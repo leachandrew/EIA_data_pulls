@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1516221083898.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "733942314",
+    "id" : "EDB2624E",
+    "lastKnownWriteTime" : 1516222247,
+    "last_content_update" : 1516222247526,
+    "path" : "C:/Users/aleach/Google Drive/EIA_data_pulls/eia_data.R",
+    "project_path" : "eia_data.R",
+    "properties" : {
+        "cursorPosition" : "0,0",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

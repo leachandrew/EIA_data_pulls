@@ -1,0 +1,512 @@
+plays<-plays[plays!="RegionCounties"]
+wb <- loadWorkbook("dpr-data.xlsx")
+cnames<-c("Month","Rigcount",	"Oil_Production_per_rig",	"Oil_Legacy_prod_chg",	"Total_oil_prod","Gas_Production_per_rig",	"Gas_Legacy_prod_chg",	"Total_gas_prod")
+dpr_data<-data.frame()
+for(play in plays){
+play_data <- read.xlsx(xlsxFile = "dpr-data.xlsx", sheet = play, startRow = 2,skipEmptyRows = TRUE,detectDates = TRUE)
+names(play_data)<-cnames
+play_data$play<-play
+dpr_data<-rbind(dpr_data,play_data)
+}
+df1<-melt(dpr_data,id=c("Month","Total_oil_prod","Total_gas_prod"),measure.vars = c("play"),value.name = "Play")
+df1$variable<-NULL
+df1<-na.omit(df1)
+png<-1
+if(png==1)#set these to only turn on if you're making PNG graphs
+set_png("lto_dpr.png")
+ggplot(df1,aes(Month,Total_oil_prod/1000,group = Play,colour=Play,fill=Play)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+#scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
+#scale_x_date(date_breaks = "1 year", date_labels =  "%Y",limits=c(max(as.Date("2000-01-01"),min(df1$date)),Sys.Date()),expand=c(0,0)) +
+#scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
+#scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+theme_minimal()+theme(
+legend.position = "bottom",
+legend.margin=margin(c(0,0,0,0),unit="cm"),
+legend.text = element_text(colour="black", size = 12),
+plot.caption = element_text(size = 14, face = "italic"),
+plot.title = element_text(face = "bold"),
+plot.subtitle = element_text(size = 14, face = "italic"),
+#panel.grid.minor = element_blank(),
+text = element_text(size = 14,face = "bold"),
+axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+axis.text.x=element_text(size = 14,face = "bold", colour="black",angle=90, hjust=1),
+)+
+labs(y="Crude Oil Production by Play \n(Monthly, Thousands of Barrels per Day)",x="Week",
+title=paste("US Production of Tight Oil",sep=""),
+caption="Source: EIA DPR, graph by Andrew Leach.")
+if(png==1)#set these to only turn on if you're making PNG graphs
+dev.off()
+png<-1
+if(png==1)#set these to only turn on if you're making PNG graphs
+set_png("lto_dpr_no_permian.png")
+ggplot(subset(df1,Play != "Permian Region"),aes(Month,Total_oil_prod/1000,group = Play,colour=Play,fill=Play)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+#scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
+#scale_x_date(date_breaks = "1 year", date_labels =  "%Y",limits=c(max(as.Date("2000-01-01"),min(df1$date)),Sys.Date()),expand=c(0,0)) +
+#scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
+#scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+theme_minimal()+theme(
+legend.position = "bottom",
+legend.margin=margin(c(0,0,0,0),unit="cm"),
+legend.text = element_text(colour="black", size = 12),
+plot.caption = element_text(size = 14, face = "italic"),
+plot.title = element_text(face = "bold"),
+plot.subtitle = element_text(size = 14, face = "italic"),
+#panel.grid.minor = element_blank(),
+text = element_text(size = 14,face = "bold"),
+axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+axis.text.x=element_text(size = 14,face = "bold", colour="black",angle=90, hjust=1),
+)+
+labs(y="Crude Oil Production by Play \n(Monthly, Thousands of Barrels per Day)",x="Week",
+title=paste("US Production of Tight Oil ex Permian Basin",sep=""),
+caption="Source: EIA DPR, graph by Andrew Leach.")
+if(png==1)#set these to only turn on if you're making PNG graphs
+dev.off()
+png<-1
+if(png==1)#set these to only turn on if you're making PNG graphs
+set_png("gas_dpr.png")
+ggplot(df1,aes(Month,Total_gas_prod/10^6,group = Play,colour=Play,fill=Play)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+#scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
+#scale_x_date(date_breaks = "1 year", date_labels =  "%Y",limits=c(max(as.Date("2000-01-01"),min(df1$date)),Sys.Date()),expand=c(0,0)) +
+#scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
+#scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+theme_minimal()+theme(
+legend.position = "bottom",
+legend.margin=margin(c(0,0,0,0),unit="cm"),
+legend.text = element_text(colour="black", size = 12),
+plot.caption = element_text(size = 14, face = "italic"),
+plot.title = element_text(face = "bold"),
+plot.subtitle = element_text(size = 14, face = "italic"),
+#panel.grid.minor = element_blank(),
+text = element_text(size = 14,face = "bold"),
+axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+axis.text.x=element_text(size = 14,face = "bold", colour="black",angle=90, hjust=1),
+)+
+labs(y="Shale and Tight Gas Production by Play \n(Monthly, Billion Cubic Feet per Day)",x="Week",
+title=paste("US Production of Tight and Shale Gas",sep=""),
+caption="Source: EIA DPR, graph by Andrew Leach.")
+if(png==1)#set these to only turn on if you're making PNG graphs
+dev.off()
+#EIA Production Data by Play
+#require(XLConnect)
+oil_prod_file<-"https://www.eia.gov/energyexplained/data/U.S.%20tight%20oil%20production.xlsx"
+download.file(oil_prod_file,"play-data.xlsx",mode="wb")
+#plays<-getSheetNames("play-data.xlsx")
+#plays<-plays[plays!="RegionCounties"]
+play_data <- read.xlsx(xlsxFile = "play-data.xlsx", sheet = "data", startRow = 1,skipEmptyRows = TRUE,detectDates = TRUE)
+play_data$X17<-NULL
+play_data$Date<-as.Date(play_data$Date,origin = "1899-12-30")
+df1<-melt(play_data,id=c("Date"),variable.name = "play",value.name = "volume" )
+df1$play<-gsub("\\.", " ", df1$play)
+df1$play<-gsub("&N", " & N", df1$play)
+df1$play<-gsub("  ", " ", df1$play)
+png<-1
+if(png==1)#set these to only turn on if you're making PNG graphs
+set_png("oil_play.png")
+ggplot(df1,aes(Date,volume*1000,group = play,colour=play,fill=play)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+#scale_color_viridis("",discrete=TRUE,option="D")+
+#scale_fill_viridis("",discrete=TRUE,option="D")+
+scale_fill_discrete("")+
+scale_colour_discrete(guide = "none")+
+#scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
+#scale_x_date(date_breaks = "1 year", date_labels =  "%Y",limits=c(max(as.Date("2000-01-01"),min(df1$date)),Sys.Date()),expand=c(0,0)) +
+#scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
+#scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+theme_minimal()+theme(
+legend.position = "bottom",
+legend.margin=margin(c(0,0,0,0),unit="cm"),
+plot.caption = element_text(size = 14, face = "italic"),
+plot.title = element_text(face = "bold"),
+plot.subtitle = element_text(size = 14, face = "italic"),
+#panel.grid.minor = element_blank(),
+text = element_text(size = 14,face = "bold"),
+legend.text = element_text(colour="black", size = 8),
+axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+axis.text.x=element_text(size = 14,face = "bold", colour="black",angle=90, hjust=1),
+)+
+labs(y="Tight Oil Production by Play \n(Monthly, Thousands of Barrels per Day)",x="Week",
+title=paste("US tight oil production estimates by play",sep=""),
+caption="Source: EIA data, graph by Andrew Leach.")
+if(png==1)#set these to only turn on if you're making PNG graphs
+dev.off()
+gas_prod_file<-"https://www.eia.gov/energyexplained/data/U.S.%20dry%20shale%20gas%20production.xlsx"
+download.file(gas_prod_file,"play-data.xlsx",mode="wb")
+#plays<-getSheetNames("play-data.xlsx")
+#plays<-plays[plays!="RegionCounties"]
+play_data <- read.xlsx(xlsxFile = "play-data.xlsx", sheet = "data", startRow = 1,skipEmptyRows = TRUE,detectDates = TRUE)
+play_data$X13<-NULL
+play_data$Date<-as.Date(play_data$Date,origin = "1899-12-30")
+df1<-melt(play_data,id=c("Date"),variable.name = "play",value.name = "volume" )
+df1$play<-gsub("\\.", " ", df1$play)
+df1$play<-gsub("&N", " & N", df1$play)
+df1$play<-gsub("  ", " ", df1$play)
+png<-1
+if(png==1)#set these to only turn on if you're making PNG graphs
+set_png("gas_play.png")
+ggplot(df1,aes(Date,volume,group = play,colour=play,fill=play)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+#scale_color_viridis("",discrete=TRUE,option="D")+
+#scale_fill_viridis("",discrete=TRUE,option="D")+
+scale_fill_discrete("")+
+scale_colour_discrete(guide = "none")+
+scale_x_date(date_breaks = "12 months", date_labels =  "%b\n%Y",limits=c(min(df1$Date),max(df1$Date))) +
+theme_minimal()+theme(
+legend.position = "bottom",
+legend.margin=margin(c(0,0,0,0),unit="cm"),
+plot.caption = element_text(size = 14, face = "italic"),
+plot.title = element_text(face = "bold"),
+plot.subtitle = element_text(size = 14, face = "italic"),
+#panel.grid.minor = element_blank(),
+text = element_text(size = 14,face = "bold"),
+legend.text = element_text(colour="black", size = 10),
+axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+axis.text.x=element_text(size = 14,face = "bold", colour="black"),
+)+
+labs(y="Shale Gas Production (Dry)\n(Monthly, Billion Cubic Feet per Day)",x="Week",
+title=paste("US shale gas production estimates by play",sep=""),
+caption="Source: EIA data, graph by Andrew Leach.")
+if(png==1)#set these to only turn on if you're making PNG graphs
+dev.off()
+ggplot(df1,aes(Month,Total_oil_prod/1000)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+facet_grid(~Play)
+ggplot(df1,aes(Month,Total_oil_prod/1000)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+facet_grid(~play)
+df1<-melt(dpr_data,id=c("Month","Total_oil_prod","Total_gas_prod"),measure.vars = c("play"),value.name = "Play")
+df1$variable<-NULL
+df1<-na.omit(df1)
+ggplot(df1,aes(Month,Total_oil_prod/1000)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+facet_grid(~play)
+ggplot(df1,aes(Month,Total_oil_prod/1000)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+facet_grid(~Play)
+ggplot(df1,aes(Month,Total_oil_prod/1000)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+facet_grid(~Play,row=2)
+ggplot(df1,aes(Month,Total_oil_prod/1000)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+facet_grid(~Play,nrow=2)
+ggplot(df1,aes(Month,Total_oil_prod/1000)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+facet_grid(~Play,rows=2)
+ggplot(df1,aes(Month,Total_oil_prod/1000)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+facet_grid(~Play,cols=4)
+ggplot(df1,aes(Month,Total_oil_prod/1000)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+facet_wrap(~region,ncol = 2, scales = "fixed")
+ggplot(df1,aes(Month,Total_oil_prod/1000)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+facet_wrap(~Play,ncol = 2, scales = "fixed")
+ggplot(df1,aes(Month,Total_oil_prod/1000)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+facet_wrap(~Play,ncol = 2, scales = "free")+
+#scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
+#scale_x_date(date_breaks = "1 year", date_labels =  "%Y",limits=c(max(as.Date("2000-01-01"),min(df1$date)),Sys.Date()),expand=c(0,0)) +
+#scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
+#scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+theme_minimal()+theme(
+legend.position = "bottom",
+legend.margin=margin(c(0,0,0,0),unit="cm"),
+legend.text = element_text(colour="black", size = 12),
+plot.caption = element_text(size = 14, face = "italic"),
+plot.title = element_text(face = "bold"),
+plot.subtitle = element_text(size = 14, face = "italic"),
+#panel.grid.minor = element_blank(),
+text = element_text(size = 14,face = "bold"),
+axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+axis.text.x=element_text(size = 14,face = "bold", colour="black",angle=90, hjust=1),
+)+
+labs(y="Crude Oil Production by Play \n(Monthly, Thousands of Barrels per Day)",x="Week",
+title=paste("US Production of Tight Oil ex Permian Basin",sep=""),
+caption="Source: EIA DPR, graph by Andrew Leach.")
+ggplot(df1,aes(Month,Total_oil_prod/1000),colour=colors_ua10()[1]) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+facet_wrap(~Play,ncol = 2, scales = "fixed")+
+#scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
+#scale_x_date(date_breaks = "1 year", date_labels =  "%Y",limits=c(max(as.Date("2000-01-01"),min(df1$date)),Sys.Date()),expand=c(0,0)) +
+#scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
+#scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+theme_minimal()+theme(
+legend.position = "bottom",
+legend.margin=margin(c(0,0,0,0),unit="cm"),
+legend.text = element_text(colour="black", size = 12),
+plot.caption = element_text(size = 14, face = "italic"),
+plot.title = element_text(face = "bold"),
+plot.subtitle = element_text(size = 14, face = "italic"),
+#panel.grid.minor = element_blank(),
+text = element_text(size = 14,face = "bold"),
+axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+axis.text.x=element_text(size = 14,face = "bold", colour="black",angle=90, hjust=1),
+)+
+labs(y="(Monthly Production, 1000 bbl/d)",x="Week",
+title=paste("US Production of Tight Oil by Play",sep=""),
+caption="Source: EIA DPR, graph by Andrew Leach.")
+ggplot(df1,aes(Month,Total_oil_prod/1000)) +
+geom_area(position = "stack",colour=colors_ua10()[1]) +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+facet_wrap(~Play,ncol = 2, scales = "fixed")+
+#scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
+#scale_x_date(date_breaks = "1 year", date_labels =  "%Y",limits=c(max(as.Date("2000-01-01"),min(df1$date)),Sys.Date()),expand=c(0,0)) +
+#scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
+#scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+theme_minimal()+theme(
+legend.position = "bottom",
+legend.margin=margin(c(0,0,0,0),unit="cm"),
+legend.text = element_text(colour="black", size = 12),
+plot.caption = element_text(size = 14, face = "italic"),
+plot.title = element_text(face = "bold"),
+plot.subtitle = element_text(size = 14, face = "italic"),
+#panel.grid.minor = element_blank(),
+text = element_text(size = 14,face = "bold"),
+axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+axis.text.x=element_text(size = 14,face = "bold", colour="black",angle=90, hjust=1),
+)+
+labs(y="(Monthly Production, 1000 bbl/d)",x="Week",
+title=paste("US Production of Tight Oil by Play",sep=""),
+caption="Source: EIA DPR, graph by Andrew Leach.")
+ggplot(df1,aes(Month,Total_oil_prod/1000)) +
+geom_area(position = "stack",fill=colors_ua10()[1]) +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+facet_wrap(~Play,ncol = 2, scales = "fixed")+
+#scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
+#scale_x_date(date_breaks = "1 year", date_labels =  "%Y",limits=c(max(as.Date("2000-01-01"),min(df1$date)),Sys.Date()),expand=c(0,0)) +
+#scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
+#scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+theme_minimal()+theme(
+legend.position = "bottom",
+legend.margin=margin(c(0,0,0,0),unit="cm"),
+legend.text = element_text(colour="black", size = 12),
+plot.caption = element_text(size = 14, face = "italic"),
+plot.title = element_text(face = "bold"),
+plot.subtitle = element_text(size = 14, face = "italic"),
+#panel.grid.minor = element_blank(),
+text = element_text(size = 14,face = "bold"),
+axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+axis.text.x=element_text(size = 14,face = "bold", colour="black",angle=90, hjust=1),
+)+
+labs(y="(Monthly Production, 1000 bbl/d)",x="Week",
+title=paste("US Production of Tight Oil by Play",sep=""),
+caption="Source: EIA DPR, graph by Andrew Leach.")
+png<-1
+if(png==1)#set these to only turn on if you're making PNG graphs
+set_png("lto_play.png")
+ggplot(df1,aes(Month,Total_oil_prod/1000)) +
+geom_area(position = "stack",fill=colors_ua10()[1]) +
+#geom_point(size=1) +
+scale_color_viridis("",discrete=TRUE,option="D")+
+scale_fill_viridis("",discrete=TRUE,option="D")+
+facet_wrap(~Play,ncol = 2, scales = "fixed")+
+#scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
+#scale_x_date(date_breaks = "1 year", date_labels =  "%Y",limits=c(max(as.Date("2000-01-01"),min(df1$date)),Sys.Date()),expand=c(0,0)) +
+#scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
+#scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+theme_minimal()+theme(
+legend.position = "bottom",
+legend.margin=margin(c(0,0,0,0),unit="cm"),
+legend.text = element_text(colour="black", size = 12),
+plot.caption = element_text(size = 14, face = "italic"),
+plot.title = element_text(face = "bold"),
+plot.subtitle = element_text(size = 14, face = "italic"),
+#panel.grid.minor = element_blank(),
+text = element_text(size = 14,face = "bold"),
+axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+axis.text.x=element_text(size = 14,face = "bold", colour="black",angle=90, hjust=1),
+)+
+labs(y="(Monthly Production, 1000 bbl/d)",x="Week",
+title=paste("US Production of Tight Oil by Play",sep=""),
+caption="Source: EIA DPR, graph by Andrew Leach.")
+if(png==1)#set these to only turn on if you're making PNG graphs
+dev.off()
+#EIA Production Data by Play
+#require(XLConnect)
+oil_prod_file<-"https://www.eia.gov/energyexplained/data/U.S.%20tight%20oil%20production.xlsx"
+download.file(oil_prod_file,"play-data.xlsx",mode="wb")
+#plays<-getSheetNames("play-data.xlsx")
+#plays<-plays[plays!="RegionCounties"]
+play_data <- read.xlsx(xlsxFile = "play-data.xlsx", sheet = "data", startRow = 1,skipEmptyRows = TRUE,detectDates = TRUE)
+play_data$X17<-NULL
+play_data$Date<-as.Date(play_data$Date,origin = "1899-12-30")
+df1<-melt(play_data,id=c("Date"),variable.name = "play",value.name = "volume" )
+df1$play<-gsub("\\.", " ", df1$play)
+df1$play<-gsub("&N", " & N", df1$play)
+df1$play<-gsub("  ", " ", df1$play)
+ggplot(df1,aes(Date,volume*1000,group = play,colour=play,fill=play)) +
+geom_area(position = "stack")
+play_data <- read.xlsx(xlsxFile = "play-data.xlsx", sheet = "data", startRow = 1,skipEmptyRows = TRUE,detectDates = TRUE)
+View(play_data)
+play_data$X12<-NULL
+play_data$Date<-as.Date(play_data$Date,origin = "1899-12-30")
+df1<-melt(play_data,id=c("Date"),variable.name = "play",value.name = "volume" )
+df1$play<-gsub("\\.", " ", df1$play)
+df1$play<-gsub("&N", " & N", df1$play)
+df1$play<-gsub("  ", " ", df1$play)
+play_data <- read.xlsx(xlsxFile = "play-data.xlsx", sheet = "data", startRow = 1,skipEmptyRows = TRUE,detectDates = TRUE)
+play_data$X17<-NULL
+play_data$X12<-NULL
+play_data$Date<-ymd(play_data$Date)
+play_data <- read.xlsx(xlsxFile = "play-data.xlsx", sheet = "data", startRow = 1,skipEmptyRows = TRUE,detectDates = TRUE)
+play_data$X17<-NULL
+play_data$X12<-NULL
+play_data$Date<-ymd(play_data$Date,origin = "1899-12-30")
+play_data$Date<-as.Date(play_data$Date,origin = "1899-12-30")
+play_data <- read.xlsx(xlsxFile = "play-data.xlsx", sheet = "data", startRow = 1,skipEmptyRows = TRUE,detectDates = TRUE)
+play_data$X17<-NULL
+play_data$X12<-NULL
+play_data$Date<-as.Date(play_data$Date,origin = "1899-12-30")
+df1<-melt(play_data,id=c("Date"),variable.name = "play",value.name = "volume" )
+df1$play<-gsub("\\.", " ", df1$play)
+df1$play<-gsub("&N", " & N", df1$play)
+df1$play<-gsub("  ", " ", df1$play)
+png<-1
+if(png==1)#set these to only turn on if you're making PNG graphs
+set_png("oil_play.png")
+ggplot(df1,aes(Date,volume*1000,group = play,colour=play,fill=play)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+#scale_color_viridis("",discrete=TRUE,option="D")+
+#scale_fill_viridis("",discrete=TRUE,option="D")+
+scale_fill_discrete("")+
+scale_colour_discrete(guide = "none")+
+#scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
+#scale_x_date(date_breaks = "1 year", date_labels =  "%Y",limits=c(max(as.Date("2000-01-01"),min(df1$date)),Sys.Date()),expand=c(0,0)) +
+#scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
+#scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+theme_minimal()+theme(
+legend.position = "bottom",
+legend.margin=margin(c(0,0,0,0),unit="cm"),
+plot.caption = element_text(size = 14, face = "italic"),
+plot.title = element_text(face = "bold"),
+plot.subtitle = element_text(size = 14, face = "italic"),
+#panel.grid.minor = element_blank(),
+text = element_text(size = 14,face = "bold"),
+legend.text = element_text(colour="black", size = 8),
+axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+axis.text.x=element_text(size = 14,face = "bold", colour="black",angle=90, hjust=1),
+)+
+labs(y="Tight Oil Production by Play \n(Monthly, Thousands of Barrels per Day)",x="Week",
+title=paste("US tight oil production estimates by play",sep=""),
+caption="Source: EIA data, graph by Andrew Leach.")
+if(png==1)#set these to only turn on if you're making PNG graphs
+dev.off()
+df1$play<-as.factor(df1$play)
+png<-1
+if(png==1)#set these to only turn on if you're making PNG graphs
+set_png("oil_play.png")
+ggplot(df1,aes(Date,volume*1000,group = play,colour=play,fill=play)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+#scale_color_viridis("",discrete=TRUE,option="D")+
+#scale_fill_viridis("",discrete=TRUE,option="D")+
+scale_fill_discrete("")+
+scale_colour_discrete(guide = "none")+
+#scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
+scale_x_date(date_breaks = "6 months", date_labels =  "%b\n%Y",limits=c(max(as.Date("2000-01-01"),min(df1$date)),Sys.Date()),expand=c(0,0)) +
+#scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
+#scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+theme_minimal()+theme(
+legend.position = "bottom",
+legend.margin=margin(c(0,0,0,0),unit="cm"),
+plot.caption = element_text(size = 14, face = "italic"),
+plot.title = element_text(face = "bold"),
+plot.subtitle = element_text(size = 14, face = "italic"),
+#panel.grid.minor = element_blank(),
+text = element_text(size = 14,face = "bold"),
+legend.text = element_text(colour="black", size = 8),
+axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+axis.text.x=element_text(size = 14,face = "bold", colour="black",angle=90, hjust=1),
+)+
+labs(y="Tight Oil Production by Play \n(Monthly, Thousands of Barrels per Day)",x="Date",
+title=paste("US tight oil production estimates by play",sep=""),
+caption="Source: EIA data, graph by Andrew Leach.")
+if(png==1)#set these to only turn on if you're making PNG graphs
+dev.off()
+png<-1
+if(png==1)#set these to only turn on if you're making PNG graphs
+set_png("oil_play.png")
+ggplot(df1,aes(Date,volume*1000,group = play,colour=play,fill=play)) +
+geom_area(position = "stack") +
+#geom_point(size=1) +
+#scale_color_viridis("",discrete=TRUE,option="D")+
+#scale_fill_viridis("",discrete=TRUE,option="D")+
+scale_fill_discrete("")+
+scale_colour_discrete(guide = "none")+
+#scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
+scale_x_date(date_breaks = "6 months", date_labels =  "%b\n%Y",expand=c(0,0)) +
+#scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
+#scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+theme_minimal()+theme(
+legend.position = "bottom",
+legend.margin=margin(c(0,0,0,0),unit="cm"),
+plot.caption = element_text(size = 14, face = "italic"),
+plot.title = element_text(face = "bold"),
+plot.subtitle = element_text(size = 14, face = "italic"),
+#panel.grid.minor = element_blank(),
+text = element_text(size = 14,face = "bold"),
+legend.text = element_text(colour="black", size = 8),
+axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+axis.text.x=element_text(size = 14,face = "bold", colour="black",angle=90, hjust=1),
+)+
+labs(y="Tight Oil Production by Play \n(Monthly, Thousands of Barrels per Day)",x="Date",
+title=paste("US tight oil production estimates by play",sep=""),
+caption="Source: EIA data, graph by Andrew Leach.")
+if(png==1)#set these to only turn on if you're making PNG graphs
+dev.off()
+ymd("2019-09-15")
+ymd("2019-09-15")-days(120)

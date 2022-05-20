@@ -1,0 +1,249 @@
+---
+title: "EIA Annual Energy Outlook Projections"
+author: "Andrew Leach"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+      code_folding: hide
+      includes:
+      after_body: 
+      theme: lumen
+  always_allow_html: yes
+---
+
+```{r basics, cache=FALSE,warning=FALSE,message=FALSE}
+library(zoo)
+library(lubridate)
+library(readxl)
+library(scales)
+library(grid)
+library(gridExtra)
+library(janitor)
+library(ggpubr)
+library(cowplot)
+library(patchwork)
+library(ggthemes)
+library(directlabels)
+library(pdfetch)
+library(gghighlight)
+library(viridis)
+library(tidyverse)
+library(ggrepel)
+library(xml2)
+library(rvest)
+
+ pd_fix<-function(data,name){
+   data<-data.frame(date=index(data), coredata(data))
+   data$date<-ymd(data$date)
+   data <- setNames(data, c("date",name)) 
+ }
+ 
+
+
+eia_aeo_comp<-function(start_year=2014,end_year=2022,api_series=".SUP_NA_LFL_NA_DCP_NA_USA_MILLBRLPDY.A",
+                   label="US Total Crude Oil Production",
+                   units="mmbbl/d",
+                   history=FALSE,
+                   hist_series="PET.MCRFPUS2.A",
+                   hist_conversion=1,
+                   hist_year=1950,
+                   zero_y=TRUE
+                   ){ #use oil as the default
+  #testing
+  #api_series<-".GEN_NA_ELEP_NA_SLR_PHTVL_NA_BLNKWH.A"
+  #start_year=2015
+  #end_year=2022
+  #label="Oil Production"
+  #units="mmbbl/d"
+  #hist_series<-"PET.MCRFPUS2.A"
+  #hist_conversion=1000
+  series<-paste("AEO.",seq(start_year,end_year),".REF",seq(start_year,end_year),api_series,sep="")
+  labels<-paste(seq(start_year,end_year)," AEO",sep="")
+  elements=end_year-start_year+1
+  data<-pd_fix(pdfetch_EIA(series,KEY),labels)%>%
+    pivot_longer(-date,names_to = "variable")
+  plot<-ggplot(data)+
+  geom_line(aes(date,value,group=variable,color=variable,size=variable==paste(end_year,"AEO")),lty="31")+
+  #geom_point(data=data %>% filter(variable==paste(end_year,"AEO")),aes(date,value,group=variable,color=variable),size=2.25)+
+  scale_y_continuous(breaks=pretty_breaks(),expand=c(0,0))+
+  scale_x_date(breaks=pretty_breaks(n=10),expand=c(0,0))+
+  scale_color_viridis("",discrete = T,option="A",direction = -1,end = .9)+
+  scale_size_manual("",values=c(1,1.5))+
+  scale_linetype_manual("",values=c("solid"))+
+  theme_minimal()+weekly_graphs()+
+    theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)))+
+  guides(linetype=guide_legend(order = 1,keywidth = unit(1.6,"cm")),
+         size="none",
+          #shape = guide_legend(keywidth = unit(1.6,"cm"),nrow = 2),
+         #linetype = guide_legend(keywidth = unit(1.6,"cm"),nrow = 2),
+         #colour = guide_legend(keywidth = unit(1.6,"cm"),override.aes = list(lty = "11")  ,nrow = 2),
+         colour = guide_legend(keywidth = unit(1.6,"cm"),nrow = trunc(elements/6)+1,
+                               override.aes = list(size=c(rep(1,elements-1),1.5))),
+         #fill = guide_legend(keywidth = unit(1.6,"cm"),nrow = 2)
+         NULL)
+  if(zero_y)
+    plot<-plot+expand_limits(y=0)
+  
+  #get historical data
+  if(history)
+    {
+    hist_data<-pd_fix(pdfetch_EIA(hist_series,KEY),"Historical data")%>%
+      pivot_longer(-date,names_to = "variable")%>%
+      mutate(value=value/hist_conversion)%>%
+      filter(year(date)>=hist_year)
+    plot<-plot+
+    geom_line(data=hist_data,aes(date,value,lty="Historical Data"),size=1)+
+    labs(y=paste(label," (",units,")",sep=""),x="",
+         title=paste("Historical",label,"and EIA AEO Reference Case Projections"),
+         caption="Source: Data via EIA AEO, graph by Andrew Leach.")
+   }
+  
+  if(!history){
+    plot<-plot+
+    labs(y=paste(label," (",units,")",sep=""),x="",
+         title=paste("EIA Annual Energy Outlook",label,"Forecasts"),
+         caption="Source: Data via EIA AEO, graph by Andrew Leach.")
+    }
+plot
+  
+  }
+
+```
+   
+   
+
+
+
+## Oil Production, Trade, and Prices {.tabset .tabset-fade}
+### US Oil Production
+```{r fig.width=14, fig.height=7, oil_prod, cache=TRUE,warning=FALSE}
+
+eia_aeo_comp(history = TRUE,hist_conversion = 1000)
+```
+
+### US Oil Imports
+```{r fig.width=14, fig.height=7, oil_imp, cache=TRUE,warning=FALSE}
+
+eia_aeo_comp(start_year = 2014,api_series =".TRAD_NA_LFL_NA_GIM_NA_USA_MILLBRLPDY.A",label = "US Gross Crude Oil Imports",
+                          units = "million barrels per day",
+                          history = TRUE,
+                          hist_series = "PET.MCRIMUS2.A",
+                          hist_conversion = 1000,
+                          hist_year=1950)
+```
+
+### US Oil Exports
+```{r fig.width=14, fig.height=7, oil_exp, cache=TRUE,warning=FALSE}
+
+eia_aeo_comp(start_year = 2014,api_series =".TRAD_NA_LFL_NA_EXP_NA_USA_MILLBRLPDY.A",label = "US Gross Crude Oil Exports",
+                          units = "million barrels per day",
+                          history = TRUE,
+                          hist_series = "PET.MCREXUS2.A",
+                          hist_conversion = 1000,
+                          hist_year=2010)
+```
+
+### WTI Oil Prices
+```{r fig.width=14, fig.height=7, oil_price, cache=TRUE,warning=FALSE}
+
+eia_aeo_comp(start_year = 2015,api_series =".PRCE_NA_NA_NA_CR_WTI_USA_NDLRPBRL.A",label = "WTI (Cushing) Nominal Spot Price",
+                        units = "$/bbl",
+                        history = TRUE,
+                        hist_series = "PET.RWTC.M",
+                        hist_conversion = 1,
+                        hist_year=1990)
+```
+
+
+## Natural Gas Production, Trade, and Prices {.tabset .tabset-fade}
+### US Natural Gas Production
+```{r fig.width=14, fig.height=7, gas_prod, cache=TRUE,warning=FALSE}
+
+eia_aeo_comp(start_year = 2014,api_series =".SUP_DPR_NA_NA_NG_TOT_USA_TRLCF.A",label = "US Dry Natural Gas Production",
+                          units = "TCF",
+                          history = TRUE,
+                          hist_series = "NG.N9070US2.M",
+                          hist_conversion = 10^6/12,
+                          hist_year=1950)
+```
+
+### US Natural Gas Imports
+```{r fig.width=14, fig.height=7, gas_imp, cache=TRUE,warning=FALSE}
+
+eia_aeo_comp(start_year = 2020,api_series =".SUP_IMP_NA_NA_NG_NA_NA_TRLCF.A",label = "US Gross Natural Gas Imports",
+                          units = "TCF",
+                          history = TRUE,
+                          hist_series = "NG.N9100US2.M",
+                          hist_conversion = 10^6/12,
+                          hist_year=1950)
+```
+
+### US Natural Gas Exports
+```{r fig.width=14, fig.height=7, gas_exp, cache=TRUE,warning=FALSE}
+
+eia_aeo_comp(start_year = 2014,api_series =".SUP_EXPT_NA_NA_NG_NA_NA_TRLCF.A",label = "US Gross Natural Gas Exports",
+                          units = "TCF",
+                          history = TRUE,
+                          hist_series = "NG.N9130US2.M",
+                          hist_conversion = 10^6/12,
+                          hist_year=2010)
+```
+
+### Henry Hub Natural Gas Prices
+```{r fig.width=14, fig.height=7, gas_price, cache=TRUE,warning=FALSE}
+
+eia_aeo_comp(start_year = 2014,api_series =".PRCE_HHP_NA_NA_NG_NA_USA_NDLRPMBTU.A",label = "Henry Hub Nominal Spot Price",
+                          units = "$/MMBTU",
+                          history = TRUE,
+                          hist_series = "NG.RNGWHHD.M",
+                          hist_conversion = 1,
+                          hist_year=1990)
+```
+
+
+## Electricity supply {.tabset .tabset-fade}
+
+
+### Total Electricity Supply
+```{r fig.width=14, fig.height=7, scheme_plot_3, cache=TRUE,warning=FALSE}
+
+eia_aeo_comp(start_year = 2015,api_series =".GEN_NA_ELEP_NA_TEG_NA_USA_BLNKWH.A",label = "Electricity Generation",
+                          units = "billion kWh",
+                          history = TRUE,
+                          hist_conversion = 1000,
+                          hist_series = "ELEC.GEN.ALL-US-99.A"
+                          )
+```
+
+
+### Solar Generation
+```{r fig.width=14, fig.height=7, scheme_plot_1, cache=TRUE,warning=FALSE}
+
+eia_aeo_comp(start_year = 2014,api_series =".GEN_NA_ALLS_NA_SLR_NA_NA_BLNKWH.A",label = "Solar Electricity Generation",
+                          units = "billion kWh",
+                          history = TRUE,
+                          hist_conversion = 1000,
+                          hist_series = "ELEC.GEN.TSN-US-99.A"
+                          )
+```
+
+
+### Coal Generation
+
+```{r fig.width=14, fig.height=7, scheme_plot_2, cache=TRUE,warning=FALSE}
+eia_aeo_comp(start_year = 2018,api_series =".GEN_NA_ELEP_POW_CL_NA_USA_BLNKWH.A",label = "Coal-fired Electricity Generation",
+                          units = "billion kWh",
+                         history = TRUE,
+                         hist_conversion = 1000,
+                         hist_series = "ELEC.GEN.COW-US-98.A")
+```
+
+## Energy-related carbon dioxide emissions {.tabset .tabset-fade}
+```{r fig.width=14, fig.height=7, co2_plot, cache=TRUE,warning=FALSE}
+eia_aeo_comp(start_year = 2015,api_series =".EMI_CO2_TEN_NA_NA_NA_NA_MILLMETNCO2.A",label = "Energy-related CO2 Emissions",
+                         units = "Mt",
+                         history = TRUE,
+                         hist_series = "EMISS.CO2-TOTV-TT-TO-US.A",
+                        zero_y = TRUE)+expand_limits(y=6000)
+```
+

@@ -1,0 +1,26 @@
+{
+    "id": "2517E396",
+    "path": "~/data_projects/EIA_data_pulls/crude_movements.R",
+    "project_path": "crude_movements.R",
+    "type": "r_source",
+    "hash": "4182108480",
+    "contents": "",
+    "dirty": false,
+    "created": 1649695323993.0,
+    "source_on_save": false,
+    "relative_order": 7,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "578,0",
+        "scrollLine": "553"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1649723978,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1649723978054,
+    "read_only": false,
+    "read_only_alternatives": []
+}

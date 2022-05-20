@@ -1,0 +1,1356 @@
+---
+title: <center>EIA Data Updates</center>
+author: <center>Andrew Leach</center>
+date: <center>`r format(Sys.time(), '%d %B, %Y')`</center>
+output:
+  html_document:
+      code_folding: hide
+      includes:
+      after_body: 
+      theme: lumen
+      toc: yes
+      toc_float: yes
+  word_document:
+    toc: yes
+  pdf_document:
+    toc: yes
+always_allow_html: yes
+
+---
+
+
+```{r, include=FALSE,cache=FALSE}
+#Mac
+if(R.version$platform ==  "x86_64-apple-darwin15.6.0")
+  setwd("/Users/aleach/Google Drive/EIA_data_pulls")
+#PC
+if(R.version$platform ==  "x86_64-w64-mingw32")
+  setwd("C:/Users/aleach/Google Drive/EIA_data_pulls")
+#Set EIA API Key
+
+KEY <- "91b4dca0b858df64a2279d82f71af240"
+
+#use this to tell R to download data again in certain spots
+KEEP_CACHE<-TRUE
+
+
+```
+
+
+The US Energy Information Administration (EIA) provides a wealth of data for energy markets.  This update focusses on their regularly-updated oil and gas data sources including:
+
+* Spot Prices and Some Futures Market Info
+* Weekly Petroleum Status Report
+* Weekly Gas Storage Reort
+* Oil and gas production updates
+    + Monthly Production Data by Region
+    + Drilling Productivity Reports
+    + Shale Gas and Light Tight Oil Production Reports
+* Short Term Energy Outlook
+* Annual Energy Outlook
+
+For each section, I've included R code to access the data as well as links to the web interface for the data.  The R code relies on stadard Tidyverse packages as well as a couple of custom functions and an API key.  You should be able to run this with the code provided once you get your own key  [here](https://www.eia.gov/opendata/register.cfm), and you'll have to store it in a variable called KEY to get the code to work.
+
+If you're going to run the R code, you'll need a few basic set-up elements to get everything to work. I've included the code here for your reference.
+
+```{r basics, cache=FALSE,warning=FALSE,message=FALSE}
+#packages used
+library(RColorBrewer)
+library(viridis)
+library(scales) 
+library(pdfetch)
+library(tidyverse)
+library(lubridate)
+library(reshape2)
+library(knitr)
+library(prettydoc)
+library(XML)
+library(zoo)
+library(openxlsx)
+
+#quick function to make time breaks on axes
+make_breaks <- function(strt, hour, interval="day", length.out=31) {
+  strt <- as.POSIXlt(strt - 60*60*24)  # start back one day
+  strt <- ISOdatetime(strt$year+1900L, strt$mon+1L, strt$mday, hour=hour, min=0, sec=0, tz="UTC")
+  seq.POSIXt(strt, strt+(1+length.out)*60*60*24, by=interval)
+}
+
+#get multiple series listing from the EIA API
+data_fetch<-function(key, cat=2227122){
+  key <- unlist(strsplit(key, ";"))
+  ifelse(cat==999999999,
+         url <- paste("http://api.eia.gov/category?api_key=",
+                      key, "&out=xml", sep="" ),
+         url <- paste("http://api.eia.gov/category?api_key=",
+                      key, "&category_id=", cat, "&out=xml", sep="" )
+  )
+  doc <- xmlParse(file=url, isURL=TRUE)
+  Parent_Category <- tryCatch(xmlToDataFrame(,stringsAsFactors = F,nodes =
+                                               XML::getNodeSet(doc, "//category/parent_category_id")),
+                              warning=function(w) FALSE, error=function(w) FALSE)
+  Sub_Categories <- xmlToDataFrame(,stringsAsFactors = F,nodes =
+                                     XML::getNodeSet(doc, "//childcategories/row"))
+  Series_IDs <- xmlToDataFrame(nodes =
+                                 XML::getNodeSet(doc, "///childseries/row"),stringsAsFactors = F)
+  Categories <- list(Parent_Category, Sub_Categories, Series_IDs)
+  names(Categories) <- c("Parent_Category", "Sub_Categories", "Series_IDs")
+  return(Categories)
+}
+
+colors_tableau10 <- function()
+{
+  return(c("#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD", "#8C564B",
+           "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF"))
+}
+
+colors_tableau10_light <- function()
+{
+  return(c("#AEC7E8", "#FFBB78", "#98DF8A", "#FF9896", "#C5B0D5", "#C49C94",
+           "#F7B6D2", "#C7C7C7", "#DBDB8D", "#9EDAE5"))
+}
+
+colors_tableau10_medium <- function()
+{
+  return(c("#729ECE", "#FF9E4A", "#67BF5C", "#ED665D", "#AD8BC9", "#A8786E",
+           "#ED97CA", "#A2A2A2", "#CDCC5D", "#6DCCDA"))
+}
+
+```
+
+#Commodity Prices
+
+
+Both the EIA data interface [here](https://www.eia.gov/petroleum/data.php#prices) or the API [here](https://www.eia.gov/opendata/qb.php?category=714757) allow you to access benchmark commodity prices we'll talk a lot about in the first couple of classes.  For most of what we do with prices, we'll use data from the Bloomberg terminal but the EIA prices are a useful source of information that you can access from anywhere. 
+
+The first step is to access the data (click on the code button to see how to do things in R if you're interested).
+
+```{r spot_prices, cache=KEEP_CACHE} 
+#don't need to cache this long-term - it's daily data
+#GET EIA NYMEX SPOTS 
+subs<-data_fetch(KEY,cat=241335)
+series<-t(subs$Series_IDs$series_id)
+series<- as.character(series)
+names<-t(subs$Series_IDs$name)
+
+subs<-data_fetch(KEY,cat=241347)
+series<-c(series,t(subs$Series_IDs$series_id))
+series<- as.character(series)
+names<-c(names,t(subs$Series_IDs$name))
+
+
+nymex_data<- pdfetch_EIA(series,KEY)
+nymex_data <- setNames(nymex_data, names)
+nymex_data<-data.frame(date=index(nymex_data), coredata(nymex_data),stringsAsFactors = F)
+nymex_data$date<-as.Date(nymex_data$date,format = "%m/%d/%Y")
+
+annual_crude<-cbind(nymex_data$date,nymex_data[,grep("Annual", colnames(nymex_data))])  #all annual columns
+annual_crude<-na.omit(annual_crude)
+names(annual_crude)[1]<-paste("Date")  
+
+monthly_crude<-cbind(nymex_data$date,nymex_data[,grep("Monthly", colnames(nymex_data))])  #all monthly columns
+monthly_crude<-na.omit(monthly_crude)
+names(monthly_crude)[1]<-paste("Date")
+
+weekly_crude<-cbind(nymex_data$date,nymex_data[,grep("Weekly", colnames(nymex_data))])  #all weekly_crude columns
+#weekly_crude<-na.omit(weekly_crude)
+names(weekly_crude)[1]<-paste("Date")
+weekly_crude<-subset(weekly_crude, Date > as.Date("2007-01-01"))
+weekly_crude<-na.omit(weekly_crude)
+
+daily_crude<-cbind(nymex_data$date,nymex_data[,grep("Daily", colnames(nymex_data))])  #all weekly_crude columns
+#weekly_crude<-na.omit(weekly_crude)
+names(daily_crude)[1]<-paste("Date")
+
+daily_crude$WTI_Brent_diff<- daily_crude$Europe.Brent.Spot.Price.FOB..Daily-daily_crude$Cushing..OK.WTI.Spot.Price.FOB..Daily
+```
+
+Then, we set up some graphing preliminaries.  Again, R code provided for your interest.
+
+```{r levels_chart_code, cache=TRUE}
+#set up graph format
+weekly_graphs<-function(caption_align=1){
+  theme_minimal()+theme(
+    plot.margin = margin(.25, .75, .25, .75, "cm"),
+    legend.position = "bottom",
+    legend.margin=margin(c(0,0,0,0),unit="cm"),
+    legend.text = element_text(colour="black", size = 14, face = "bold"),
+    plot.caption = element_text(size = 14, face = "italic",hjust=caption_align),
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(size = 16, face = "italic"),
+    panel.grid.minor = element_blank(),
+    text = element_text(size = 14,face = "bold"),
+    axis.title.x = element_text(size = 14,face = "bold", colour="black",margin = margin(t = 15, b = 0)),
+    axis.title.y = element_text(size = 14,face = "bold", colour="black",margin = margin(r = 10)),
+    axis.text = element_text(size = 14,face = "bold", colour="black",margin = margin(t = 10, b = 10)),
+  )
+}
+
+weekly_small<-function(caption_align=1){
+  theme_minimal()+theme(
+    plot.margin = margin(.25, .75, .25, .75, "cm"),
+    legend.position = "bottom",
+    legend.margin=margin(c(0,0,0,0),unit="cm"),
+    legend.text = element_text(colour="black", size = 9),
+    plot.caption = element_text(size = 11, face = "italic",hjust=caption_align),
+    plot.title = element_text(size = 16,face = "bold"),
+    plot.subtitle = element_text(size = 14, face = "italic"),
+    panel.grid.minor = element_blank(),
+    text = element_text(size = 11,face = "bold"),
+    axis.title.x = element_text(size = 11,face = "bold", colour="black",margin = margin(t = 15, b = 0)),
+    axis.text = element_text(size = 11,face = "bold", colour="black",margin = margin(t = 10, b = 10)),
+  )
+}
+
+
+#define levels chart design function
+levels_chart<-function(data_sent,names,name_labels,years,title_sent="Benchmark Oil Prices",break_set="12 months",y_lab="Spot Prices ($US/bbl)")
+{
+  #send a data set and variable names
+  #testing
+    #data_sent<-daily_crude
+    #names<-"Europe.Brent.Spot.Price.FOB..Daily"
+    #name_labels<-"Brent"
+    #years<-5   
+    #break_set<-"12 months"
+    #title_sent<-"Benchmark Oil Prices"
+  rows_legend<-max(1,round(sum(nchar(names))/60))
+  data_sent<-filter(data_sent,Date>=max(Date)-years(years))
+  
+  df1<-melt(data_sent,id=c("Date"),measure.vars = names)
+  df1<-na.omit(df1)
+  lims<-c(max(df1$Date)-years(years),max(df1$Date)+months(1))
+  lims_y<-c(min(0,min(df1$value)-5),max(df1$value)+10)
+  
+  p<-ggplot(df1) +
+    geom_line(data=filter(df1,variable!="diff"),aes(Date,value,group = variable,colour=variable),size=1.7) +
+    #geom_point(size=1) +
+    scale_colour_manual(NULL,values=colors_tableau10(), labels=name_labels)+
+    scale_x_date(name=NULL,date_breaks = break_set, date_labels =  "%b\n%Y",limits=lims,expand=c(0,0)) +
+    scale_y_continuous(expand = c(0, 0),limits=lims_y,breaks=c(-10,seq(0,lims_y[2],10))) +
+    guides(colour=guide_legend(nrow=rows_legend))+
+    labs(y=y_lab,x="Date",
+         title=title_sent,
+         caption="Data via EIA API")+
+    weekly_graphs()
+  p
+}
+```
+
+Now we can make the graphs we need.
+
+```{r spot_price graph, cache=FALSE}
+names<-c("Cushing..OK.WTI.Spot.Price.FOB..Daily","Europe.Brent.Spot.Price.FOB..Daily")
+name_labels<-c("WTI (Cushing)", "Brent (Europe)")
+years<-5   
+break_set<-"12 months"
+title_sent<-"Benchmark Oil Prices"
+WTI_Brent<-levels_chart(daily_crude,names,name_labels,years,title_sent="North American and European Benchmark Oil Prices",break_set="12 months")
+```
+
+For example, if you access the data, you'll see that the most recent prices for WTI and Brent are $US `r last(na.omit(daily_crude$Cushing..OK.WTI.Spot.Price.FOB..Daily))`/bbl and $US `r last(na.omit(daily_crude$Europe.Brent.Spot.Price.FOB..Daily))`/bbl respectively, based on the `r format(last(daily_crude$Date) , format="%B %d, %Y")` update. The most recent 5 years of data for WTI and Brent prices are shown below.
+
+```{r attendplot, echo = FALSE, warning=FALSE, results="asis", cache=FALSE,  fig.width=10, fig.pos="H"}
+#use fig.cap="\\label{fig:figs}West Texas Intermediate and Brent Prices and #Differentials" if you want to add a caption
+
+WTI_Brent
+```
+
+The EIA data library also provides a lot of other prices and we can use those to produce some of the other types of graphs we use in the class.  For example, if you're interested in refining margins, you can look at New York Harbour and Gulf Coast 3:2:1 crack spreads: the difference between the value of crude oil and the value of a refined product yield of 2/3 gasoline and 1/3 diesel. 
+```{r cracks graph, cache=FALSE,fig.width=10, fig.pos="H"}
+# first, make the cracks
+daily_crude<-daily_crude %>% mutate(
+  gc_321=U.S..Gulf.Coast.Ultra.Low.Sulfur.No.2.Diesel.Spot.Price..Daily*42/3+ U.S..Gulf.Coast.Conventional.Gasoline.Regular.Spot.Price.FOB..Daily*42*2/3-Europe.Brent.Spot.Price.FOB..Daily,
+  nyh_321=New.York.Harbor.Ultra.Low.Sulfur.No.2.Diesel.Spot.Price..Daily*42/3+New.York.Harbor.Conventional.Gasoline.Regular.Spot.Price.FOB..Daily*42*2/3 -Cushing..OK.WTI.Spot.Price.FOB..Daily
+)
+
+names<-c("gc_321","nyh_321")
+name_labels<-c("Gulf Coast 3:2:1 Crack to Brent","NY Harbour 3:2:1 Crack to WTI")
+years<-5   
+break_set<-"12 months"
+title<-"3:2:1 Crack Spreads"
+y_label<-"3:2:1 Crack Spread ($/bbl)"
+
+levels_chart(daily_crude,names,name_labels,years = years,title_sent = title,y_lab = y_label)
+```
+On the graph above, the last points imply that the gross profit margin from refining a barrel purchased at Brent prices on the Gulf Coast would be $US `r last(daily_crude$gc_321)`/bbl while a barrel purchased at WTI prices with refined products sold at NY Harbour prices would yield $US `r last(na.omit(daily_crude$gc_321))`/bbl in gross profits, based on `r format(last(daily_crude$Date) , format="%B %d, %Y")` prices. 
+
+# Weekly Petroleum Status Report
+
+The EIA Weekly Petroleum Status Report is one of the most-watched data releases in energy markets.  The report is released at 10:30 a.m. (Eastern time) on Wednesdays every week, with publication of the data to the API after 1:00 p.m. (Eastern Time) on Wednesday. You can see the full Petroleum Status Report [here](https://www.eia.gov/petroleum/supply/weekly/) or you can access via the EIA API starting from [here](https://www.eia.gov/opendata/qb.php?category=235079). For most of what follows, I'll be using three data series: the full US weekly supply [here](https://www.eia.gov/opendata/qb.php?category=235081) and the Cushing oil stocks data [here](https://www.eia.gov/opendata/qb.php?category=235418).  You can download the data any way you like, but for this purpose, I'm grabbing the data with R as follows:
+
+```{r setup, cache=TRUE}
+#first, build a list of series names we want to access
+#get the information from the EIA weekly supply API
+cat_store <- list()
+name_store<-list()
+
+subs<-data_fetch(KEY,cat=235081)
+#take out the 4 week average data
+series_ids<-subs$Series_IDs$series_id[-grep("\\b.4\\b",subs$Series_IDs$series_id)]
+#make sure series ids aren't stored as factors
+series_ids<- as.character(series_ids)
+#same for names
+names<-t(subs$Series_IDs$name[-grep("\\b.4\\b",subs$Series_IDs$series_id)])
+cat_store[[1]]<-series_ids
+name_store[[1]]<-names
+
+
+#get the Cushing series ids and names
+subs<-data_fetch(KEY,cat=235418)
+series_ids<-subs$Series_IDs$series_id[]
+names<-t(subs$Series_IDs$name[])
+cat_store[[2]]<-series_ids
+name_store[[2]]<-names
+
+#get the gas storage series and IDs
+subs<-data_fetch(KEY,cat=1709237)
+series_ids<-subs$Series_IDs$series_id[]
+names<-t(subs$Series_IDs$name[])
+cat_store[[3]]<-series_ids
+name_store[[3]]<-names
+
+#stack all of them
+series<-data.frame(do.call(c,cat_store))
+name_list<-do.call(c,name_store)
+
+#fetchez le data
+all_data<- pdfetch_EIA(t(series),KEY)
+all_data<-data.frame(date=index(all_data), coredata(all_data))
+#fix the data names list
+name_list<- gsub("\\.", " ", name_list)
+name_list<- gsub("\\U S ", "US", name_list)
+name_list<- gsub("  ", " ", name_list)
+name_list<- gsub(", Weekly", "", name_list)
+name_list<- gsub("US ", "", name_list)
+name_list<- gsub("U S ", "", name_list)
+name_list<- gsub("^\\s+|\\s+$", "",name_list)
+#assign names
+all_data <- setNames(all_data,c("date",name_list))
+#build week and year indicators
+all_data<-all_data%>% mutate(
+week=week(date),
+month=month(date),
+year=year(date)
+)
+```
+
+The weekly petroleum supply information is very detailed, and you'll see markets move in response to its release.  The most important series traders will watch are production, inventories, and trade data.  I set up a basic graph to allow me to quickly compare the current release data with previous years and the trailing 5 year range. The graph code is provided under the Code icon for your reference.
+
+```{r crude_functions,cache=TRUE}
+
+ribbon_graph<-function(data_sent,series_name,unit_sent,years,alt_axis=FALSE){
+#melt the data into long form
+df1<-melt(data_sent,id=c("date","week","month","year"),measure.vars = series_name)
+#remove NAs
+df1<-na.omit(df1)
+#truncate to 52 weeks for the years where there is a 53rd week.
+df1$week[df1$week==53]<-52
+
+#create range data
+max_year<-max(df1$year)
+
+#first, we want the ones we are going to graph - this year and last year
+df.years <- df1 %>% 
+  filter(year >= max_year-1)
+
+#now we want the ones for the range
+df.year.range <- df1 %>% 
+  filter(year >= max_year - years & year < max_year) %>% 
+  group_by(week) %>% 
+  summarize(mean = mean(value), min = min(value), max = max(value))
+
+y_lab<-paste(alt_axis,"\n(",unit_sent,")",sep="")
+if(alt_axis==FALSE)
+  y_lab<-paste(series_name,"\n(",unit_sent,")",sep="")
+
+#We can then trick ggplot into printing a nice title for the fill on the legend, by setting fill inside aes to the intended string. Because fill is set in aes(), we control its color with scale_fill_manual.
+graph<- ggplot() +
+  geom_ribbon(data = df.year.range, aes(x = week, ymin = min, ymax = max, fill =  "fill1")) +
+  geom_line(data = df.year.range, aes(x = week, y = mean,colour="3"),size=1.7) +
+  geom_line(data = subset(df.years,year==max_year-1), aes(x = week, y = value, color = "2"),size=1.7)+ 
+  geom_line(data = subset(df.years,year==max_year), aes(x = week, y = value, color = "1"),size=1.7) +
+  geom_point(data = subset(df.years,year==max_year), aes(x = week, y = value, color = "1"),size=1.7) +
+  #scale_fill_manual(values = '#ffccff')
+  scale_fill_manual("",values = 'grey70',labels=paste(max_year-years,"-",max_year-1,"\nrange",sep =""))+     
+  scale_color_viridis("",discrete=TRUE,option="C",labels=c(max_year, max_year-1,paste(max_year-years,"-",max_year-1,"\naverage",sep ="")))+
+  #scale_fill_continuous()+
+  scale_x_continuous(limits=c(min(df1$week),max(df1$week)),expand=c(.001,0))+
+  theme_minimal()+
+  theme(
+    legend.position = "bottom",
+    legend.margin=margin(c(0,0,0,0),unit="cm"),
+    legend.text = element_text(colour="black", size = 12),
+    plot.caption = element_text(size = 14, face = "italic"),
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(size = 14, face = "italic"),
+    #panel.grid.minor = element_blank(),
+    text = element_text(size = 14,face = "bold"),
+    axis.line = element_line(color="black", size = 1),
+    axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+    axis.text.x=element_text(size = 14,face = "bold", colour="black",angle=90, hjust=1),
+  )+
+  labs(y=y_lab,x="Week",
+       title=paste(series_name,sep=""),
+       caption="Source: EIA API, graph by Andrew Leach.")
+print(graph)
+}
+```
+
+## Crude Production
+Certainly, the most-watched element in the data most weeks will be the US crude production data. The below shows the previous 5 year range of production as well as the previous 5 year average, current year, and previous year's time series. 
+
+
+```{r echo = FALSE, warning=FALSE, message=FALSE,results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Field Production of Crude Oil","Thousands of Barrels per Day",5)
+```
+
+
+## Crude Trade {.tabset .tabset-fade}
+Over the past decade, the US has moved from a major crude oil importer to a major crude oil exporter.  Net imports have also decreased.  Below, I've included both the total imports and exports as well as net imports data, with 10 year ranges and averages, as well as the current year, and previous year's time series. 
+
+### Crude Imports
+
+Displays the most recent crude import data and historic ranges.
+
+```{r echo = FALSE, warning=FALSE, message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Imports of Crude Oil","Thousands of Barrels per Day",10)
+```
+
+### Crude Exports
+
+Displays the most recent crude export data and historic ranges.
+
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Exports of Crude Oil","Thousands of Barrels per Day",10)
+```
+
+### Net Imports
+
+Displays the most recent crude net imports data and historic ranges.
+
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Net Imports of Crude Oil","Thousands of Barrels per Day",10)
+```
+
+
+## Total Products Trade {.tabset .tabset-fade}
+
+Refined products like gasoline, diesel and jet fuel are traded just as crude oil is, and the US trade picture has also been changing a lot on the products front.  
+
+### Products Imports
+
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Imports of Total Petroleum Products","Thousands of Barrels per Day",5)
+```
+
+### Products Exports
+
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Imports of Total Petroleum Products","Thousands of Barrels per Day",5)
+```
+
+
+### Net Imports of Crude Oil and Petroleum Products
+
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Net Imports of Crude Oil and Petroleum Products","Thousands of Barrels per Day",5)
+```
+
+
+Below, I've also included some key graphs for gasoline and diesel.
+
+## Gasoline and Diesel Trade {.tabset .tabset-fade}
+Each of the graphs shows the 5 year range of data as well as the 5 year average, current year, and previous year's time series for the key refined products we'll talk about in class.
+
+### Gasoline Imports
+
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Imports of Finished Motor Gasoline","Thousands of Barrels per Day",5)
+```
+
+### Gasoline Exports
+
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Exports of Finished Motor Gasoline","Thousands of Barrels per Day",5)
+```
+
+### Diesel Imports
+
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Imports of Distillate Fuel Oil","Thousands of Barrels per Day",5)
+```
+
+### Diesel Exports
+
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Exports of Total Distillate","Thousands of Barrels per Day",5)
+```
+
+### Jet Imports
+
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Imports of Kerosene-Type Jet Fuel","Thousands of Barrels per Day",5)
+```
+
+### Jet Exports
+
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Exports of Kerosene-Type Jet Fuel","Thousands of Barrels per Day",5)
+```
+
+
+## Crude and Products Storage  {.tabset .tabset-fade}
+The other markers that people will pay a lot of attention to in the Weekly Petroleum Status Report are storage levels for crude oil and refined products.  Inventory changes tell us how quantities supplied and imported related to quantities consumed and exported, and also tell us whether the physical side of the market is looking bullish or bearish. As with the previous graphs, each of the graphs below shows the 5 year range of data as well as the 5 year average, current year, and previous year's time series, but in this case the axis labels are in total storage levels. 
+
+### Crude 
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Ending Stocks of Crude Oil","Thousands of Barrels",5)
+```
+
+### Cushing Crude
+```{r echo = FALSE, warning=FALSE, message=FALSE,results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Cushing, OK Ending Stocks excluding SPR of Crude Oil","Thousands of Barrels",5)
+```
+
+### Strategic Petroleum Reserve (SPR)
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Ending Stocks of Crude Oil in SPR","Thousands of Barrels",5)
+```
+
+### Gasoline
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Ending Stocks of Conventional Motor Gasoline","Thousands of Barrels",5)
+```
+
+### Distillate
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Ending Stocks of Distillate Fuel Oil","Thousands of Barrels",5)
+```
+
+
+
+
+## Refining  {.tabset .tabset-fade}
+
+The Weekly Petroleum Status Report also contains significant information on refining.  A small sample of these are shown below.  The Operable Distillation Capacity tells you what's available each week in terms of conventional refining.  We don't have weekly operable capacity data on more complex units post-distillation, but the EIA does track these on a longer-term basis.  We also have weekly data on inputs of crude oil to refineries as well as total production. 
+
+### Operable Distillation Capacity
+
+
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Operable Crude Oil Distillation Capacity","Millions of Barrels per Day",5)
+```
+
+
+### Gross Inputs to Refineries
+
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Gross Inputs into Refineries","Millions of Barrels per Day",5)
+```
+
+
+
+### Net Production of Gasoline
+
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Refiner and Blender Net Production of Conventional Motor Gasoline","Thousands of Barrels per Day",5,alt_axis = "Net Production of Gasoline")
+```
+
+### Net Production of Diesel
+
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Refiner and Blender Net Production of Distillate Fuel Oil","Thousands of Barrels per Day",5,alt_axis ="Net Production of Distillate Fuel Oil" )
+```
+
+
+# Weekly Natural Gas Storage Report  {.tabset .tabset-fade}
+The weekly gas storage report is available [here](http://ir.eia.gov/ngs/ngs.html) or via the API [here](https://www.eia.gov/opendata/qb.php?category=1709237). I've included it in my code above, so there's no separate data pull for this section, and the graphs rely on the same code as above. Natural gas storage and use is much more seasonal than oil, so you can really see the inventory builds following a pattern that you don't see in oil markets to the same degree.
+As above, each of the graphs I've provided below shows the 5 year range of data as well as the 5 year average, current year, and previous year's time series. 
+
+## Lower 48 States Natural Gas Working Underground Storage
+
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Weekly Lower 48 States Natural Gas Working Underground Storage","Billion Cubic Feet",5,alt_axis ="Lower-48 Working Underground Storage")
+```
+
+## East Region Natural Gas Working Underground Storage
+
+```{r echo = FALSE, warning=FALSE,message=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+ribbon_graph(all_data,"Weekly East Region Natural Gas Working Underground Storage","Billion Cubic Feet",5,alt_axis ="East Region Working Underground Storage")
+```
+
+
+# Oil and gas production updates
+The EIA also provides regular updates on production of light tight oil and shale gas as well as other play- or resource-specific data.  There are two sources of data which I use, so I'm sharing code for them here: the Drilling Productivity Report and the 
+
+## Monthly Production Updates by State and/or Area
+
+The key longer-term data series that the EIA provides on oil and gas production are also found either on their website [here](https://www.eia.gov/petroleum/production/) for oil and gas.  I'll use the API [here](https://www.eia.gov/opendata/qb.php?category=296686) for oil production by state, [here](https://www.eia.gov/opendata/qb.php?category=2477496) for oil production by API gravity, and [here](https://www.eia.gov/opendata/qb.php?category=474572) for gas.  As above, you can download the data any way you like, but for this purpose, I'm again grabbing and cleaning the data with R as follows:
+
+```{r production_data, cache=TRUE}
+#first, build a list of series names we want to access
+#get the information from the EIA weekly supply API
+cat_store <- list()
+name_store<-list()
+unit_store<-list()
+
+#monthly crude production by Area
+subs<-data_fetch(KEY,cat=296686)
+#take out the 4 week average data
+series_ids<-subs$Series_IDs$series_id[grep("\\.M\\b",subs$Series_IDs$series_id)]
+#make sure series ids aren't stored as factors
+series_ids<- as.character(series_ids)
+#same for names
+names<-t(subs$Series_IDs$name[grep("\\.M\\b",subs$Series_IDs$series_id)])
+units<-subs$Series_IDs$units[grep("\\.M\\b",subs$Series_IDs$series_id)]
+
+cat_store[[1]]<-series_ids
+name_store[[1]]<-names
+unit_store[[1]]<-units
+
+
+#get the natural gas production data
+subs<-data_fetch(KEY,cat=474572)
+series_ids<-subs$Series_IDs$series_id[grep("\\.M\\b",subs$Series_IDs$series_id)]
+#make sure series ids aren't stored as factors
+series_ids<- as.character(series_ids)
+#same for names
+names<-t(subs$Series_IDs$name[grep("\\.M\\b",subs$Series_IDs$series_id)])
+units<-subs$Series_IDs$units[grep("\\.M\\b",subs$Series_IDs$series_id)]
+
+cat_store[[2]]<-series_ids
+name_store[[2]]<-names
+unit_store[[2]]<-units
+#get crude production by API gravity
+subs<-data_fetch(KEY,cat=2477496)
+series_ids<-subs$Series_IDs$series_id[grep("\\.M\\b",subs$Series_IDs$series_id)]
+units<-subs$Series_IDs$units[grep("\\.M\\b",subs$Series_IDs$series_id)]
+
+#make sure series ids aren't stored as factors
+series_ids<- as.character(series_ids)
+#same for names
+names<-t(subs$Series_IDs$name[grep("\\.M\\b",subs$Series_IDs$series_id)])
+cat_store[[3]]<-series_ids
+name_store[[3]]<-names
+unit_store[[3]]<-units
+#stack all of them
+series<-data.frame(do.call(c,cat_store))
+name_list<-do.call(c,name_store)
+units<-do.call(c,unit_store)
+#fetchez le data
+production_data<- pdfetch_EIA(t(series),KEY)
+production_data<-data.frame(date=index(production_data), coredata(production_data))
+#store units
+attributes(production_data)$units<-c("Date",units)
+#fix the data names list
+name_list<- gsub("\\.", " ", name_list)
+name_list<- gsub("\\U S ", "US", name_list)
+name_list<- gsub("  ", " ", name_list)
+name_list<- gsub(", Monthly", "", name_list)
+name_list<- gsub("US ", "", name_list)
+name_list<- gsub("U S ", "", name_list)
+name_list<- gsub("^\\s+|\\s+$", "",name_list)
+#assign names
+production_data <- setNames(production_data,c("Date",name_list))
+
+full_names<-paste(name_list,units,sep=", ")
+production_data <- setNames(production_data,c("Date",full_names))
+
+#build week and year indicators
+production_data<-production_data%>% mutate(
+week=week(Date),
+month=month(Date),
+year=year(Date)
+)
+```
+
+These data are super-rich and far exceed the level of detail we're going to need in the class. However, one thing we will talk a lot about is US regional crude production so let's use this as an example for these data.  First, as above, we need some graphing preliminaries
+
+```{r production_chart_code, cache=TRUE}
+#define production chart design function
+#default will be oil
+oil_production_chart<-function(data_sent,names,name_labels,years,title_sent="Benchmark Oil Prices",break_set="12 months",y_lab="Production (Thousands of Barrels Per Day)")
+{
+  #send a data set and variable names
+  #testing
+    #data_sent<-daily_crude
+    #names<-"Europe.Brent.Spot.Price.FOB..Daily"
+    #name_labels<-"Brent"
+    #years<-5   
+    #break_set<-"12 months"
+    #title_sent<-"Benchmark Oil Prices"
+  rows_legend<-max(1,round(sum(nchar(names))/180))
+  data_sent<-filter(data_sent,Date>=max(Date)-years(years))
+  df1<-melt(data_sent,id=c("Date"),measure.vars = names)
+  df1<-na.omit(df1)
+  lims<-c(max(df1$Date)-years(years),max(df1$Date)+months(1))
+  lims_y<-c(0,max(df1$value)*1.1)
+  
+  p<-ggplot(df1) +
+    geom_line(data=filter(df1,variable!="diff"),aes(Date,value,group = variable,colour=variable),size=1.7) +
+    #geom_point(size=1) +
+    scale_colour_manual(NULL,values=colors_tableau10(), labels=name_labels)+
+    scale_x_date(name=NULL,date_breaks = break_set, date_labels =  "%b\n%Y",limits=lims,expand=c(0,0)) +
+    scale_y_continuous(expand = c(0,0),limits=lims_y) +
+    guides(colour=guide_legend(nrow=rows_legend))+
+    labs(y=y_lab,x="Date",
+         title=title_sent,
+         caption="Data via EIA API")+
+    weekly_small()
+  p
+}
+```
+
+Now we can make the graphs we need. Start with a basic graph of US oil production.
+
+```{r US production graph,fig.width=10, fig.pos="H"}
+names<-c("Field Production of Crude Oil, Thousand Barrels per Day")
+name_labels<-c("US Crude Oil Production")
+years<-10   
+break_set<-"12 months"
+title_sent<-"U.S. Field Production of Crude Oil"
+oil_production_chart(production_data,names,name_labels,years,title_sent=title_sent,break_set=break_set)
+```
+   
+As mentioned above, regional production of crude oil is very important for Canada, as much of the growth in US production has occurred either in or closer to markets that we traditionally serve with our exports to the US. 
+
+```{r PADD production graph,fig.width=10, fig.pos="H"}
+names<-c("East Coast (PADD 1) Field Production of Crude Oil, Thousand Barrels per Day","Midwest (PADD 2) Field Production of Crude Oil, Thousand Barrels per Day","Gulf Coast (PADD 3) Field Production of Crude Oil, Thousand Barrels per Day","Rocky Mountain (PADD 4) Field Production of Crude Oil, Thousand Barrels per Day","West Coast (PADD 5) Field Production of Crude Oil, Thousand Barrels per Day")
+name_labels<-c("East Coast (PADD 1)","Midwest (PADD 2)","Gulf Coast (PADD 3)","Rocky Mountain (PADD 4)","West Coast (PADD 5)")
+
+years<-10   
+break_set<-"12 months"
+title_sent<-"U.S. Field Production of Crude Oil by PADD"
+oil_production_chart(production_data,names,name_labels,years,title_sent=title_sent,break_set=break_set)
+```
+   
+There are many other sources of data in the reports, but this is enough of a sense of what's possible for these purposes.
+
+
+
+## Drilling Productivity Reports  {.tabset .tabset-fade}
+The US EIA also produces the Drilling Productivity Report (DPR) which provides a select set of data by region for oil and shale gas production.  The DPR is accessible on their website [here](https://www.eia.gov/petroleum/drilling/) or you can access the Excel spreadsheet directly [here](https://www.eia.gov/petroleum/drilling/xls/dpr-data.xlsx). Again, the code link shows the means of downloading and processing the data via R. 
+
+```{r dpr_data, echo = TRUE,message=FALSE,  include=TRUE, warning=FALSE,cache=TRUE}
+dpr_file<-"https://www.eia.gov/petroleum/drilling/xls/dpr-data.xlsx"
+
+download.file(dpr_file,"dpr-data.xlsx",mode="wb")
+plays<-getSheetNames("dpr-data.xlsx")
+plays<-plays[plays!="RegionCounties"]
+wb <- loadWorkbook("dpr-data.xlsx")
+cnames<-c("Month","Rigcount",	"Oil_Production_per_rig",	"Oil_Legacy_prod_chg",	"Total_oil_prod","Gas_Production_per_rig",	"Gas_Legacy_prod_chg",	"Total_gas_prod")
+
+
+dpr_data<-data.frame()
+for(play in plays){
+  play_data <- read.xlsx(xlsxFile = "dpr-data.xlsx", sheet = play, startRow = 2,skipEmptyRows = TRUE,detectDates = TRUE)
+  names(play_data)<-cnames
+  play_data$play<-play
+  dpr_data<-rbind(dpr_data,play_data)
+}
+
+
+dpr_data<-melt(dpr_data,id=c("Month","Total_oil_prod","Total_gas_prod"),measure.vars = c("play"),value.name = "Play")
+dpr_data$variable<-NULL
+dpr_data<-na.omit(dpr_data)
+dpr_data$Play<-as.factor(dpr_data$Play)
+```
+
+There's a ton of information in the DPR as well, but a quick snapshot here shows you production for shale gas and light tight oil by play based on the code included below.
+
+```{r dpr_graphs, message=FALSE, warning=FALSE,cache=TRUE}
+
+lto_dpr<-ggplot(dpr_data,aes(Month,Total_oil_prod/1000,group = Play,colour=Play,fill=Play)) +
+  geom_area(position = "stack") +
+  #geom_point(size=1) +
+  scale_color_viridis("",discrete=TRUE,option="D")+
+  scale_fill_viridis("",discrete=TRUE,option="D")+   
+  #scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
+  #scale_x_date(date_breaks = "1 year", date_labels =  "%Y",limits=c(max(as.Date("2000-01-01"),min(df1$date)),Sys.Date()),expand=c(0,0)) +
+  #scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
+  #scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+  #scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+  theme_minimal()+theme(
+    legend.position = "bottom",
+    legend.margin=margin(c(0,0,0,0),unit="cm"),
+    legend.text = element_text(colour="black", size = 12),
+    plot.caption = element_text(size = 14, face = "italic"),
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(size = 14, face = "italic"),
+    #panel.grid.minor = element_blank(),
+    text = element_text(size = 14,face = "bold"),
+    axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+    axis.text.x=element_text(size = 14,face = "bold", colour="black",angle=90, hjust=1),
+  )+
+  labs(y="Crude Oil Production by Play \n(Monthly, Thousands of Barrels per Day)",x="Week",
+       title=paste("US Production of Tight Oil",sep=""),
+       caption="Source: EIA DPR, graph by Andrew Leach.")
+
+lto_no_permian<-ggplot(subset(dpr_data,Play != "Permian Region"),aes(Month,Total_oil_prod/1000,group = Play,colour=Play,fill=Play)) +
+  geom_area(position = "stack") +
+  #geom_point(size=1) +
+  scale_color_viridis("",discrete=TRUE,option="D")+
+  scale_fill_viridis("",discrete=TRUE,option="D")+   
+  #scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
+  #scale_x_date(date_breaks = "1 year", date_labels =  "%Y",limits=c(max(as.Date("2000-01-01"),min(df1$date)),Sys.Date()),expand=c(0,0)) +
+  #scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
+  #scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+  #scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+  theme_minimal()+theme(
+    legend.position = "bottom",
+    legend.margin=margin(c(0,0,0,0),unit="cm"),
+    legend.text = element_text(colour="black", size = 12),
+    plot.caption = element_text(size = 14, face = "italic"),
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(size = 14, face = "italic"),
+    #panel.grid.minor = element_blank(),
+    text = element_text(size = 14,face = "bold"),
+    axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+    axis.text.x=element_text(size = 14,face = "bold", colour="black",angle=90, hjust=1),
+  )+
+  labs(y="Crude Oil Production by Play \n(Monthly, Thousands of Barrels per Day)",x="Week",
+       title=paste("US Production of Tight Oil ex Permian Basin",sep=""),
+       caption="Source: EIA DPR, graph by Andrew Leach.")
+
+gas_dpr<-ggplot(dpr_data,aes(Month,Total_gas_prod/10^6,group = Play,colour=Play,fill=Play)) +
+  geom_area(position = "stack") +
+  #geom_point(size=1) +
+  scale_color_viridis("",discrete=TRUE,option="D")+
+  scale_fill_viridis("",discrete=TRUE,option="D")+   
+  theme_minimal()+theme(
+    legend.position = "bottom",
+    legend.margin=margin(c(0,0,0,0),unit="cm"),
+    legend.text = element_text(colour="black", size = 12),
+    plot.caption = element_text(size = 14, face = "italic"),
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(size = 14, face = "italic"),
+    #panel.grid.minor = element_blank(),
+    text = element_text(size = 14,face = "bold"),
+    axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+    axis.text.x=element_text(size = 14,face = "bold", colour="black",angle=90, hjust=1),
+  )+
+  labs(y="Shale and Tight Gas Production by Play \n(Monthly, Billion Cubic Feet per Day)",x="Week",
+       title=paste("US Production of Tight and Shale Gas",sep=""),
+       caption="Source: EIA DPR, graph by Andrew Leach.")
+```
+
+  
+### Gas Production by Play
+```{r dpr_gas_play, echo = FALSE, warning=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+gas_dpr
+```  
+
+### Oil Production by Play
+```{r dpr_oil_play, echo = FALSE, warning=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+lto_dpr
+```  
+    
+  
+    
+## Shale Gas and Light Tight Oil Production Reports {.tabset .tabset-fade}
+
+Finally for current data, the US EIA also produces a shale gas and light tight oil spreadsheet with data by play which is slightly different than the DPR data - it's more disaggregated. You can access the Excel spreadsheet directly [here](https://www.eia.gov/energyexplained/data/U.S.%20tight%20oil%20production.xlsx) for oil and [here](https://www.eia.gov/energyexplained/data/U.S.%20dry%20shale%20gas%20production.xlsx") for gas. Again, the code link shows the means of downloading and processing the data via R. 
+
+```{r , warning=FALSE,cache=TRUE}
+oil_prod_file<-"https://www.eia.gov/energyexplained/data/U.S.%20tight%20oil%20production.xlsx"
+
+download.file(oil_prod_file,"play-data.xlsx",mode="wb")
+#plays<-getSheetNames("play-data.xlsx")
+#plays<-plays[plays!="RegionCounties"]
+play_data <- read.xlsx(xlsxFile = "play-data.xlsx", sheet = "data", startRow = 1,skipEmptyRows = TRUE,detectDates = TRUE)
+play_data$X17<-NULL
+play_data$X12<-NULL
+play_data$Date<-as.Date(play_data$Date,origin = "1899-12-30")
+df1<-melt(play_data,id=c("Date"),variable.name = "play",value.name = "volume" )
+df1$play<-gsub("\\.", " ", df1$play)
+df1$play<-gsub("&N", " & N", df1$play)
+df1$play<-gsub("  ", " ", df1$play)
+df1$play<-gsub("  ", " ", df1$play)
+df1$play<-gsub("Rest of US 'tight oil'","Other Tight Oil",df1$play)
+df1$play<-factor(df1$play,levels = unique(df1$play))
+df1$play<-fct_relevel(df1$play, "Other Tight Oil", after = Inf)
+
+oil_play<-ggplot(df1,aes(Date,volume*1000,group = play,fill=play)) +
+  geom_area(position = "stack") +
+  scale_fill_viridis("",discrete=TRUE,option="D")+
+  weekly_small()+guides(fill=guide_legend(nrow=3,byrow=TRUE))+
+  labs(y="Tight Oil Production by Play \n(Monthly, Thousands of Barrels per Day)",x="Week",
+       title=paste("US tight oil production estimates by play",sep=""),
+       caption="Source: EIA data, graph by Andrew Leach.")
+
+```
+
+
+```{r gas data, warning=FALSE,cache=TRUE}
+gas_prod_file<-"https://www.eia.gov/energyexplained/data/U.S.%20dry%20shale%20gas%20production.xlsx"
+
+download.file(gas_prod_file,"play-data.xlsx",mode="wb")
+#plays<-getSheetNames("play-data.xlsx")
+#plays<-plays[plays!="RegionCounties"]
+play_data <- read.xlsx(xlsxFile = "play-data.xlsx", sheet = "data", startRow = 1,skipEmptyRows = TRUE,detectDates = TRUE)
+play_data$X13<-NULL
+play_data$Date<-as.Date(play_data$Date,origin = "1899-12-30")
+df1<-melt(play_data,id=c("Date"),variable.name = "play",value.name = "volume" )
+df1$play<-gsub("\\.", " ", df1$play)
+df1$play<-gsub("&N", " & N", df1$play)
+df1$play<-gsub("  ", " ", df1$play)
+df1$play<-gsub("Rest of US 'shale'","Other Shale Plays",df1$play)
+df1$play<-factor(df1$play,levels = unique(df1$play))
+df1$play<-fct_relevel(df1$play, "Other Shale Plays", after = Inf)
+
+
+gas_play<-ggplot(df1,aes(Date,volume,group = play,fill=play)) +
+  geom_area(position = "stack") +
+ geom_area(position = "stack") +
+  scale_fill_viridis("",discrete=TRUE,option="D")+
+  weekly_small()+guides(fill=guide_legend(nrow=3,byrow=TRUE))+
+  labs(y="Shale Gas Production (Dry)\n(Monthly, Billion Cubic Feet per Day)",x="Week",
+       title=paste("US shale gas production estimates by play",sep=""),
+       caption="Source: EIA data, graph by Andrew Leach.")
+```
+
+Using the same basic graph code as for the DPR, we can see the results are comparable but with a little more disaggregation.
+
+### Gas Production by Play
+```{r gas_play, echo = FALSE, warning=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+gas_play
+```
+
+
+### Light Tight Oil Production by Play
+
+```{r oil_play, echo = FALSE, warning=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+oil_play
+```
+
+
+
+
+#US Trade with Canada 
+
+The US is Canada's most important trading partner and, as far as energy is concerned, as also becoming a significant competitor.  These graphs show oil, refined product, and natural gas liquids trade between Canada and the US.  The code snippets show you how to first download and stack the data and then how to build the generic trade graph.
+
+## Oil, Oil Products, and Natural Gas Liquids Trade {.tabset .tabset-fade}
+
+```{r trade_data, cache=TRUE }
+#this section grabs data for trade with Canada
+
+cat_store <- list()
+name_store<-list()
+unit_store<-list()
+#Imports from Canada
+subs<-data_fetch(KEY,cat=340981)
+series_ids<-subs$Series_IDs$series_id[grep("\\.M\\b",subs$Series_IDs$series_id)]#monthly data
+#same for names
+names<-t(subs$Series_IDs$name[grep("\\.M\\b",subs$Series_IDs$series_id)])
+#and units
+units<-subs$Series_IDs$units[grep("\\.M\\b",subs$Series_IDs$series_id)]
+cat_store[[1]]<-series_ids
+name_store[[1]]<-names
+unit_store[[1]]<-units
+
+#Exports to Canada
+subs<-data_fetch(KEY,cat=316977)
+series_ids<-subs$Series_IDs$series_id[grep("\\.M\\b",subs$Series_IDs$series_id)]
+#same for names
+names<-t(subs$Series_IDs$name[grep("\\.M\\b",subs$Series_IDs$series_id)])
+#and units
+units<-subs$Series_IDs$units[grep("\\.M\\b",subs$Series_IDs$series_id)]
+cat_store[[2]]<-series_ids
+name_store[[2]]<-names
+unit_store[[2]]<-units
+
+
+#net imports will be in 323934
+
+#Net Imports to Canada
+subs<-data_fetch(KEY,cat=323934)
+series_ids<-subs$Series_IDs$series_id[grep("\\.M\\b",subs$Series_IDs$series_id)]
+#same for names
+names<-t(subs$Series_IDs$name[grep("\\.M\\b",subs$Series_IDs$series_id)])
+#and units
+units<-subs$Series_IDs$units[grep("\\.M\\b",subs$Series_IDs$series_id)]
+cat_store[[3]]<-series_ids
+name_store[[3]]<-names
+unit_store[[3]]<-units
+
+
+
+#stack all of them
+series<-data.frame(do.call(c,cat_store))
+name_list<-do.call(c,name_store)
+units<-do.call(c,unit_store)
+
+#fetchez le data
+cda_trade_data<- pdfetch_EIA(t(series),KEY)
+cda_trade_data<-data.frame(date=index(cda_trade_data), coredata(cda_trade_data))
+#store units
+attributes(cda_trade_data)$units<-c("Date",units)
+#fix the data names list
+name_list<- gsub("\\.", " ", name_list)
+name_list<- gsub("  ", " ", name_list) #take out extrac spaces
+name_list<- gsub(", Monthly", "", name_list) #take out monthly label
+name_list<- gsub("U.S. ", "", name_list)
+name_list<- gsub("U S ", "", name_list)
+name_list<- gsub("^\\s+|\\s+$", "",name_list)
+
+#assign names
+cda_trade_data <- setNames(cda_trade_data,c("Date",name_list))
+
+full_names<-paste(name_list,units,sep=", ")
+cda_trade_data <- setNames(cda_trade_data,c("Date",full_names))
+
+#build week and year indicators
+cda_trade_data<-cda_trade_data%>% mutate(
+week=week(Date),
+month=month(Date),
+year=year(Date)
+)
+
+#We're interested in a few commodities
+
+commod_list<-c("Conventional Motor Gasoline",
+               "Crude Oil and Petroleum Products",
+               "Residual Fuel Oil",
+               "Propane",
+               "Normal Butane",
+               "Isobutane",
+               "Pentanes Plus",
+               "Natural Gas Liquids",
+               #"Natural.Gasoline..Monthly",
+               "Kerosene Type Jet Fuel",
+               "Distillate Fuel Oil",
+               "Distillate Fuel Oil, 0 to 15 ppm Sulfur",
+               "Total Petroleum Products",
+               "Crude Oil"
+               )
+commod_list<-paste(commod_list,"Thousand Barrels per Day",sep=", ")
+#now cda_trade_data has what you need - call it to make the graphs  
+```
+
+  
+```{r trade graphs}
+  
+  generic_trade_graph<-function(commod_sent,unit_sent="Thousand Barrels per Day"){
+      #testing
+      #commod_sent<-"Crude Oil and Petroleum Products"
+      #unit_sent<-"Thousand Barrels per Day"
+    export_field<-paste("Exports to Canada of ",commod_sent,", Thousand Barrels per Day",sep = "")
+    net_import_field<-paste("Net Imports from Canada of ",commod_sent,", Thousand Barrels per Day",sep = "")
+    import_field<-paste("Imports from Canada of ",commod_sent,", Thousand Barrels per Day",sep = "")
+  
+  #order is imports, exports, net imports
+  df1<-melt(cda_trade_data,id=c("Date"),measure.vars = c(import_field,export_field,net_import_field))
+  
+  labels<-gsub(paste(",",unit_sent),"",levels(df1$variable))
+  
+  graph<-ggplot(df1,aes(Date,value,group = variable,colour=variable))+
+    geom_line(size=1.7) +
+    scale_color_manual("",values=colors_tableau10(),labels=labels)+
+    scale_x_date(date_breaks = "1 year", date_labels ="%b\n%Y",limits=c(max(as.Date("2007-07-01"),min(df1$Date)),Sys.Date())) +
+    #scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
+    #scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+    #scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+    guides(colour=guide_legend(nrow=2,byrow=TRUE))+
+   weekly_small()+
+    labs(y=paste("Monthly Trade (",unit_sent,")",sep=""),x="Year",
+         title=paste("US ",commod_sent," Trade with Canada",sep=""),
+         caption="Source: EIA API, graph by Andrew Leach.")
+  graph
+}
+```
+
+
+
+### Crude Oil
+
+```{r cda_trade_crude_oil, echo = FALSE, warning=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+generic_trade_graph("Crude Oil")
+```
+
+### Petroleum Products
+
+```{r cda_trade_products, echo = FALSE, warning=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+generic_trade_graph("Total Petroleum Products")
+```
+
+### Gasoline
+
+```{r cda_trade_gasoline, echo = FALSE, warning=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+generic_trade_graph("Conventional Motor Gasoline")
+```
+
+
+
+### Distillates
+
+```{r cda_trade_dist, echo = FALSE, warning=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+generic_trade_graph("Distillate Fuel Oil")
+```
+
+
+### Low Sulphur Distillates
+
+```{r cda_trade_ulsd, echo = FALSE, warning=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+generic_trade_graph("Distillate Fuel Oil, 0 to 15 ppm Sulfur")
+```
+
+
+### Pentanes Plus
+Pentanes plus (or natural gasoline) is a natural gas liquid used primarily in Canada as a diluent for oil sands crude.
+
+```{r cda_trade_pentanes, echo = FALSE, warning=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+generic_trade_graph("Pentanes Plus")
+```
+
+
+
+
+
+
+
+
+
+
+
+# Short Term Energy Outlook
+The Short Term Energy Outlook (STEO) is updated monthly and provides recent data and, as the name suggests, a short term (12 month) forecast of potential energy market impacts.  There is, as you'd expect, significant oil and gas production and pricing information in the STEO as well.  You can access the STEO on the web [here](https://www.eia.gov/outlooks/steo/) as well as archived versions of it [here](https://www.eia.gov/outlooks/steo/outlook.php). You can also access the data directly via the API [here](https://www.eia.gov/opendata/qb.php?category=829714).
+
+The key data series we'll use from the STEO are U.S. Prices, U.S. and International Petroleum and Other Liquids, and U.S. Natural Gas. For this example, let's look at their petroleum price outlooks first.
+
+```{r steo data,warning=FALSE,cache=TRUE}
+#STEO Production Outlooks
+petroleum_series<-data_fetch(KEY,cat=829726)
+sub_cats<-petroleum_series$Sub_Categories$category_id
+
+data_store <- list()
+stack<-1
+for (cat in sub_cats) {
+  #for testing
+  #cat<-sub_cats$category_id[2]
+  subs<-data_fetch(KEY,cat=cat)
+  series <-subs$Series_IDs %>% filter(grepl("Monthly",name))#,units=="Thousand Barrels per Day")
+  #series$name<-as.character(series$name)
+  #series$To<-"Export"
+  #series$From<-do.call("rbind",strsplit(series$name, " Exports of "))[,1]
+  #series$Mode<-"Export"
+  #Rest<-do.call("rbind",strsplit(series$name, " Exports of "))[,2]
+  #series<-series[!grepl("Exports to",Rest),]
+  #Rest<-Rest[!grepl("Exports to",Rest)] #take out exports to the PADD itself - odd
+  #series$Commodity<-do.call("rbind",strsplit(Rest, ", Monthly"))[,1]
+  #series$freq<-"Monthly"
+  data_store[[stack]]<-series
+  stack<-stack+1
+}
+series_proc<-data.frame(do.call(rbind,data_store),stringsAsFactors = FALSE)
+series_proc<-data.frame(lapply(series_proc,as.character),stringsAsFactors = FALSE)
+
+price_data<-data.frame(pdfetch_EIA(series_proc$series_id,KEY),stringsAsFactors = F)
+
+price_data$date=ymd(rownames(price_data))
+rownames(price_data)<-NULL
+price_data<-melt(price_data,id="date",variable.name = "series_id",value.name = "price") #convert data to long form with series ids
+price_data$series_id<-as.character(price_data$series_id)
+
+
+price_data<-price_data %>% left_join(series_proc,by=c("series_id"="series_id")) %>%
+  na.omit()%>% mutate(price=ifelse(units=="cents per gallon",price/100*42,price),
+                      units=ifelse(units=="cents per gallon","dollars per barrel",units)) %>%
+                filter(date>=ymd("1990-01-01"))
+#adjust everything to dollars per barrel
+
+#figure out crack spread
+
+#add the spot price for two barrels of Gulf Coast conventional gasoline to the spot price for one barrel of Gulf Coast ultra-low sulfur diesel. 
+
+#add a 3:2:1 crack to the price
+crack_data<-dcast(price_data, date ~name,value.var="price",sum)%>%
+  group_by(date) %>% summarize(price=`Refiner Wholesale Gasoline Price, Monthly`*2/3+
+                                 `Diesel Fuel Refiner Wholesale Price, Monthly`*1/3-
+                                 `Refiner Average Crude Oil Acquisition Cost, Monthly`)%>%
+  mutate(name="crack_321",
+         units="dollars per barrel",
+         series_id="321_crack_calculated",
+         f="M",
+         updated=max(price_data$updated))
+
+price_data<-rbind(price_data,crack_data)
+```
+
+```{r crack forecast plot,warning=FALSE,cache=TRUE,fig.width=10, fig.pos="H"}
+
+series_names<-c("Refiner Average Crude Oil Acquisition Cost, Monthly",
+          "Refiner Wholesale Gasoline Price, Monthly",
+          "Diesel Fuel Refiner Wholesale Price, Monthly"#,
+          #"Heating Oil Refiner Wholesale Price, Monthly",
+          #"No. 6 Residual Fuel Oil Price, Monthly")
+)
+labels=c("Crude Costs", "Gasoline Rack Price", "Diesel Rack Price","3:2:1 Crack Spread")
+min_forecast=dmy_hms(min(price_data$updated))
+min_forecast=ymd(paste(year(min_forecast),month(min_forecast),1,sep = "-"))
+max_forecast=max(price_data$date)
+ggplot() +
+  geom_line(data=filter(price_data,date>=ymd("1998-01-01"),name %in%series_names[1]),aes(date,price,group=name,color="A"),size=1.7) +
+  geom_line(data=filter(price_data,date>=ymd("1998-01-01"),name %in%series_names[2]),aes(date,price,group=name,color="B"),size=1.7) +
+  geom_line(data=filter(price_data,date>=ymd("1998-01-01"),name %in%series_names[3]),aes(date,price,group=name,color="C"),size=1.7) +
+  geom_area(data=filter(price_data,date>=ymd("1998-01-01"),name =="crack_321"),aes(date,price,fill="Z")) +
+  scale_color_manual("",labels=labels[1:3],values=colors_tableau10())+
+  scale_fill_manual("" ,labels=labels[4],values="dodgerblue")+   
+  #scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
+  scale_x_date(date_breaks = "2 years", date_labels =  "%Y",expand=c(0,0)) +
+  guides(colour=guide_legend(nrow=1,byrow=TRUE))+
+  weekly_small()+
+  labs(y="Crude Oil and Refined Product Prices ($/bbl)",x="Year",
+       title=paste("STEO US Crude Oil and Refined Product Outlook"),
+       caption="Source: EIA STEO, graph by Andrew Leach.")+
+  annotate("rect", fill = "grey10", alpha = 0.25, 
+           xmin = min_forecast, xmax =max_forecast+months(1), ymin = -Inf, ymax = Inf)+
+  annotate("text", x = min_forecast+(max_forecast-min_forecast)/2+months(1), y = 130, label = "STEO\nForecast",size=1.75)
+  
+
+```
+
+The STEO also has data on other aspects we'll discuss in class like OPEC spare capacity and non-opec supply addtions.
+
+![](eia_data_files/figure-html/opec_spare_capacity.png)
+
+![](eia_data_files/figure-html/non_opec_production.png)
+
+# Annual Energy Outlook {.tabset .tabset-fade}
+
+Finally, for long-term outlooks, we can look to the Annual Energy Outlook which carries forecasts through to 2050 under a variety of assumptions and scenarios.  The Annual Outlook which appears twice per year (in November as an Early Release and in March in final form) is available [here](https://www.eia.gov/outlooks/aeo/) from the EIA website and, as usual, data are available for the previous 5 editions through the API [here](https://www.eia.gov/opendata/qb.php?category=964164).  One of the more interesting things to do with Annual Outlook data from year to year is to see how the forward views have changed on prices or quantities in which we are interested. Below are are few examples of how the projections have evolved since 2014.
+
+```{r AEO data and graphs}
+oil_exports_data_18<-EIAdata::getEIA(ID = "AEO.2018.REF2018.TRAD_NA_LFL_NA_EXP_NA_USA_MILLBRLPDY.A", key = KEY) 
+
+oil_exports_data_17<-EIAdata::getEIA(ID = "AEO.2017.REF2017.TRAD_NA_LFL_NA_EXP_NA_USA_MILLBRLPDY.A", key = KEY) 
+#series_id=AEO.2017.REF2017.GEN_NA_ELEP_NA_SLR_PHTVL_NA_BLNKWH.A 
+oil_exports_data_16<-EIAdata::getEIA(ID = "AEO.2016.REF2016.TRAD_NA_LFL_NA_EXP_NA_USA_MILLBRLPDY.A", key = KEY)  
+oil_exports_data_15<-EIAdata::getEIA(ID = "AEO.2015.REF2015.TRAD_NA_LFL_NA_EXP_NA_USA_MILLBRLPDY.A", key = KEY)  
+oil_exports_data_14<-EIAdata::getEIA(ID = "AEO.2014.REF2014.TRAD_NA_LFL_NA_EXP_NA_USA_MILLBRLPDY.A", key = KEY)  
+
+
+oil_exports_data<-merge(oil_exports_data_18,oil_exports_data_17)
+
+oil_exports_data<-merge(oil_exports_data,oil_exports_data_16)
+oil_exports_data<-merge(oil_exports_data,oil_exports_data_15)
+oil_exports_data<-merge(oil_exports_data,oil_exports_data_14)
+
+names(oil_exports_data)<-c("oil_exports_2018","oil_exports_2017","oil_exports_2016","oil_exports_2015","oil_exports_2014")
+oil_exports_data<-data.frame(date=index(oil_exports_data), coredata(oil_exports_data))
+oil_exports_melt <- melt(oil_exports_data,id="date") 
+
+oil_exports_graph<-ggplot(oil_exports_melt) +
+  geom_line(aes(date,value,colour=variable),size=2) +
+  scale_color_viridis("",labels = c("2018 AEO","2017 AEO","2016 AEO","2015 AEO","2014 AEO"),discrete = TRUE)+
+  #scale_x_datetime(limits = lims,breaks=breaks,labels = date_format("%a\n%m-%d\n%H:00", tz="America/Denver"))+
+  guides(colour=guide_legend(byrow=FALSE))+
+  theme_minimal()+theme(    
+    legend.position = "bottom",
+    legend.margin=margin(c(0,0,0,0),unit="cm"),
+    legend.text = element_text(colour="black", size = 16, face = "bold"),
+    plot.caption = element_text(size = 14, face = "italic"),
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(size = 16, face = "italic"),
+    panel.grid.minor = element_blank(),
+    text = element_text(size = 16,face = "bold"),
+    axis.text = element_text(size = 16,face = "bold", colour="black")
+  )+    labs(y="Annual Oil Exports (mmbbl/d)",x="",
+             title="EIA Annual Energy Outlook Oil Exports Forecasts",
+             caption="Source: EIA API\nGraph by Andrew Leach")
+
+oil_net_imports_data_18<-EIAdata::getEIA(ID = "AEO.2018.REF2018.TRAD_NA_LFL_NA_NETIMP_NETIMP_USA_MILLBRLPDY.A", key = KEY) 
+oil_net_imports_data_17<-EIAdata::getEIA(ID = "AEO.2017.REF2017.TRAD_NA_LFL_NA_NETIMP_NETIMP_USA_MILLBRLPDY.A", key = KEY) 
+oil_net_imports_data_16<-EIAdata::getEIA(ID = "AEO.2016.REF2016.TRAD_NA_LFL_NA_NETIMP_NETIMP_USA_MILLBRLPDY.A", key = KEY) 
+oil_net_imports_data_15<-EIAdata::getEIA(ID = "AEO.2015.REF2015.TRAD_NA_LFL_NA_NETIMP_NETIMP_USA_MILLBRLPDY.A", key = KEY) 
+oil_net_imports_data_14<-EIAdata::getEIA(ID = "AEO.2014.REF2014.TRAD_NA_LFL_NA_NETIMP_NETIMP_USA_MILLBRLPDY.A", key = KEY) 
+oil_net_imports_data<-merge(oil_net_imports_data_18,oil_net_imports_data_17)
+oil_net_imports_data<-merge(oil_net_imports_data,oil_net_imports_data_16)
+oil_net_imports_data<-merge(oil_net_imports_data,oil_net_imports_data_15)
+oil_net_imports_data<-merge(oil_net_imports_data,oil_net_imports_data_14)
+
+names(oil_net_imports_data)<-c("oil_net_imports_2018","oil_net_imports_2017","oil_net_imports_2016","oil_net_imports_2015","oil_net_imports_2014")
+oil_net_imports_data<-data.frame(date=index(oil_net_imports_data), coredata(oil_net_imports_data))
+oil_net_imports_melt <- melt(oil_net_imports_data,id="date") 
+
+
+oil_net_imports_graph<-ggplot(oil_net_imports_melt) +
+  geom_line(aes(date,value,colour=variable),size=2) +
+  scale_color_viridis("",labels = c("2018 AEO","2017 AEO","2016 AEO","2015 AEO","2014 AEO"),discrete = TRUE)+
+  #scale_x_datetime(limits = lims,breaks=breaks,labels = date_format("%a\n%m-%d\n%H:00", tz="America/Denver"))+
+  guides(colour=guide_legend(byrow=FALSE))+
+  theme_minimal()+theme(    
+    legend.position = "bottom",
+    legend.margin=margin(c(0,0,0,0),unit="cm"),
+    legend.text = element_text(colour="black", size = 16, face = "bold"),
+    plot.caption = element_text(size = 14, face = "italic"),
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(size = 16, face = "italic"),
+    panel.grid.minor = element_blank(),
+    text = element_text(size = 16,face = "bold"),
+    axis.text = element_text(size = 16,face = "bold", colour="black")
+  )+    labs(y="Millions of Barrels Per Day",x="\nTime",
+             title="EIA Annual Energy Outlook Net Oil Imports Forecasts",
+             caption="Source: EIA API\nGraph by Andrew Leach")
+
+products_net_imports_data_18<-EIAdata::getEIA(ID = "AEO.2018.REF2018.SUP_NA_LFL_OPS_NPI_NA_NA_NA.A", key = KEY) 
+products_net_imports_data_17<-EIAdata::getEIA(ID = "AEO.2017.REF2017.SUP_NA_LFL_OPS_NPI_NA_NA_NA.A", key = KEY)
+products_net_imports_data_16<-EIAdata::getEIA(ID = "AEO.2016.REF2016.SUP_NA_LFL_OPS_NPI_NA_NA_NA.A", key = KEY)
+products_net_imports_data_15<-EIAdata::getEIA(ID = "AEO.2015.REF2015.SUP_NA_LFL_OPS_NPI_NA_NA_NA.A", key = KEY)
+products_net_imports_data_14<-EIAdata::getEIA(ID = "AEO.2014.REF2014.SUP_NA_LFL_OPS_NPI_NA_NA_NA.A", key = KEY)
+products_net_imports_data<-merge(products_net_imports_data_18,products_net_imports_data_17)
+products_net_imports_data<-merge(products_net_imports_data,products_net_imports_data_16)
+products_net_imports_data<-merge(products_net_imports_data,products_net_imports_data_15)
+products_net_imports_data<-merge(products_net_imports_data,products_net_imports_data_14)
+
+names(products_net_imports_data)<-c("products_net_imports_2018","products_net_imports_2017","products_net_imports_2016","products_net_imports_2015","products_net_imports_2014")
+products_net_imports_data<-data.frame(date=index(products_net_imports_data), coredata(products_net_imports_data))
+products_net_imports_melt <- melt(products_net_imports_data,id="date") 
+
+product_net_imports_graph<-ggplot(products_net_imports_melt) +
+  geom_line(aes(date,-value,colour=variable),size=2) +
+  scale_color_viridis("",labels = c("2018 AEO","2017 AEO","2016 AEO","2015 AEO","2014 AEO"),discrete = TRUE)+
+  #scale_x_datetime(limits = lims,breaks=breaks,labels = date_format("%a\n%m-%d\n%H:00", tz="America/Denver"))+
+  guides(colour=guide_legend(byrow=FALSE))+
+  theme_minimal()+theme(    
+    legend.position = "bottom",
+    legend.margin=margin(c(0,0,0,0),unit="cm"),
+    legend.text = element_text(colour="black", size = 16, face = "bold"),
+    plot.caption = element_text(size = 14, face = "italic"),
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(size = 16, face = "italic"),
+    panel.grid.minor = element_blank(),
+    text = element_text(size = 16,face = "bold"),
+    axis.text = element_text(size = 16,face = "bold", colour="black")
+  )+    labs(y="Millions of Barrels Per Day",x="\nTime",
+             title="EIA Annual Energy Outlook Net Products Export Forecasts",
+             caption="Source: EIA API\nGraph by Andrew Leach")
+
+```
+
+## Oil Exports
+
+```{r oil_exports_graph, echo = FALSE, warning=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+oil_exports_graph
+```
+
+
+## Oil Net Imports
+
+```{r oil_net_imports, echo = FALSE, warning=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+oil_net_imports_graph
+```
+
+## Product Net Exports
+
+```{r aeo_products, echo = FALSE, warning=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+product_net_imports_graph
+```
+
+
+
+
+
+
+
+

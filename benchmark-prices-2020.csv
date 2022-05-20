@@ -1,0 +1,553 @@
+Scenario,Variable,Year,Value
+Reference,Brent - US$/bbl,2005,71.82844317
+Reference,Brent - US$/bbl,2006,83.09041545
+Reference,Brent - US$/bbl,2007,89.79604632
+Reference,Brent - US$/bbl,2008,115.7502339
+Reference,Brent - US$/bbl,2009,73.9569536
+Reference,Brent - US$/bbl,2010,93.82747568
+Reference,Brent - US$/bbl,2011,127.1381252
+Reference,Brent - US$/bbl,2012,124.9700624
+Reference,Brent - US$/bbl,2013,119.7772846
+Reference,Brent - US$/bbl,2014,107.4603872
+Reference,Brent - US$/bbl,2015,55.81102139
+Reference,Brent - US$/bbl,2016,45.78805812
+Reference,Brent - US$/bbl,2017,55.86726989
+Reference,Brent - US$/bbl,2018,72.4733151
+Reference,Brent - US$/bbl,2019,64.35
+Reference,Brent - US$/bbl,2020,37
+Reference,Brent - US$/bbl,2021,45
+Reference,Brent - US$/bbl,2022,52
+Reference,Brent - US$/bbl,2023,60
+Reference,Brent - US$/bbl,2024,65
+Reference,Brent - US$/bbl,2025,70
+Reference,Brent - US$/bbl,2026,75
+Reference,Brent - US$/bbl,2027,75
+Reference,Brent - US$/bbl,2028,75
+Reference,Brent - US$/bbl,2029,75
+Reference,Brent - US$/bbl,2030,75
+Reference,Brent - US$/bbl,2031,75
+Reference,Brent - US$/bbl,2032,75
+Reference,Brent - US$/bbl,2033,75
+Reference,Brent - US$/bbl,2034,75
+Reference,Brent - US$/bbl,2035,75
+Reference,Brent - US$/bbl,2036,75
+Reference,Brent - US$/bbl,2037,75
+Reference,Brent - US$/bbl,2038,75
+Reference,Brent - US$/bbl,2039,75
+Reference,Brent - US$/bbl,2040,75
+Reference,Brent - US$/bbl,2041,75
+Reference,Brent - US$/bbl,2042,75
+Reference,Brent - US$/bbl,2043,75
+Reference,Brent - US$/bbl,2044,75
+Reference,Brent - US$/bbl,2045,75
+Reference,Brent - US$/bbl,2046,75
+Reference,Brent - US$/bbl,2047,75
+Reference,Brent - US$/bbl,2048,75
+Reference,Brent - US$/bbl,2049,75
+Reference,Brent - US$/bbl,2050,75
+Reference,West Texas Intermediate (WTI) - US$/bbl,2005,74.49844317
+Reference,West Texas Intermediate (WTI) - US$/bbl,2006,84.20041545
+Reference,West Texas Intermediate (WTI) - US$/bbl,2007,89.67604632
+Reference,West Texas Intermediate (WTI) - US$/bbl,2008,118.9302339
+Reference,West Texas Intermediate (WTI) - US$/bbl,2009,74.2069536
+Reference,West Texas Intermediate (WTI) - US$/bbl,2010,93.67747568
+Reference,West Texas Intermediate (WTI) - US$/bbl,2011,108.8481252
+Reference,West Texas Intermediate (WTI) - US$/bbl,2012,105.7400624
+Reference,West Texas Intermediate (WTI) - US$/bbl,2013,108.3672846
+Reference,West Texas Intermediate (WTI) - US$/bbl,2014,101.3003872
+Reference,West Texas Intermediate (WTI) - US$/bbl,2015,52.22044246
+Reference,West Texas Intermediate (WTI) - US$/bbl,2016,45.9822721
+Reference,West Texas Intermediate (WTI) - US$/bbl,2017,52.94566909
+Reference,West Texas Intermediate (WTI) - US$/bbl,2018,66.39180337
+Reference,West Texas Intermediate (WTI) - US$/bbl,2019,57
+Reference,West Texas Intermediate (WTI) - US$/bbl,2020,32
+Reference,West Texas Intermediate (WTI) - US$/bbl,2021,40.25
+Reference,West Texas Intermediate (WTI) - US$/bbl,2022,47.5
+Reference,West Texas Intermediate (WTI) - US$/bbl,2023,55.75
+Reference,West Texas Intermediate (WTI) - US$/bbl,2024,61
+Reference,West Texas Intermediate (WTI) - US$/bbl,2025,66
+Reference,West Texas Intermediate (WTI) - US$/bbl,2026,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2027,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2028,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2029,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2030,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2031,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2032,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2033,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2034,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2035,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2036,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2037,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2038,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2039,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2040,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2041,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2042,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2043,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2044,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2045,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2046,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2047,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2048,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2049,71
+Reference,West Texas Intermediate (WTI) - US$/bbl,2050,71
+Reference,Western Canadian Select (WCS) - US$/bbl,2005,48.25844317
+Reference,Western Canadian Select (WCS) - US$/bbl,2006,58.05041545
+Reference,Western Canadian Select (WCS) - US$/bbl,2007,62.12604632
+Reference,Western Canadian Select (WCS) - US$/bbl,2008,95.47023391
+Reference,Western Canadian Select (WCS) - US$/bbl,2009,62.7169536
+Reference,Western Canadian Select (WCS) - US$/bbl,2010,77.34747568
+Reference,Western Canadian Select (WCS) - US$/bbl,2011,89.92812516
+Reference,Western Canadian Select (WCS) - US$/bbl,2012,82.88006243
+Reference,Western Canadian Select (WCS) - US$/bbl,2013,81.4572846
+Reference,Western Canadian Select (WCS) - US$/bbl,2014,78.60038718
+Reference,Western Canadian Select (WCS) - US$/bbl,2015,38.83044246
+Reference,Western Canadian Select (WCS) - US$/bbl,2016,32.3422721
+Reference,Western Canadian Select (WCS) - US$/bbl,2017,40.69906602
+Reference,Western Canadian Select (WCS) - US$/bbl,2018,39.88629137
+Reference,Western Canadian Select (WCS) - US$/bbl,2019,44
+Reference,Western Canadian Select (WCS) - US$/bbl,2020,18
+Reference,Western Canadian Select (WCS) - US$/bbl,2021,26.25
+Reference,Western Canadian Select (WCS) - US$/bbl,2022,34
+Reference,Western Canadian Select (WCS) - US$/bbl,2023,42.75
+Reference,Western Canadian Select (WCS) - US$/bbl,2024,48.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2025,53.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2026,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2027,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2028,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2029,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2030,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2031,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2032,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2033,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2034,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2035,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2036,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2037,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2038,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2039,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2040,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2041,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2042,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2043,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2044,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2045,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2046,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2047,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2048,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2049,58.5
+Reference,Western Canadian Select (WCS) - US$/bbl,2050,58.5
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2005,58.40844317
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2006,66.08041545
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2007,73.15604632
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2008,98.41023391
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2009,59.4169536
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2010,77.39747568
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2011,99.01812516
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2012,89.09006243
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2013,92.9672846
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2014,86.98038718
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2015,49.6107429
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2016,43.75297531
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2017,50.80009094
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2018,55.82180337
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2019,52.3
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2020,25.4
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2021,34.35
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2022,43.94941876
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2023,52.94941876
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2024,58.44941876
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2025,63.5
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2026,68.55
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2027,68.6
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2028,68.65
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2029,68.66318517
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2030,68.67830817
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2031,68.68459443
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2032,68.69069791
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2033,68.71309263
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2034,68.72926121
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2035,68.71537357
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2036,68.69829179
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2037,68.68738743
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2038,68.67754566
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2039,68.66630729
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2040,68.67167474
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2041,68.67167474
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2042,68.67167474
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2043,68.67167474
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2044,68.67167474
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2045,68.67167474
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2046,68.67167474
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2047,68.67167474
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2048,68.67167474
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2049,68.67167474
+Reference,Canadian Light Sweet (CLS) - US$/bbl,2050,68.67167474
+Reference,Henry Hub - US$/MMBtu,2005,11.19170488
+Reference,Henry Hub - US$/MMBtu,2006,8.401704875
+Reference,Henry Hub - US$/MMBtu,2007,8.461704875
+Reference,Henry Hub - US$/MMBtu,2008,10.36170488
+Reference,Henry Hub - US$/MMBtu,2009,4.701704875
+Reference,Henry Hub - US$/MMBtu,2010,5.071704875
+Reference,Henry Hub - US$/MMBtu,2011,4.491704875
+Reference,Henry Hub - US$/MMBtu,2012,3.041704875
+Reference,Henry Hub - US$/MMBtu,2013,4.041704875
+Reference,Henry Hub - US$/MMBtu,2014,4.631704875
+Reference,Henry Hub - US$/MMBtu,2015,2.811704875
+Reference,Henry Hub - US$/MMBtu,2016,2.6767227
+Reference,Henry Hub - US$/MMBtu,2017,3.116290366
+Reference,Henry Hub - US$/MMBtu,2018,3.208139878
+Reference,Henry Hub - US$/MMBtu,2019,2.56
+Reference,Henry Hub - US$/MMBtu,2020,2.05
+Reference,Henry Hub - US$/MMBtu,2021,2.45
+Reference,Henry Hub - US$/MMBtu,2022,2.5
+Reference,Henry Hub - US$/MMBtu,2023,2.6
+Reference,Henry Hub - US$/MMBtu,2024,2.675
+Reference,Henry Hub - US$/MMBtu,2025,2.8125
+Reference,Henry Hub - US$/MMBtu,2026,2.95
+Reference,Henry Hub - US$/MMBtu,2027,3.0875
+Reference,Henry Hub - US$/MMBtu,2028,3.225
+Reference,Henry Hub - US$/MMBtu,2029,3.3625
+Reference,Henry Hub - US$/MMBtu,2030,3.5
+Reference,Henry Hub - US$/MMBtu,2031,3.55
+Reference,Henry Hub - US$/MMBtu,2032,3.6
+Reference,Henry Hub - US$/MMBtu,2033,3.65
+Reference,Henry Hub - US$/MMBtu,2034,3.7
+Reference,Henry Hub - US$/MMBtu,2035,3.75
+Reference,Henry Hub - US$/MMBtu,2036,3.8
+Reference,Henry Hub - US$/MMBtu,2037,3.85
+Reference,Henry Hub - US$/MMBtu,2038,3.9
+Reference,Henry Hub - US$/MMBtu,2039,3.95
+Reference,Henry Hub - US$/MMBtu,2040,4
+Reference,Henry Hub - US$/MMBtu,2041,4.025
+Reference,Henry Hub - US$/MMBtu,2042,4.05
+Reference,Henry Hub - US$/MMBtu,2043,4.075
+Reference,Henry Hub - US$/MMBtu,2044,4.1
+Reference,Henry Hub - US$/MMBtu,2045,4.125
+Reference,Henry Hub - US$/MMBtu,2046,4.15
+Reference,Henry Hub - US$/MMBtu,2047,4.175
+Reference,Henry Hub - US$/MMBtu,2048,4.2
+Reference,Henry Hub - US$/MMBtu,2049,4.225
+Reference,Henry Hub - US$/MMBtu,2050,4.25
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2005,9.397898395
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2006,7.187898395
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2007,7.257898395
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2008,8.157898395
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2009,3.677898395
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2010,4.027898395
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2011,3.697898395
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2012,2.367898395
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2013,2.997898395
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2014,3.867898395
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2015,2.037898395
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2016,1.575955735
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2017,1.503285309
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2018,1.292196282
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2019,1.27
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2020,1.3
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2021,1.5
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2022,1.65
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2023,1.675
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2024,1.725
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2025,1.8625
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2026,2.02
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2027,2.1575
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2028,2.295
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2029,2.4325
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2030,2.57
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2031,2.63
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2032,2.7
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2033,2.75
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2034,2.8
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2035,2.85
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2036,2.9
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2037,2.95
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2038,3
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2039,3.05
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2040,3.1
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2041,3.125
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2042,3.15
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2043,3.175
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2044,3.2
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2045,3.225
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2046,3.25
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2047,3.275
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2048,3.3
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2049,3.325
+Reference,Nova Inventory Transfer (NIT) - US$/MMBtu,2050,3.35
+Evolving,Brent - US$/bbl,2005,71.82844317
+Evolving,Brent - US$/bbl,2006,83.09041545
+Evolving,Brent - US$/bbl,2007,89.79604632
+Evolving,Brent - US$/bbl,2008,115.7502339
+Evolving,Brent - US$/bbl,2009,73.9569536
+Evolving,Brent - US$/bbl,2010,93.82747568
+Evolving,Brent - US$/bbl,2011,127.1381252
+Evolving,Brent - US$/bbl,2012,124.9700624
+Evolving,Brent - US$/bbl,2013,119.7772846
+Evolving,Brent - US$/bbl,2014,107.4603872
+Evolving,Brent - US$/bbl,2015,55.81102139
+Evolving,Brent - US$/bbl,2016,45.78805812
+Evolving,Brent - US$/bbl,2017,55.86726989
+Evolving,Brent - US$/bbl,2018,72.4733151
+Evolving,Brent - US$/bbl,2019,64.35
+Evolving,Brent - US$/bbl,2020,37
+Evolving,Brent - US$/bbl,2021,43
+Evolving,Brent - US$/bbl,2022,45.4
+Evolving,Brent - US$/bbl,2023,47.8
+Evolving,Brent - US$/bbl,2024,50.2
+Evolving,Brent - US$/bbl,2025,52.6
+Evolving,Brent - US$/bbl,2026,55
+Evolving,Brent - US$/bbl,2027,55
+Evolving,Brent - US$/bbl,2028,55
+Evolving,Brent - US$/bbl,2029,55
+Evolving,Brent - US$/bbl,2030,55
+Evolving,Brent - US$/bbl,2031,55
+Evolving,Brent - US$/bbl,2032,55
+Evolving,Brent - US$/bbl,2033,55
+Evolving,Brent - US$/bbl,2034,55
+Evolving,Brent - US$/bbl,2035,55
+Evolving,Brent - US$/bbl,2036,55
+Evolving,Brent - US$/bbl,2037,55
+Evolving,Brent - US$/bbl,2038,55
+Evolving,Brent - US$/bbl,2039,54.58333333
+Evolving,Brent - US$/bbl,2040,54.16666667
+Evolving,Brent - US$/bbl,2041,53.75
+Evolving,Brent - US$/bbl,2042,53.33333333
+Evolving,Brent - US$/bbl,2043,52.91666667
+Evolving,Brent - US$/bbl,2044,52.5
+Evolving,Brent - US$/bbl,2045,52.08333333
+Evolving,Brent - US$/bbl,2046,51.66666667
+Evolving,Brent - US$/bbl,2047,51.25
+Evolving,Brent - US$/bbl,2048,50.83333333
+Evolving,Brent - US$/bbl,2049,50.41666667
+Evolving,Brent - US$/bbl,2050,50
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2005,74.49844317
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2006,84.20041545
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2007,89.67604632
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2008,118.9302339
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2009,74.2069536
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2010,93.67747568
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2011,108.8481252
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2012,105.7400624
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2013,108.3672846
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2014,101.3003872
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2015,52.22044246
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2016,45.9822721
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2017,52.94566909
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2018,66.39180337
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2019,57
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2020,32
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2021,38.25
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2022,40.9
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2023,43.55
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2024,46.2
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2025,48.6
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2026,51
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2027,51
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2028,51
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2029,51
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2030,51
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2031,51
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2032,51
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2033,51
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2034,51
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2035,51
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2036,51
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2037,51
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2038,51
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2039,50.58333333
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2040,50.16666667
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2041,49.75
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2042,49.33333333
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2043,48.91666667
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2044,48.5
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2045,48.08333333
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2046,47.66666667
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2047,47.25
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2048,46.83333333
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2049,46.41666667
+Evolving,West Texas Intermediate (WTI) - US$/bbl,2050,46
+Evolving,Western Canadian Select (WCS) - US$/bbl,2005,48.25844317
+Evolving,Western Canadian Select (WCS) - US$/bbl,2006,58.05041545
+Evolving,Western Canadian Select (WCS) - US$/bbl,2007,62.12604632
+Evolving,Western Canadian Select (WCS) - US$/bbl,2008,95.47023391
+Evolving,Western Canadian Select (WCS) - US$/bbl,2009,62.7169536
+Evolving,Western Canadian Select (WCS) - US$/bbl,2010,77.34747568
+Evolving,Western Canadian Select (WCS) - US$/bbl,2011,89.92812516
+Evolving,Western Canadian Select (WCS) - US$/bbl,2012,82.88006243
+Evolving,Western Canadian Select (WCS) - US$/bbl,2013,81.4572846
+Evolving,Western Canadian Select (WCS) - US$/bbl,2014,78.60038718
+Evolving,Western Canadian Select (WCS) - US$/bbl,2015,38.83044246
+Evolving,Western Canadian Select (WCS) - US$/bbl,2016,32.3422721
+Evolving,Western Canadian Select (WCS) - US$/bbl,2017,40.69906602
+Evolving,Western Canadian Select (WCS) - US$/bbl,2018,39.88629137
+Evolving,Western Canadian Select (WCS) - US$/bbl,2019,44
+Evolving,Western Canadian Select (WCS) - US$/bbl,2020,18
+Evolving,Western Canadian Select (WCS) - US$/bbl,2021,24.25
+Evolving,Western Canadian Select (WCS) - US$/bbl,2022,27.4
+Evolving,Western Canadian Select (WCS) - US$/bbl,2023,30.55
+Evolving,Western Canadian Select (WCS) - US$/bbl,2024,33.7
+Evolving,Western Canadian Select (WCS) - US$/bbl,2025,36.1
+Evolving,Western Canadian Select (WCS) - US$/bbl,2026,38.5
+Evolving,Western Canadian Select (WCS) - US$/bbl,2027,38.5
+Evolving,Western Canadian Select (WCS) - US$/bbl,2028,38.5
+Evolving,Western Canadian Select (WCS) - US$/bbl,2029,38.5
+Evolving,Western Canadian Select (WCS) - US$/bbl,2030,38.5
+Evolving,Western Canadian Select (WCS) - US$/bbl,2031,38.5
+Evolving,Western Canadian Select (WCS) - US$/bbl,2032,38.5
+Evolving,Western Canadian Select (WCS) - US$/bbl,2033,38.5
+Evolving,Western Canadian Select (WCS) - US$/bbl,2034,38.5
+Evolving,Western Canadian Select (WCS) - US$/bbl,2035,38.5
+Evolving,Western Canadian Select (WCS) - US$/bbl,2036,38.5
+Evolving,Western Canadian Select (WCS) - US$/bbl,2037,38.5
+Evolving,Western Canadian Select (WCS) - US$/bbl,2038,38.5
+Evolving,Western Canadian Select (WCS) - US$/bbl,2039,38.08333333
+Evolving,Western Canadian Select (WCS) - US$/bbl,2040,37.66666667
+Evolving,Western Canadian Select (WCS) - US$/bbl,2041,37.25
+Evolving,Western Canadian Select (WCS) - US$/bbl,2042,36.83333333
+Evolving,Western Canadian Select (WCS) - US$/bbl,2043,36.41666667
+Evolving,Western Canadian Select (WCS) - US$/bbl,2044,36
+Evolving,Western Canadian Select (WCS) - US$/bbl,2045,35.58333333
+Evolving,Western Canadian Select (WCS) - US$/bbl,2046,35.16666667
+Evolving,Western Canadian Select (WCS) - US$/bbl,2047,34.75
+Evolving,Western Canadian Select (WCS) - US$/bbl,2048,34.33333333
+Evolving,Western Canadian Select (WCS) - US$/bbl,2049,33.91666667
+Evolving,Western Canadian Select (WCS) - US$/bbl,2050,33.5
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2005,58.40844317
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2006,66.08041545
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2007,73.15604632
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2008,98.41023391
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2009,59.4169536
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2010,77.39747568
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2011,99.01812516
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2012,89.09006243
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2013,92.9672846
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2014,86.98038718
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2015,49.6107429
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2016,43.75297531
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2017,50.80009094
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2018,55.82180337
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2019,52.3
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2020,25.4
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2021,32.35
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2022,37.34941876
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2023,40.74941876
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2024,43.64941876
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2025,46.1
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2026,48.55
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2027,48.6
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2028,48.65
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2029,48.66318517
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2030,48.67830817
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2031,48.68459443
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2032,48.69069791
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2033,48.71309263
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2034,48.72926121
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2035,48.71537357
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2036,48.69829179
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2037,48.68738743
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2038,48.67754566
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2039,48.24964062
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2040,47.8383414
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2041,47.42167474
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2042,47.00500807
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2043,46.5883414
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2044,46.17167474
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2045,45.75500807
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2046,45.3383414
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2047,44.92167474
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2048,44.50500807
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2049,44.0883414
+Evolving,Canadian Light Sweet (CLS) - US$/bbl,2050,43.67167474
+Evolving,Henry Hub - US$/MMBtu,2005,11.19170488
+Evolving,Henry Hub - US$/MMBtu,2006,8.401704875
+Evolving,Henry Hub - US$/MMBtu,2007,8.461704875
+Evolving,Henry Hub - US$/MMBtu,2008,10.36170488
+Evolving,Henry Hub - US$/MMBtu,2009,4.701704875
+Evolving,Henry Hub - US$/MMBtu,2010,5.071704875
+Evolving,Henry Hub - US$/MMBtu,2011,4.491704875
+Evolving,Henry Hub - US$/MMBtu,2012,3.041704875
+Evolving,Henry Hub - US$/MMBtu,2013,4.041704875
+Evolving,Henry Hub - US$/MMBtu,2014,4.631704875
+Evolving,Henry Hub - US$/MMBtu,2015,2.811704875
+Evolving,Henry Hub - US$/MMBtu,2016,2.6767227
+Evolving,Henry Hub - US$/MMBtu,2017,3.116290366
+Evolving,Henry Hub - US$/MMBtu,2018,3.208139878
+Evolving,Henry Hub - US$/MMBtu,2019,2.56
+Evolving,Henry Hub - US$/MMBtu,2020,2.05
+Evolving,Henry Hub - US$/MMBtu,2021,2.45
+Evolving,Henry Hub - US$/MMBtu,2022,2.48
+Evolving,Henry Hub - US$/MMBtu,2023,2.55
+Evolving,Henry Hub - US$/MMBtu,2024,2.61875
+Evolving,Henry Hub - US$/MMBtu,2025,2.740625
+Evolving,Henry Hub - US$/MMBtu,2026,2.8625
+Evolving,Henry Hub - US$/MMBtu,2027,2.984375
+Evolving,Henry Hub - US$/MMBtu,2028,3.10625
+Evolving,Henry Hub - US$/MMBtu,2029,3.228125
+Evolving,Henry Hub - US$/MMBtu,2030,3.35
+Evolving,Henry Hub - US$/MMBtu,2031,3.39
+Evolving,Henry Hub - US$/MMBtu,2032,3.43
+Evolving,Henry Hub - US$/MMBtu,2033,3.47
+Evolving,Henry Hub - US$/MMBtu,2034,3.51
+Evolving,Henry Hub - US$/MMBtu,2035,3.55
+Evolving,Henry Hub - US$/MMBtu,2036,3.59
+Evolving,Henry Hub - US$/MMBtu,2037,3.63
+Evolving,Henry Hub - US$/MMBtu,2038,3.67
+Evolving,Henry Hub - US$/MMBtu,2039,3.71
+Evolving,Henry Hub - US$/MMBtu,2040,3.75
+Evolving,Henry Hub - US$/MMBtu,2041,3.75
+Evolving,Henry Hub - US$/MMBtu,2042,3.75
+Evolving,Henry Hub - US$/MMBtu,2043,3.75
+Evolving,Henry Hub - US$/MMBtu,2044,3.75
+Evolving,Henry Hub - US$/MMBtu,2045,3.75
+Evolving,Henry Hub - US$/MMBtu,2046,3.75
+Evolving,Henry Hub - US$/MMBtu,2047,3.75
+Evolving,Henry Hub - US$/MMBtu,2048,3.75
+Evolving,Henry Hub - US$/MMBtu,2049,3.75
+Evolving,Henry Hub - US$/MMBtu,2050,3.75
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2005,9.397898395
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2006,7.187898395
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2007,7.257898395
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2008,8.157898395
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2009,3.677898395
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2010,4.027898395
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2011,3.697898395
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2012,2.367898395
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2013,2.997898395
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2014,3.867898395
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2015,2.037898395
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2016,1.575955735
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2017,1.503285309
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2018,1.292196282
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2019,1.27
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2020,1.3
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2021,1.5
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2022,1.63
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2023,1.625
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2024,1.66875
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2025,1.790625
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2026,1.9325
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2027,2.054375
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2028,2.17625
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2029,2.298125
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2030,2.42
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2031,2.47
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2032,2.53
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2033,2.57
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2034,2.61
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2035,2.65
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2036,2.69
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2037,2.73
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2038,2.77
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2039,2.81
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2040,2.85
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2041,2.85
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2042,2.85
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2043,2.85
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2044,2.85
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2045,2.85
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2046,2.85
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2047,2.85
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2048,2.85
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2049,2.85
+Evolving,Nova Inventory Transfer (NIT) - US$/MMBtu,2050,2.85

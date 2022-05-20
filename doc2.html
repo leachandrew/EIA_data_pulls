@@ -1,0 +1,863 @@
+
+
+
+
+<html>
+<body>
+
+    <form method="post" action="/marketdata/reports/ngx/DailySettlementPrices.shtml" onsubmit="if (typeof(doForm2Submit)=='function') {doForm2Submit(this); return false}; return true;" class="form" target="targetFrame">
+        <input name="htmlReport" type="hidden" value="" />
+        <input type="hidden" name="reportId" value="254"/>
+        <input type="hidden" name="criteria.group" value="Natural Gas"/>
+
+        <div class="row">
+            <div class="form-group true-grid-6">
+                <label for="selectedMarket">Natural Gas Markets</label>
+                <select name="criteria.selectedMarket" id="selectedMarket" class="select-compact select-long">
+                    <option value="NG Firm Phys, BS, LD1, (US/MM), ANR-SE-T">NG Firm Phys, BS, LD1, (US/MM), ANR-SE-T</option><option value="NG Firm Phys, BS, LD1, (US/MM), ANR-SW">NG Firm Phys, BS, LD1, (US/MM), ANR-SW</option><option value="NG Firm Phys, BS, LD1, (US/MM), APC-ACE">NG Firm Phys, BS, LD1, (US/MM), APC-ACE</option><option value="NG Firm Phys, BS, LD1, (US/MM), CG-Mainline">NG Firm Phys, BS, LD1, (US/MM), CG-Mainline</option><option value="NG Firm Phys, BS, LD1, (US/MM), CG-Onshore">NG Firm Phys, BS, LD1, (US/MM), CG-Onshore</option><option value="NG Firm Phys, BS, LD1, (US/MM), Cheyenne Hub">NG Firm Phys, BS, LD1, (US/MM), Cheyenne Hub</option><option value="NG Firm Phys, BS, LD1, (US/MM), Consumers">NG Firm Phys, BS, LD1, (US/MM), Consumers</option><option value="NG Firm Phys, BS, LD1, (US/MM), Cove Point">NG Firm Phys, BS, LD1, (US/MM), Cove Point</option><option value="NG Firm Phys, BS, LD1, (US/MM), Dominion-North">NG Firm Phys, BS, LD1, (US/MM), Dominion-North</option><option value="NG Firm Phys, BS, LD1, (US/MM), Dominion-South">NG Firm Phys, BS, LD1, (US/MM), Dominion-South</option><option value="NG Firm Phys, BS, LD1, (US/MM), EGT-Flex">NG Firm Phys, BS, LD1, (US/MM), EGT-Flex</option><option value="NG Firm Phys, BS, LD1, (US/MM), EP-Keystone">NG Firm Phys, BS, LD1, (US/MM), EP-Keystone</option><option value="NG Firm Phys, BS, LD1, (US/MM), EP-SJ Blanco Pool">NG Firm Phys, BS, LD1, (US/MM), EP-SJ Blanco Pool</option><option value="NG Firm Phys, BS, LD1, (US/MM), FGT-Z3">NG Firm Phys, BS, LD1, (US/MM), FGT-Z3</option><option value="NG Firm Phys, BS, LD1, (US/MM), GTN-Kingsgate">NG Firm Phys, BS, LD1, (US/MM), GTN-Kingsgate</option><option value="NG Firm Phys, BS, LD1, (US/MM), GTN-Malin">NG Firm Phys, BS, LD1, (US/MM), GTN-Malin</option><option value="NG Firm Phys, BS, LD1, (US/MM), GTN-Stanfield">NG Firm Phys, BS, LD1, (US/MM), GTN-Stanfield</option><option value="NG Firm Phys, BS, LD1, (US/MM), HSC-HPL Pool">NG Firm Phys, BS, LD1, (US/MM), HSC-HPL Pool</option><option value="NG Firm Phys, BS, LD1, (US/MM), Henry">NG Firm Phys, BS, LD1, (US/MM), Henry</option><option value="NG Firm Phys, BS, LD1, (US/MM), Iroquois (Into)">NG Firm Phys, BS, LD1, (US/MM), Iroquois (Into)</option><option value="NG Firm Phys, BS, LD1, (US/MM), KRGT-Del Pool">NG Firm Phys, BS, LD1, (US/MM), KRGT-Del Pool</option><option value="NG Firm Phys, BS, LD1, (US/MM), KRGT-Rec Pool">NG Firm Phys, BS, LD1, (US/MM), KRGT-Rec Pool</option><option value="NG Firm Phys, BS, LD1, (US/MM), Katy-Enstor Pool">NG Firm Phys, BS, LD1, (US/MM), Katy-Enstor Pool</option><option value="NG Firm Phys, BS, LD1, (US/MM), Katy-Oasis">NG Firm Phys, BS, LD1, (US/MM), Katy-Oasis</option><option value="NG Firm Phys, BS, LD1, (US/MM), Leidy-Transco">NG Firm Phys, BS, LD1, (US/MM), Leidy-Transco</option><option value="NG Firm Phys, BS, LD1, (US/MM), Michcon">NG Firm Phys, BS, LD1, (US/MM), Michcon</option><option value="NG Firm Phys, BS, LD1, (US/MM), Millennium East Pool">NG Firm Phys, BS, LD1, (US/MM), Millennium East Pool</option><option value="NG Firm Phys, BS, LD1, (US/MM), Moss Bluff Inter">NG Firm Phys, BS, LD1, (US/MM), Moss Bluff Inter</option><option value="NG Firm Phys, BS, LD1, (US/MM), NBPL-Ventura TP">NG Firm Phys, BS, LD1, (US/MM), NBPL-Ventura TP</option><option value="NG Firm Phys, BS, LD1, (US/MM), NGPL-Midcont Pool">NG Firm Phys, BS, LD1, (US/MM), NGPL-Midcont Pool</option><option value="NG Firm Phys, BS, LD1, (US/MM), NGPL-Nicor">NG Firm Phys, BS, LD1, (US/MM), NGPL-Nicor</option><option value="NG Firm Phys, BS, LD1, (US/MM), NGPL-Nipsco">NG Firm Phys, BS, LD1, (US/MM), NGPL-Nipsco</option><option value="NG Firm Phys, BS, LD1, (US/MM), NGPL-STX">NG Firm Phys, BS, LD1, (US/MM), NGPL-STX</option><option value="NG Firm Phys, BS, LD1, (US/MM), NGPL-TXOK East">NG Firm Phys, BS, LD1, (US/MM), NGPL-TXOK East</option><option value="NG Firm Phys, BS, LD1, (US/MM), NNG-Demarc">NG Firm Phys, BS, LD1, (US/MM), NNG-Demarc</option><option value="NG Firm Phys, BS, LD1, (US/MM), NNG-Ventura">NG Firm Phys, BS, LD1, (US/MM), NNG-Ventura</option><option value="NG Firm Phys, BS, LD1, (US/MM), OGT">NG Firm Phys, BS, LD1, (US/MM), OGT</option><option value="NG Firm Phys, BS, LD1, (US/MM), Oasis-Waha Pool">NG Firm Phys, BS, LD1, (US/MM), Oasis-Waha Pool</option><option value="NG Firm Phys, BS, LD1, (US/MM), Opal">NG Firm Phys, BS, LD1, (US/MM), Opal</option><option value="NG Firm Phys, BS, LD1, (US/MM), PGE-Citygate">NG Firm Phys, BS, LD1, (US/MM), PGE-Citygate</option><option value="NG Firm Phys, BS, LD1, (US/MM), Panhandle">NG Firm Phys, BS, LD1, (US/MM), Panhandle</option><option value="NG Firm Phys, BS, LD1, (US/MM), Pine Prairie">NG Firm Phys, BS, LD1, (US/MM), Pine Prairie</option><option value="NG Firm Phys, BS, LD1, (US/MM), REX E-ANR">NG Firm Phys, BS, LD1, (US/MM), REX E-ANR</option><option value="NG Firm Phys, BS, LD1, (US/MM), SoCal-Citygate">NG Firm Phys, BS, LD1, (US/MM), SoCal-Citygate</option><option value="NG Firm Phys, BS, LD1, (US/MM), Sonat-Z0 South">NG Firm Phys, BS, LD1, (US/MM), Sonat-Z0 South</option><option value="NG Firm Phys, BS, LD1, (US/MM), Stagecoach Marcellus">NG Firm Phys, BS, LD1, (US/MM), Stagecoach Marcellus</option><option value="NG Firm Phys, BS, LD1, (US/MM), TCO">NG Firm Phys, BS, LD1, (US/MM), TCO</option><option value="NG Firm Phys, BS, LD1, (US/MM), TCO-A04 Pool">NG Firm Phys, BS, LD1, (US/MM), TCO-A04 Pool</option><option value="NG Firm Phys, BS, LD1, (US/MM), TETCO-ELA">NG Firm Phys, BS, LD1, (US/MM), TETCO-ELA</option><option value="NG Firm Phys, BS, LD1, (US/MM), TETCO-M1 30">NG Firm Phys, BS, LD1, (US/MM), TETCO-M1 30</option><option value="NG Firm Phys, BS, LD1, (US/MM), TETCO-M2 (receipts)">NG Firm Phys, BS, LD1, (US/MM), TETCO-M2 (receipts)</option><option value="NG Firm Phys, BS, LD1, (US/MM), TETCO-M3">NG Firm Phys, BS, LD1, (US/MM), TETCO-M3</option><option value="NG Firm Phys, BS, LD1, (US/MM), TETCO-STX">NG Firm Phys, BS, LD1, (US/MM), TETCO-STX</option><option value="NG Firm Phys, BS, LD1, (US/MM), TETCO-WLA">NG Firm Phys, BS, LD1, (US/MM), TETCO-WLA</option><option value="NG Firm Phys, BS, LD1, (US/MM), TGP-500L">NG Firm Phys, BS, LD1, (US/MM), TGP-500L</option><option value="NG Firm Phys, BS, LD1, (US/MM), TGP-800L">NG Firm Phys, BS, LD1, (US/MM), TGP-800L</option><option value="NG Firm Phys, BS, LD1, (US/MM), TGP-Z0 North">NG Firm Phys, BS, LD1, (US/MM), TGP-Z0 North</option><option value="NG Firm Phys, BS, LD1, (US/MM), TGP-Z0 South">NG Firm Phys, BS, LD1, (US/MM), TGP-Z0 South</option><option value="NG Firm Phys, BS, LD1, (US/MM), TGT-Mainline">NG Firm Phys, BS, LD1, (US/MM), TGT-Mainline</option><option value="NG Firm Phys, BS, LD1, (US/MM), TGT-North LA">NG Firm Phys, BS, LD1, (US/MM), TGT-North LA</option><option value="NG Firm Phys, BS, LD1, (US/MM), TGT-SL">NG Firm Phys, BS, LD1, (US/MM), TGT-SL</option><option value="NG Firm Phys, BS, LD1, (US/MM), Transco-30">NG Firm Phys, BS, LD1, (US/MM), Transco-30</option><option value="NG Firm Phys, BS, LD1, (US/MM), Transco-65">NG Firm Phys, BS, LD1, (US/MM), Transco-65</option><option value="NG Firm Phys, BS, LD1, (US/MM), Transco-85">NG Firm Phys, BS, LD1, (US/MM), Transco-85</option><option value="NG Firm Phys, BS, LD1, (US/MM), Transco-River Road">NG Firm Phys, BS, LD1, (US/MM), Transco-River Road</option><option value="NG Firm Phys, BS, LD1, (US/MM), Transco-Z5 South">NG Firm Phys, BS, LD1, (US/MM), Transco-Z5 South</option><option value="NG Firm Phys, BS, LD1, (US/MM), Transco-Z6 (non-NY north ML)">NG Firm Phys, BS, LD1, (US/MM), Transco-Z6 (non-NY north ML)</option><option value="NG Firm Phys, BS, LD1, (US/MM), Transco-Z6 NY">NG Firm Phys, BS, LD1, (US/MM), Transco-Z6 NY</option><option value="NG Firm Phys, BS, LD1, (US/MM), Transco-Z6 Sta-210">NG Firm Phys, BS, LD1, (US/MM), Transco-Z6 Sta-210</option><option value="NG Firm Phys, BS, LD1, (US/MM), Transco-Z6 non-NY">NG Firm Phys, BS, LD1, (US/MM), Transco-Z6 non-NY</option><option value="NG Firm Phys, BS, LD1, (US/MM), Transco-Z6 non-NY north">NG Firm Phys, BS, LD1, (US/MM), Transco-Z6 non-NY north</option><option value="NG Firm Phys, BS, LD1, (US/MM), Trunkline-ELA">NG Firm Phys, BS, LD1, (US/MM), Trunkline-ELA</option><option value="NG Firm Phys, BS, LD1, (US/MM), Trunkline-WLA">NG Firm Phys, BS, LD1, (US/MM), Trunkline-WLA</option><option value="NG Firm Phys, BS, LD1, (US/MM), Trunkline-Z1A">NG Firm Phys, BS, LD1, (US/MM), Trunkline-Z1A</option><option value="NG Firm Phys, BS, LD1, (US/MM), Waha">NG Firm Phys, BS, LD1, (US/MM), Waha</option><option value="NG Firm Phys, FP, (US/MM), ANR-SE-T">NG Firm Phys, FP, (US/MM), ANR-SE-T</option><option value="NG Firm Phys, FP, (US/MM), ANR-SW">NG Firm Phys, FP, (US/MM), ANR-SW</option><option value="NG Firm Phys, FP, (US/MM), APC-ACE">NG Firm Phys, FP, (US/MM), APC-ACE</option><option value="NG Firm Phys, FP, (US/MM), CG-Mainline">NG Firm Phys, FP, (US/MM), CG-Mainline</option><option value="NG Firm Phys, FP, (US/MM), CG-Onshore">NG Firm Phys, FP, (US/MM), CG-Onshore</option><option value="NG Firm Phys, FP, (US/MM), Cheyenne Hub">NG Firm Phys, FP, (US/MM), Cheyenne Hub</option><option value="NG Firm Phys, FP, (US/MM), Consumers">NG Firm Phys, FP, (US/MM), Consumers</option><option value="NG Firm Phys, FP, (US/MM), Cove Point">NG Firm Phys, FP, (US/MM), Cove Point</option><option value="NG Firm Phys, FP, (US/MM), Dominion-North">NG Firm Phys, FP, (US/MM), Dominion-North</option><option value="NG Firm Phys, FP, (US/MM), Dominion-South">NG Firm Phys, FP, (US/MM), Dominion-South</option><option value="NG Firm Phys, FP, (US/MM), EGT-Flex">NG Firm Phys, FP, (US/MM), EGT-Flex</option><option value="NG Firm Phys, FP, (US/MM), EP-Keystone">NG Firm Phys, FP, (US/MM), EP-Keystone</option><option value="NG Firm Phys, FP, (US/MM), EP-SJ Blanco Pool">NG Firm Phys, FP, (US/MM), EP-SJ Blanco Pool</option><option value="NG Firm Phys, FP, (US/MM), FGT-Z3">NG Firm Phys, FP, (US/MM), FGT-Z3</option><option value="NG Firm Phys, FP, (US/MM), GTN-Kingsgate">NG Firm Phys, FP, (US/MM), GTN-Kingsgate</option><option value="NG Firm Phys, FP, (US/MM), GTN-Malin">NG Firm Phys, FP, (US/MM), GTN-Malin</option><option value="NG Firm Phys, FP, (US/MM), GTN-Stanfield">NG Firm Phys, FP, (US/MM), GTN-Stanfield</option><option value="NG Firm Phys, FP, (US/MM), HSC-HPL Pool">NG Firm Phys, FP, (US/MM), HSC-HPL Pool</option><option value="NG Firm Phys, FP, (US/MM), Henry">NG Firm Phys, FP, (US/MM), Henry</option><option value="NG Firm Phys, FP, (US/MM), Iroquois (Into)">NG Firm Phys, FP, (US/MM), Iroquois (Into)</option><option value="NG Firm Phys, FP, (US/MM), KRGT-Del Pool">NG Firm Phys, FP, (US/MM), KRGT-Del Pool</option><option value="NG Firm Phys, FP, (US/MM), KRGT-Rec Pool">NG Firm Phys, FP, (US/MM), KRGT-Rec Pool</option><option value="NG Firm Phys, FP, (US/MM), Katy-Enstor Pool">NG Firm Phys, FP, (US/MM), Katy-Enstor Pool</option><option value="NG Firm Phys, FP, (US/MM), Katy-Oasis">NG Firm Phys, FP, (US/MM), Katy-Oasis</option><option value="NG Firm Phys, FP, (US/MM), Leidy-Transco">NG Firm Phys, FP, (US/MM), Leidy-Transco</option><option value="NG Firm Phys, FP, (US/MM), Michcon">NG Firm Phys, FP, (US/MM), Michcon</option><option value="NG Firm Phys, FP, (US/MM), Millennium East Pool">NG Firm Phys, FP, (US/MM), Millennium East Pool</option><option value="NG Firm Phys, FP, (US/MM), Moss Bluff Inter">NG Firm Phys, FP, (US/MM), Moss Bluff Inter</option><option value="NG Firm Phys, FP, (US/MM), NBPL-Ventura TP">NG Firm Phys, FP, (US/MM), NBPL-Ventura TP</option><option value="NG Firm Phys, FP, (US/MM), NGPL-Midcont Pool">NG Firm Phys, FP, (US/MM), NGPL-Midcont Pool</option><option value="NG Firm Phys, FP, (US/MM), NGPL-Nicor">NG Firm Phys, FP, (US/MM), NGPL-Nicor</option><option value="NG Firm Phys, FP, (US/MM), NGPL-Nipsco">NG Firm Phys, FP, (US/MM), NGPL-Nipsco</option><option value="NG Firm Phys, FP, (US/MM), NGPL-STX">NG Firm Phys, FP, (US/MM), NGPL-STX</option><option value="NG Firm Phys, FP, (US/MM), NGPL-TXOK East">NG Firm Phys, FP, (US/MM), NGPL-TXOK East</option><option value="NG Firm Phys, FP, (US/MM), NNG-Demarc">NG Firm Phys, FP, (US/MM), NNG-Demarc</option><option value="NG Firm Phys, FP, (US/MM), NNG-Ventura">NG Firm Phys, FP, (US/MM), NNG-Ventura</option><option value="NG Firm Phys, FP, (US/MM), OGT">NG Firm Phys, FP, (US/MM), OGT</option><option value="NG Firm Phys, FP, (US/MM), Oasis-Waha Pool">NG Firm Phys, FP, (US/MM), Oasis-Waha Pool</option><option value="NG Firm Phys, FP, (US/MM), Opal">NG Firm Phys, FP, (US/MM), Opal</option><option value="NG Firm Phys, FP, (US/MM), PGE-Citygate">NG Firm Phys, FP, (US/MM), PGE-Citygate</option><option value="NG Firm Phys, FP, (US/MM), Panhandle">NG Firm Phys, FP, (US/MM), Panhandle</option><option value="NG Firm Phys, FP, (US/MM), Pine Prairie">NG Firm Phys, FP, (US/MM), Pine Prairie</option><option value="NG Firm Phys, FP, (US/MM), REX E-ANR">NG Firm Phys, FP, (US/MM), REX E-ANR</option><option value="NG Firm Phys, FP, (US/MM), SoCal-Citygate">NG Firm Phys, FP, (US/MM), SoCal-Citygate</option><option value="NG Firm Phys, FP, (US/MM), Sonat-Z0 South">NG Firm Phys, FP, (US/MM), Sonat-Z0 South</option><option value="NG Firm Phys, FP, (US/MM), Stagecoach Marcellus">NG Firm Phys, FP, (US/MM), Stagecoach Marcellus</option><option value="NG Firm Phys, FP, (US/MM), TCO">NG Firm Phys, FP, (US/MM), TCO</option><option value="NG Firm Phys, FP, (US/MM), TCO-A04 Pool">NG Firm Phys, FP, (US/MM), TCO-A04 Pool</option><option value="NG Firm Phys, FP, (US/MM), TETCO-ELA">NG Firm Phys, FP, (US/MM), TETCO-ELA</option><option value="NG Firm Phys, FP, (US/MM), TETCO-M1 30">NG Firm Phys, FP, (US/MM), TETCO-M1 30</option><option value="NG Firm Phys, FP, (US/MM), TETCO-M2 (receipts)">NG Firm Phys, FP, (US/MM), TETCO-M2 (receipts)</option><option value="NG Firm Phys, FP, (US/MM), TETCO-M3">NG Firm Phys, FP, (US/MM), TETCO-M3</option><option value="NG Firm Phys, FP, (US/MM), TETCO-STX">NG Firm Phys, FP, (US/MM), TETCO-STX</option><option value="NG Firm Phys, FP, (US/MM), TETCO-WLA">NG Firm Phys, FP, (US/MM), TETCO-WLA</option><option value="NG Firm Phys, FP, (US/MM), TGP-500L">NG Firm Phys, FP, (US/MM), TGP-500L</option><option value="NG Firm Phys, FP, (US/MM), TGP-800L">NG Firm Phys, FP, (US/MM), TGP-800L</option><option value="NG Firm Phys, FP, (US/MM), TGP-Z0 North">NG Firm Phys, FP, (US/MM), TGP-Z0 North</option><option value="NG Firm Phys, FP, (US/MM), TGP-Z0 South">NG Firm Phys, FP, (US/MM), TGP-Z0 South</option><option value="NG Firm Phys, FP, (US/MM), TGT-Mainline">NG Firm Phys, FP, (US/MM), TGT-Mainline</option><option value="NG Firm Phys, FP, (US/MM), TGT-North LA">NG Firm Phys, FP, (US/MM), TGT-North LA</option><option value="NG Firm Phys, FP, (US/MM), TGT-SL">NG Firm Phys, FP, (US/MM), TGT-SL</option><option value="NG Firm Phys, FP, (US/MM), Transco-30">NG Firm Phys, FP, (US/MM), Transco-30</option><option value="NG Firm Phys, FP, (US/MM), Transco-65">NG Firm Phys, FP, (US/MM), Transco-65</option><option value="NG Firm Phys, FP, (US/MM), Transco-85">NG Firm Phys, FP, (US/MM), Transco-85</option><option value="NG Firm Phys, FP, (US/MM), Transco-River Road">NG Firm Phys, FP, (US/MM), Transco-River Road</option><option value="NG Firm Phys, FP, (US/MM), Transco-Z5 South">NG Firm Phys, FP, (US/MM), Transco-Z5 South</option><option value="NG Firm Phys, FP, (US/MM), Transco-Z6 (non-NY north ML)">NG Firm Phys, FP, (US/MM), Transco-Z6 (non-NY north ML)</option><option value="NG Firm Phys, FP, (US/MM), Transco-Z6 NY">NG Firm Phys, FP, (US/MM), Transco-Z6 NY</option><option value="NG Firm Phys, FP, (US/MM), Transco-Z6 Sta-210">NG Firm Phys, FP, (US/MM), Transco-Z6 Sta-210</option><option value="NG Firm Phys, FP, (US/MM), Transco-Z6 non-NY">NG Firm Phys, FP, (US/MM), Transco-Z6 non-NY</option><option value="NG Firm Phys, FP, (US/MM), Transco-Z6 non-NY north">NG Firm Phys, FP, (US/MM), Transco-Z6 non-NY north</option><option value="NG Firm Phys, FP, (US/MM), Trunkline-ELA">NG Firm Phys, FP, (US/MM), Trunkline-ELA</option><option value="NG Firm Phys, FP, (US/MM), Trunkline-WLA">NG Firm Phys, FP, (US/MM), Trunkline-WLA</option><option value="NG Firm Phys, FP, (US/MM), Trunkline-Z1A">NG Firm Phys, FP, (US/MM), Trunkline-Z1A</option><option value="NG Firm Phys, FP, (US/MM), Waha">NG Firm Phys, FP, (US/MM), Waha</option><option value="NG Firm Phys, ID, GDD, (US/MM), ANR-SE-T">NG Firm Phys, ID, GDD, (US/MM), ANR-SE-T</option><option value="NG Firm Phys, ID, GDD, (US/MM), ANR-SW">NG Firm Phys, ID, GDD, (US/MM), ANR-SW</option><option value="NG Firm Phys, ID, GDD, (US/MM), APC-ACE">NG Firm Phys, ID, GDD, (US/MM), APC-ACE</option><option value="NG Firm Phys, ID, GDD, (US/MM), CG-Mainline">NG Firm Phys, ID, GDD, (US/MM), CG-Mainline</option><option value="NG Firm Phys, ID, GDD, (US/MM), CG-Onshore">NG Firm Phys, ID, GDD, (US/MM), CG-Onshore</option><option value="NG Firm Phys, ID, GDD, (US/MM), Cheyenne Hub">NG Firm Phys, ID, GDD, (US/MM), Cheyenne Hub</option><option value="NG Firm Phys, ID, GDD, (US/MM), Consumers">NG Firm Phys, ID, GDD, (US/MM), Consumers</option><option value="NG Firm Phys, ID, GDD, (US/MM), Cove Point">NG Firm Phys, ID, GDD, (US/MM), Cove Point</option><option value="NG Firm Phys, ID, GDD, (US/MM), Dominion-North">NG Firm Phys, ID, GDD, (US/MM), Dominion-North</option><option value="NG Firm Phys, ID, GDD, (US/MM), Dominion-South">NG Firm Phys, ID, GDD, (US/MM), Dominion-South</option><option value="NG Firm Phys, ID, GDD, (US/MM), EGT-Flex">NG Firm Phys, ID, GDD, (US/MM), EGT-Flex</option><option value="NG Firm Phys, ID, GDD, (US/MM), EP-Keystone (EP Perm id)">NG Firm Phys, ID, GDD, (US/MM), EP-Keystone (EP Perm id)</option><option value="NG Firm Phys, ID, GDD, (US/MM), EP-Keystone (EP WTX id)">NG Firm Phys, ID, GDD, (US/MM), EP-Keystone (EP WTX id)</option><option value="NG Firm Phys, ID, GDD, (US/MM), EP-SJ Blanco Pool">NG Firm Phys, ID, GDD, (US/MM), EP-SJ Blanco Pool</option><option value="NG Firm Phys, ID, GDD, (US/MM), FGT-Z3">NG Firm Phys, ID, GDD, (US/MM), FGT-Z3</option><option value="NG Firm Phys, ID, GDD, (US/MM), GTN-Kingsgate">NG Firm Phys, ID, GDD, (US/MM), GTN-Kingsgate</option><option value="NG Firm Phys, ID, GDD, (US/MM), GTN-Malin">NG Firm Phys, ID, GDD, (US/MM), GTN-Malin</option><option value="NG Firm Phys, ID, GDD, (US/MM), GTN-Stanfield">NG Firm Phys, ID, GDD, (US/MM), GTN-Stanfield</option><option value="NG Firm Phys, ID, GDD, (US/MM), HSC-HPL Pool">NG Firm Phys, ID, GDD, (US/MM), HSC-HPL Pool</option><option value="NG Firm Phys, ID, GDD, (US/MM), Henry">NG Firm Phys, ID, GDD, (US/MM), Henry</option><option value="NG Firm Phys, ID, GDD, (US/MM), Iroquois (Into)">NG Firm Phys, ID, GDD, (US/MM), Iroquois (Into)</option><option value="NG Firm Phys, ID, GDD, (US/MM), KRGT-Del Pool">NG Firm Phys, ID, GDD, (US/MM), KRGT-Del Pool</option><option value="NG Firm Phys, ID, GDD, (US/MM), KRGT-Rec Pool">NG Firm Phys, ID, GDD, (US/MM), KRGT-Rec Pool</option><option value="NG Firm Phys, ID, GDD, (US/MM), Katy-Enstor Pool">NG Firm Phys, ID, GDD, (US/MM), Katy-Enstor Pool</option><option value="NG Firm Phys, ID, GDD, (US/MM), Katy-Oasis">NG Firm Phys, ID, GDD, (US/MM), Katy-Oasis</option><option value="NG Firm Phys, ID, GDD, (US/MM), Leidy-Transco">NG Firm Phys, ID, GDD, (US/MM), Leidy-Transco</option><option value="NG Firm Phys, ID, GDD, (US/MM), Michcon">NG Firm Phys, ID, GDD, (US/MM), Michcon</option><option value="NG Firm Phys, ID, GDD, (US/MM), Millennium East Pool">NG Firm Phys, ID, GDD, (US/MM), Millennium East Pool</option><option value="NG Firm Phys, ID, GDD, (US/MM), NBPL-Ventura TP">NG Firm Phys, ID, GDD, (US/MM), NBPL-Ventura TP</option><option value="NG Firm Phys, ID, GDD, (US/MM), NGPL-Midcont Pool">NG Firm Phys, ID, GDD, (US/MM), NGPL-Midcont Pool</option><option value="NG Firm Phys, ID, GDD, (US/MM), NGPL-Nicor">NG Firm Phys, ID, GDD, (US/MM), NGPL-Nicor</option><option value="NG Firm Phys, ID, GDD, (US/MM), NGPL-Nipsco">NG Firm Phys, ID, GDD, (US/MM), NGPL-Nipsco</option><option value="NG Firm Phys, ID, GDD, (US/MM), NGPL-STX">NG Firm Phys, ID, GDD, (US/MM), NGPL-STX</option><option value="NG Firm Phys, ID, GDD, (US/MM), NGPL-TXOK East">NG Firm Phys, ID, GDD, (US/MM), NGPL-TXOK East</option><option value="NG Firm Phys, ID, GDD, (US/MM), NNG-Demarc">NG Firm Phys, ID, GDD, (US/MM), NNG-Demarc</option><option value="NG Firm Phys, ID, GDD, (US/MM), NNG-Ventura">NG Firm Phys, ID, GDD, (US/MM), NNG-Ventura</option><option value="NG Firm Phys, ID, GDD, (US/MM), OGT">NG Firm Phys, ID, GDD, (US/MM), OGT</option><option value="NG Firm Phys, ID, GDD, (US/MM), Oasis-Waha Pool">NG Firm Phys, ID, GDD, (US/MM), Oasis-Waha Pool</option><option value="NG Firm Phys, ID, GDD, (US/MM), Opal">NG Firm Phys, ID, GDD, (US/MM), Opal</option><option value="NG Firm Phys, ID, GDD, (US/MM), PGE-Citygate">NG Firm Phys, ID, GDD, (US/MM), PGE-Citygate</option><option value="NG Firm Phys, ID, GDD, (US/MM), Panhandle">NG Firm Phys, ID, GDD, (US/MM), Panhandle</option><option value="NG Firm Phys, ID, GDD, (US/MM), Pine Prairie">NG Firm Phys, ID, GDD, (US/MM), Pine Prairie</option><option value="NG Firm Phys, ID, GDD, (US/MM), REX E-ANR">NG Firm Phys, ID, GDD, (US/MM), REX E-ANR</option><option value="NG Firm Phys, ID, GDD, (US/MM), SoCal-Citygate">NG Firm Phys, ID, GDD, (US/MM), SoCal-Citygate</option><option value="NG Firm Phys, ID, GDD, (US/MM), Sonat-Z0 South">NG Firm Phys, ID, GDD, (US/MM), Sonat-Z0 South</option><option value="NG Firm Phys, ID, GDD, (US/MM), TCO">NG Firm Phys, ID, GDD, (US/MM), TCO</option><option value="NG Firm Phys, ID, GDD, (US/MM), TCO-A04 Pool">NG Firm Phys, ID, GDD, (US/MM), TCO-A04 Pool</option><option value="NG Firm Phys, ID, GDD, (US/MM), TETCO-ELA">NG Firm Phys, ID, GDD, (US/MM), TETCO-ELA</option><option value="NG Firm Phys, ID, GDD, (US/MM), TETCO-M1 30">NG Firm Phys, ID, GDD, (US/MM), TETCO-M1 30</option><option value="NG Firm Phys, ID, GDD, (US/MM), TETCO-M2 (receipts)">NG Firm Phys, ID, GDD, (US/MM), TETCO-M2 (receipts)</option><option value="NG Firm Phys, ID, GDD, (US/MM), TETCO-M3">NG Firm Phys, ID, GDD, (US/MM), TETCO-M3</option><option value="NG Firm Phys, ID, GDD, (US/MM), TETCO-STX">NG Firm Phys, ID, GDD, (US/MM), TETCO-STX</option><option value="NG Firm Phys, ID, GDD, (US/MM), TETCO-WLA">NG Firm Phys, ID, GDD, (US/MM), TETCO-WLA</option><option value="NG Firm Phys, ID, GDD, (US/MM), TGP-500L">NG Firm Phys, ID, GDD, (US/MM), TGP-500L</option><option value="NG Firm Phys, ID, GDD, (US/MM), TGP-800L">NG Firm Phys, ID, GDD, (US/MM), TGP-800L</option><option value="NG Firm Phys, ID, GDD, (US/MM), TGP-Z0 North">NG Firm Phys, ID, GDD, (US/MM), TGP-Z0 North</option><option value="NG Firm Phys, ID, GDD, (US/MM), TGP-Z0 South">NG Firm Phys, ID, GDD, (US/MM), TGP-Z0 South</option><option value="NG Firm Phys, ID, GDD, (US/MM), TGT-Mainline">NG Firm Phys, ID, GDD, (US/MM), TGT-Mainline</option><option value="NG Firm Phys, ID, GDD, (US/MM), TGT-North LA">NG Firm Phys, ID, GDD, (US/MM), TGT-North LA</option><option value="NG Firm Phys, ID, GDD, (US/MM), TGT-SL">NG Firm Phys, ID, GDD, (US/MM), TGT-SL</option><option value="NG Firm Phys, ID, GDD, (US/MM), Transco-30">NG Firm Phys, ID, GDD, (US/MM), Transco-30</option><option value="NG Firm Phys, ID, GDD, (US/MM), Transco-65">NG Firm Phys, ID, GDD, (US/MM), Transco-65</option><option value="NG Firm Phys, ID, GDD, (US/MM), Transco-85">NG Firm Phys, ID, GDD, (US/MM), Transco-85</option><option value="NG Firm Phys, ID, GDD, (US/MM), Transco-River Road">NG Firm Phys, ID, GDD, (US/MM), Transco-River Road</option><option value="NG Firm Phys, ID, GDD, (US/MM), Transco-Z5 South">NG Firm Phys, ID, GDD, (US/MM), Transco-Z5 South</option><option value="NG Firm Phys, ID, GDD, (US/MM), Transco-Z6 (non-NY north ML)">NG Firm Phys, ID, GDD, (US/MM), Transco-Z6 (non-NY north ML)</option><option value="NG Firm Phys, ID, GDD, (US/MM), Transco-Z6 NY">NG Firm Phys, ID, GDD, (US/MM), Transco-Z6 NY</option><option value="NG Firm Phys, ID, GDD, (US/MM), Transco-Z6 Sta-210">NG Firm Phys, ID, GDD, (US/MM), Transco-Z6 Sta-210</option><option value="NG Firm Phys, ID, GDD, (US/MM), Transco-Z6 non-NY">NG Firm Phys, ID, GDD, (US/MM), Transco-Z6 non-NY</option><option value="NG Firm Phys, ID, GDD, (US/MM), Transco-Z6 non-NY north">NG Firm Phys, ID, GDD, (US/MM), Transco-Z6 non-NY north</option><option value="NG Firm Phys, ID, GDD, (US/MM), Trunkline-ELA">NG Firm Phys, ID, GDD, (US/MM), Trunkline-ELA</option><option value="NG Firm Phys, ID, GDD, (US/MM), Trunkline-WLA">NG Firm Phys, ID, GDD, (US/MM), Trunkline-WLA</option><option value="NG Firm Phys, ID, GDD, (US/MM), Trunkline-Z1A">NG Firm Phys, ID, GDD, (US/MM), Trunkline-Z1A</option><option value="NG Firm Phys, ID, GDD, (US/MM), Waha">NG Firm Phys, ID, GDD, (US/MM), Waha</option><option value="NG Firm Phys, ID, IF, (US/MM), ANR-SE-T">NG Firm Phys, ID, IF, (US/MM), ANR-SE-T</option><option value="NG Firm Phys, ID, IF, (US/MM), ANR-SW">NG Firm Phys, ID, IF, (US/MM), ANR-SW</option><option value="NG Firm Phys, ID, IF, (US/MM), CG-Mainline">NG Firm Phys, ID, IF, (US/MM), CG-Mainline</option><option value="NG Firm Phys, ID, IF, (US/MM), CG-Onshore">NG Firm Phys, ID, IF, (US/MM), CG-Onshore</option><option value="NG Firm Phys, ID, IF, (US/MM), Cheyenne Hub">NG Firm Phys, ID, IF, (US/MM), Cheyenne Hub</option><option value="NG Firm Phys, ID, IF, (US/MM), Consumers">NG Firm Phys, ID, IF, (US/MM), Consumers</option><option value="NG Firm Phys, ID, IF, (US/MM), Dominion-North">NG Firm Phys, ID, IF, (US/MM), Dominion-North</option><option value="NG Firm Phys, ID, IF, (US/MM), Dominion-South">NG Firm Phys, ID, IF, (US/MM), Dominion-South</option><option value="NG Firm Phys, ID, IF, (US/MM), EGT-Flex">NG Firm Phys, ID, IF, (US/MM), EGT-Flex</option><option value="NG Firm Phys, ID, IF, (US/MM), EP-Keystone (EP Perm id)">NG Firm Phys, ID, IF, (US/MM), EP-Keystone (EP Perm id)</option><option value="NG Firm Phys, ID, IF, (US/MM), EP-Keystone (EP WTX id)">NG Firm Phys, ID, IF, (US/MM), EP-Keystone (EP WTX id)</option><option value="NG Firm Phys, ID, IF, (US/MM), EP-SJ Blanco Pool">NG Firm Phys, ID, IF, (US/MM), EP-SJ Blanco Pool</option><option value="NG Firm Phys, ID, IF, (US/MM), FGT-Z3">NG Firm Phys, ID, IF, (US/MM), FGT-Z3</option><option value="NG Firm Phys, ID, IF, (US/MM), HSC-HPL Pool">NG Firm Phys, ID, IF, (US/MM), HSC-HPL Pool</option><option value="NG Firm Phys, ID, IF, (US/MM), Henry">NG Firm Phys, ID, IF, (US/MM), Henry</option><option value="NG Firm Phys, ID, IF, (US/MM), Iroquois (Into)">NG Firm Phys, ID, IF, (US/MM), Iroquois (Into)</option><option value="NG Firm Phys, ID, IF, (US/MM), KRGT-Rec Pool">NG Firm Phys, ID, IF, (US/MM), KRGT-Rec Pool</option><option value="NG Firm Phys, ID, IF, (US/MM), Katy-Enstor Pool (HSC id)">NG Firm Phys, ID, IF, (US/MM), Katy-Enstor Pool (HSC id)</option><option value="NG Firm Phys, ID, IF, (US/MM), Katy-Enstor Pool (Katy id)">NG Firm Phys, ID, IF, (US/MM), Katy-Enstor Pool (Katy id)</option><option value="NG Firm Phys, ID, IF, (US/MM), Katy-Oasis (HSC id)">NG Firm Phys, ID, IF, (US/MM), Katy-Oasis (HSC id)</option><option value="NG Firm Phys, ID, IF, (US/MM), Katy-Oasis (Katy id)">NG Firm Phys, ID, IF, (US/MM), Katy-Oasis (Katy id)</option><option value="NG Firm Phys, ID, IF, (US/MM), Leidy-Transco">NG Firm Phys, ID, IF, (US/MM), Leidy-Transco</option><option value="NG Firm Phys, ID, IF, (US/MM), Michcon">NG Firm Phys, ID, IF, (US/MM), Michcon</option><option value="NG Firm Phys, ID, IF, (US/MM), Millennium East Pool">NG Firm Phys, ID, IF, (US/MM), Millennium East Pool</option><option value="NG Firm Phys, ID, IF, (US/MM), NBPL-Ventura TP">NG Firm Phys, ID, IF, (US/MM), NBPL-Ventura TP</option><option value="NG Firm Phys, ID, IF, (US/MM), NGPL-Midcont Pool">NG Firm Phys, ID, IF, (US/MM), NGPL-Midcont Pool</option><option value="NG Firm Phys, ID, IF, (US/MM), NGPL-STX">NG Firm Phys, ID, IF, (US/MM), NGPL-STX</option><option value="NG Firm Phys, ID, IF, (US/MM), NGPL-TXOK East">NG Firm Phys, ID, IF, (US/MM), NGPL-TXOK East</option><option value="NG Firm Phys, ID, IF, (US/MM), NNG-Demarc">NG Firm Phys, ID, IF, (US/MM), NNG-Demarc</option><option value="NG Firm Phys, ID, IF, (US/MM), NNG-Ventura">NG Firm Phys, ID, IF, (US/MM), NNG-Ventura</option><option value="NG Firm Phys, ID, IF, (US/MM), OGT">NG Firm Phys, ID, IF, (US/MM), OGT</option><option value="NG Firm Phys, ID, IF, (US/MM), Oasis-Waha Pool">NG Firm Phys, ID, IF, (US/MM), Oasis-Waha Pool</option><option value="NG Firm Phys, ID, IF, (US/MM), Opal">NG Firm Phys, ID, IF, (US/MM), Opal</option><option value="NG Firm Phys, ID, IF, (US/MM), Panhandle">NG Firm Phys, ID, IF, (US/MM), Panhandle</option><option value="NG Firm Phys, ID, IF, (US/MM), Pine Prairie">NG Firm Phys, ID, IF, (US/MM), Pine Prairie</option><option value="NG Firm Phys, ID, IF, (US/MM), REX E-ANR">NG Firm Phys, ID, IF, (US/MM), REX E-ANR</option><option value="NG Firm Phys, ID, IF, (US/MM), Sonat-Z0 South">NG Firm Phys, ID, IF, (US/MM), Sonat-Z0 South</option><option value="NG Firm Phys, ID, IF, (US/MM), TCO">NG Firm Phys, ID, IF, (US/MM), TCO</option><option value="NG Firm Phys, ID, IF, (US/MM), TCO-A04 Pool">NG Firm Phys, ID, IF, (US/MM), TCO-A04 Pool</option><option value="NG Firm Phys, ID, IF, (US/MM), TETCO-ELA">NG Firm Phys, ID, IF, (US/MM), TETCO-ELA</option><option value="NG Firm Phys, ID, IF, (US/MM), TETCO-M1 30">NG Firm Phys, ID, IF, (US/MM), TETCO-M1 30</option><option value="NG Firm Phys, ID, IF, (US/MM), TETCO-M2 (receipts)">NG Firm Phys, ID, IF, (US/MM), TETCO-M2 (receipts)</option><option value="NG Firm Phys, ID, IF, (US/MM), TETCO-M3">NG Firm Phys, ID, IF, (US/MM), TETCO-M3</option><option value="NG Firm Phys, ID, IF, (US/MM), TETCO-STX">NG Firm Phys, ID, IF, (US/MM), TETCO-STX</option><option value="NG Firm Phys, ID, IF, (US/MM), TETCO-WLA">NG Firm Phys, ID, IF, (US/MM), TETCO-WLA</option><option value="NG Firm Phys, ID, IF, (US/MM), TGP-500L">NG Firm Phys, ID, IF, (US/MM), TGP-500L</option><option value="NG Firm Phys, ID, IF, (US/MM), TGP-800L">NG Firm Phys, ID, IF, (US/MM), TGP-800L</option><option value="NG Firm Phys, ID, IF, (US/MM), TGP-Z0 North">NG Firm Phys, ID, IF, (US/MM), TGP-Z0 North</option><option value="NG Firm Phys, ID, IF, (US/MM), TGP-Z0 South">NG Firm Phys, ID, IF, (US/MM), TGP-Z0 South</option><option value="NG Firm Phys, ID, IF, (US/MM), TGT-Mainline">NG Firm Phys, ID, IF, (US/MM), TGT-Mainline</option><option value="NG Firm Phys, ID, IF, (US/MM), TGT-North LA">NG Firm Phys, ID, IF, (US/MM), TGT-North LA</option><option value="NG Firm Phys, ID, IF, (US/MM), TGT-SL">NG Firm Phys, ID, IF, (US/MM), TGT-SL</option><option value="NG Firm Phys, ID, IF, (US/MM), Transco-30">NG Firm Phys, ID, IF, (US/MM), Transco-30</option><option value="NG Firm Phys, ID, IF, (US/MM), Transco-65">NG Firm Phys, ID, IF, (US/MM), Transco-65</option><option value="NG Firm Phys, ID, IF, (US/MM), Transco-85">NG Firm Phys, ID, IF, (US/MM), Transco-85</option><option value="NG Firm Phys, ID, IF, (US/MM), Transco-River Road">NG Firm Phys, ID, IF, (US/MM), Transco-River Road</option><option value="NG Firm Phys, ID, IF, (US/MM), Transco-Z5 South">NG Firm Phys, ID, IF, (US/MM), Transco-Z5 South</option><option value="NG Firm Phys, ID, IF, (US/MM), Transco-Z6 (non-NY north ML)">NG Firm Phys, ID, IF, (US/MM), Transco-Z6 (non-NY north ML)</option><option value="NG Firm Phys, ID, IF, (US/MM), Transco-Z6 NY">NG Firm Phys, ID, IF, (US/MM), Transco-Z6 NY</option><option value="NG Firm Phys, ID, IF, (US/MM), Transco-Z6 Sta-210">NG Firm Phys, ID, IF, (US/MM), Transco-Z6 Sta-210</option><option value="NG Firm Phys, ID, IF, (US/MM), Transco-Z6 non-NY">NG Firm Phys, ID, IF, (US/MM), Transco-Z6 non-NY</option><option value="NG Firm Phys, ID, IF, (US/MM), Transco-Z6 non-NY north">NG Firm Phys, ID, IF, (US/MM), Transco-Z6 non-NY north</option><option value="NG Firm Phys, ID, IF, (US/MM), Trunkline-ELA">NG Firm Phys, ID, IF, (US/MM), Trunkline-ELA</option><option value="NG Firm Phys, ID, IF, (US/MM), Trunkline-WLA">NG Firm Phys, ID, IF, (US/MM), Trunkline-WLA</option><option value="NG Firm Phys, ID, IF, (US/MM), Trunkline-Z1A">NG Firm Phys, ID, IF, (US/MM), Trunkline-Z1A</option><option value="NG Firm Phys, ID, IF, (US/MM), Waha">NG Firm Phys, ID, IF, (US/MM), Waha</option><option value="NG Firm Phys, ID, NGI, (US/MM), APC-ACE">NG Firm Phys, ID, NGI, (US/MM), APC-ACE</option><option value="NG Firm Phys, ID, NGI, (US/MM), GTN-Kingsgate">NG Firm Phys, ID, NGI, (US/MM), GTN-Kingsgate</option><option value="NG Firm Phys, ID, NGI, (US/MM), GTN-Malin">NG Firm Phys, ID, NGI, (US/MM), GTN-Malin</option><option value="NG Firm Phys, ID, NGI, (US/MM), GTN-Stanfield">NG Firm Phys, ID, NGI, (US/MM), GTN-Stanfield</option><option value="NG Firm Phys, ID, NGI, (US/MM), KRGT-Del Pool">NG Firm Phys, ID, NGI, (US/MM), KRGT-Del Pool</option><option value="NG Firm Phys, ID, NGI, (US/MM), NGPL-Nicor">NG Firm Phys, ID, NGI, (US/MM), NGPL-Nicor</option><option value="NG Firm Phys, ID, NGI, (US/MM), NGPL-Nipsco">NG Firm Phys, ID, NGI, (US/MM), NGPL-Nipsco</option><option value="NG Firm Phys, ID, NGI, (US/MM), PGE-Citygate">NG Firm Phys, ID, NGI, (US/MM), PGE-Citygate</option><option value="NG Firm Phys, ID, NGI, (US/MM), SoCal-Citygate">NG Firm Phys, ID, NGI, (US/MM), SoCal-Citygate</option><option value="NGX Fin BS, LD1 for 5A, (US/MM), AB-NIT">NGX Fin BS, LD1 for 5A, (US/MM), AB-NIT</option><option value="NGX Fin BS, LD1 for 7A, (US/MM), AB-NIT">NGX Fin BS, LD1 for 7A, (US/MM), AB-NIT</option><option value="NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT" selected="selected">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</option><option value="NGX Fin FF, FP for 7A, (US/MM), AB-NIT">NGX Fin FF, FP for 7A, (US/MM), AB-NIT</option><option value="NGX Fin FF, FP for LD1, (US/MM), Henry">NGX Fin FF, FP for LD1, (US/MM), Henry</option><option value="NGX Fin SS, FP for 5A, (CA/GJ), AB-NIT">NGX Fin SS, FP for 5A, (CA/GJ), AB-NIT</option><option value="NGX Fin SS, FP for 5A, (US/MM), AB-NIT">NGX Fin SS, FP for 5A, (US/MM), AB-NIT</option><option value="NGX Phys, BS, LD1 (US/MM), AB-NIT">NGX Phys, BS, LD1 (US/MM), AB-NIT</option><option value="NGX Phys, BS, LD1 (US/MM), Spectra - Hunt">NGX Phys, BS, LD1 (US/MM), Spectra - Hunt</option><option value="NGX Phys, BS, LD1 (US/MM), TCPL - Chippawa">NGX Phys, BS, LD1 (US/MM), TCPL - Chippawa</option><option value="NGX Phys, BS, LD1 (US/MM), TCPL - East Hereford">NGX Phys, BS, LD1 (US/MM), TCPL - East Hereford</option><option value="NGX Phys, BS, LD1 (US/MM), TCPL - Emerson 1">NGX Phys, BS, LD1 (US/MM), TCPL - Emerson 1</option><option value="NGX Phys, BS, LD1 (US/MM), TCPL - Emerson 2">NGX Phys, BS, LD1 (US/MM), TCPL - Emerson 2</option><option value="NGX Phys, BS, LD1 (US/MM), TCPL - Enbridge EDA">NGX Phys, BS, LD1 (US/MM), TCPL - Enbridge EDA</option><option value="NGX Phys, BS, LD1 (US/MM), TCPL - Energir EDA">NGX Phys, BS, LD1 (US/MM), TCPL - Energir EDA</option><option value="NGX Phys, BS, LD1 (US/MM), TCPL - Iroquois">NGX Phys, BS, LD1 (US/MM), TCPL - Iroquois</option><option value="NGX Phys, BS, LD1 (US/MM), TCPL - Niagara">NGX Phys, BS, LD1 (US/MM), TCPL - Niagara</option><option value="NGX Phys, BS, LD1 (US/MM), TCPL - North Bay Junction">NGX Phys, BS, LD1 (US/MM), TCPL - North Bay Junction</option><option value="NGX Phys, BS, LD1 (US/MM), TCPL - St. Clair">NGX Phys, BS, LD1 (US/MM), TCPL - St. Clair</option><option value="NGX Phys, BS, LD1 (US/MM), TCPL-Enbridge CDA">NGX Phys, BS, LD1 (US/MM), TCPL-Enbridge CDA</option><option value="NGX Phys, BS, LD1 (US/MM), Union-Dawn">NGX Phys, BS, LD1 (US/MM), Union-Dawn</option><option value="NGX Phys, BS, LD1 (US/MM), Union-Parkway">NGX Phys, BS, LD1 (US/MM), Union-Parkway</option><option value="NGX Phys, BS, LD1 Spr (US/MM), AB-NIT/TCPL-Emerson1">NGX Phys, BS, LD1 Spr (US/MM), AB-NIT/TCPL-Emerson1</option><option value="NGX Phys, BS, LD1 Spr (US/MM), AB-NIT/TCPL-Emerson2">NGX Phys, BS, LD1 Spr (US/MM), AB-NIT/TCPL-Emerson2</option><option value="NGX Phys, BS, LD1 Spr (US/MM), AB-NIT/Union-Dawn">NGX Phys, BS, LD1 Spr (US/MM), AB-NIT/Union-Dawn</option><option value="NGX Phys, BS, LD1 Spr (US/MM), TCPL - North Bay Junction/Union-Dawn">NGX Phys, BS, LD1 Spr (US/MM), TCPL - North Bay Junction/Union-Dawn</option><option value="NGX Phys, BS, LD1 Spr (US/MM), TCPL-St. Clair/Union-Dawn">NGX Phys, BS, LD1 Spr (US/MM), TCPL-St. Clair/Union-Dawn</option><option value="NGX Phys, BS, LD1 Spr (US/MM), Union-Dawn/TCPL - Enbridge EDA">NGX Phys, BS, LD1 Spr (US/MM), Union-Dawn/TCPL - Enbridge EDA</option><option value="NGX Phys, BS, LD1 Spr (US/MM), Union-Dawn/TCPL Energir EDA">NGX Phys, BS, LD1 Spr (US/MM), Union-Dawn/TCPL Energir EDA</option><option value="NGX Phys, BS, LD1 Spr (US/MM), Union-Dawn/TCPL-Chippawa">NGX Phys, BS, LD1 Spr (US/MM), Union-Dawn/TCPL-Chippawa</option><option value="NGX Phys, BS, LD1 Spr (US/MM), Union-Dawn/TCPL-Enbridge CDA">NGX Phys, BS, LD1 Spr (US/MM), Union-Dawn/TCPL-Enbridge CDA</option><option value="NGX Phys, BS, LD1 Spr (US/MM), Union-Dawn/TCPL-Iroquois">NGX Phys, BS, LD1 Spr (US/MM), Union-Dawn/TCPL-Iroquois</option><option value="NGX Phys, BS, LD1 Spr (US/MM), Union-Dawn/TCPL-Niagara">NGX Phys, BS, LD1 Spr (US/MM), Union-Dawn/TCPL-Niagara</option><option value="NGX Phys, BS, LD1 Spr (US/MM), Union-Dawn/Union-Parkway">NGX Phys, BS, LD1 Spr (US/MM), Union-Dawn/Union-Parkway</option><option value="NGX Phys, BS, LD1 Spr (US/MM), Union-Parkway/TCPL-Enbridge CDA">NGX Phys, BS, LD1 Spr (US/MM), Union-Parkway/TCPL-Enbridge CDA</option><option value="NGX Phys, FP (CA/GJ), AB-NIT">NGX Phys, FP (CA/GJ), AB-NIT</option><option value="NGX Phys, FP (CA/GJ), APC-ATP">NGX Phys, FP (CA/GJ), APC-ATP</option><option value="NGX Phys, FP (CA/GJ), Spectra - Stn 2">NGX Phys, FP (CA/GJ), Spectra - Stn 2</option><option value="NGX Phys, FP (CA/GJ), TCPL - Empress">NGX Phys, FP (CA/GJ), TCPL - Empress</option><option value="NGX Phys, FP (CA/GJ), TCPL-Suffield 2">NGX Phys, FP (CA/GJ), TCPL-Suffield 2</option><option value="NGX Phys, FP (CA/GJ), TEP">NGX Phys, FP (CA/GJ), TEP</option><option value="NGX Phys, FP (US/MM), AB-NIT">NGX Phys, FP (US/MM), AB-NIT</option><option value="NGX Phys, FP (US/MM), APC-ATP">NGX Phys, FP (US/MM), APC-ATP</option><option value="NGX Phys, FP (US/MM), Spectra - Hunt">NGX Phys, FP (US/MM), Spectra - Hunt</option><option value="NGX Phys, FP (US/MM), Spectra - Stn 2">NGX Phys, FP (US/MM), Spectra - Stn 2</option><option value="NGX Phys, FP (US/MM), TCPL - Chippawa">NGX Phys, FP (US/MM), TCPL - Chippawa</option><option value="NGX Phys, FP (US/MM), TCPL - East Hereford">NGX Phys, FP (US/MM), TCPL - East Hereford</option><option value="NGX Phys, FP (US/MM), TCPL - Emerson 1">NGX Phys, FP (US/MM), TCPL - Emerson 1</option><option value="NGX Phys, FP (US/MM), TCPL - Emerson 2">NGX Phys, FP (US/MM), TCPL - Emerson 2</option><option value="NGX Phys, FP (US/MM), TCPL - Enbridge EDA">NGX Phys, FP (US/MM), TCPL - Enbridge EDA</option><option value="NGX Phys, FP (US/MM), TCPL - Energir EDA">NGX Phys, FP (US/MM), TCPL - Energir EDA</option><option value="NGX Phys, FP (US/MM), TCPL - Iroquois">NGX Phys, FP (US/MM), TCPL - Iroquois</option><option value="NGX Phys, FP (US/MM), TCPL - Niagara">NGX Phys, FP (US/MM), TCPL - Niagara</option><option value="NGX Phys, FP (US/MM), TCPL - North Bay Junction">NGX Phys, FP (US/MM), TCPL - North Bay Junction</option><option value="NGX Phys, FP (US/MM), TCPL - St. Clair">NGX Phys, FP (US/MM), TCPL - St. Clair</option><option value="NGX Phys, FP (US/MM), TCPL-Enbridge CDA">NGX Phys, FP (US/MM), TCPL-Enbridge CDA</option><option value="NGX Phys, FP (US/MM), Union-Dawn">NGX Phys, FP (US/MM), Union-Dawn</option><option value="NGX Phys, FP (US/MM), Union-Parkway">NGX Phys, FP (US/MM), Union-Parkway</option><option value="NGX Phys, FP Spr (CA/GJ), AB-NIT/APC-ATP">NGX Phys, FP Spr (CA/GJ), AB-NIT/APC-ATP</option><option value="NGX Phys, FP Spr (CA/GJ), AB-NIT/Spectra-Stn2">NGX Phys, FP Spr (CA/GJ), AB-NIT/Spectra-Stn2</option><option value="NGX Phys, FP Spr (CA/GJ), AB-NIT/TCPL-Empress">NGX Phys, FP Spr (CA/GJ), AB-NIT/TCPL-Empress</option><option value="NGX Phys, FP Spr (CA/GJ), AB-NIT/TCPL-Suffield 2">NGX Phys, FP Spr (CA/GJ), AB-NIT/TCPL-Suffield 2</option><option value="NGX Phys, FP Spr (US/MM), AB-NIT/Union-Dawn">NGX Phys, FP Spr (US/MM), AB-NIT/Union-Dawn</option><option value="NGX Phys, FP Spr (US/MM), Spectra-Stn2/Spectra-Hunt">NGX Phys, FP Spr (US/MM), Spectra-Stn2/Spectra-Hunt</option><option value="NGX Phys, FP Spr (US/MM), TCPL - North Bay Junction/Union Dawn">NGX Phys, FP Spr (US/MM), TCPL - North Bay Junction/Union Dawn</option><option value="NGX Phys, FP Spr (US/MM), Union-Dawn/TCPL - Enbridge EDA">NGX Phys, FP Spr (US/MM), Union-Dawn/TCPL - Enbridge EDA</option><option value="NGX Phys, FP Spr (US/MM), Union-Dawn/TCPL Energir EDA">NGX Phys, FP Spr (US/MM), Union-Dawn/TCPL Energir EDA</option><option value="NGX Phys, FP Spr (US/MM), Union-Dawn/TCPL-Chippawa">NGX Phys, FP Spr (US/MM), Union-Dawn/TCPL-Chippawa</option><option value="NGX Phys, FP Spr (US/MM), Union-Dawn/TCPL-Enbridge CDA">NGX Phys, FP Spr (US/MM), Union-Dawn/TCPL-Enbridge CDA</option><option value="NGX Phys, FP Spr (US/MM), Union-Dawn/TCPL-Iroquois">NGX Phys, FP Spr (US/MM), Union-Dawn/TCPL-Iroquois</option><option value="NGX Phys, FP Spr (US/MM), Union-Dawn/TCPL-Niagara">NGX Phys, FP Spr (US/MM), Union-Dawn/TCPL-Niagara</option><option value="NGX Phys, FP Spr (US/MM), Union-Dawn/TCPL-St. Clair">NGX Phys, FP Spr (US/MM), Union-Dawn/TCPL-St. Clair</option><option value="NGX Phys, FP Spr (US/MM), Union-Dawn/Union-Parkway">NGX Phys, FP Spr (US/MM), Union-Dawn/Union-Parkway</option><option value="NGX Phys, FP Spr (US/MM), Union-Parkway/TCPL-Enbridge CDA">NGX Phys, FP Spr (US/MM), Union-Parkway/TCPL-Enbridge CDA</option><option value="NGX Phys, ID, 2a (CA/GJ), AB-NIT">NGX Phys, ID, 2a (CA/GJ), AB-NIT</option><option value="NGX Phys, ID, 2a (CA/GJ), APC-ATP">NGX Phys, ID, 2a (CA/GJ), APC-ATP</option><option value="NGX Phys, ID, 2a (US/MM), AB-NIT">NGX Phys, ID, 2a (US/MM), AB-NIT</option><option value="NGX Phys, ID, 4a (CA/GJ), AB-NIT">NGX Phys, ID, 4a (CA/GJ), AB-NIT</option><option value="NGX Phys, ID, 5a (CA/GJ), AB-NIT">NGX Phys, ID, 5a (CA/GJ), AB-NIT</option><option value="NGX Phys, ID, 5a (CA/GJ), APC-ATP">NGX Phys, ID, 5a (CA/GJ), APC-ATP</option><option value="NGX Phys, ID, 5a (CA/GJ), TEP">NGX Phys, ID, 5a (CA/GJ), TEP</option><option value="NGX Phys, ID, 5a (US/MM), AB-NIT">NGX Phys, ID, 5a (US/MM), AB-NIT</option><option value="NGX Phys, ID, 5a (US/MM), APC-ATP">NGX Phys, ID, 5a (US/MM), APC-ATP</option><option value="NGX Phys, ID, 7a (CA/GJ), AB-NIT">NGX Phys, ID, 7a (CA/GJ), AB-NIT</option><option value="NGX Phys, ID, 7a (CA/GJ), APC-ATP">NGX Phys, ID, 7a (CA/GJ), APC-ATP</option><option value="NGX Phys, ID, 7a (CA/GJ), Spectra - Stn 2">NGX Phys, ID, 7a (CA/GJ), Spectra - Stn 2</option><option value="NGX Phys, ID, 7a (US/MM), AB-NIT">NGX Phys, ID, 7a (US/MM), AB-NIT</option><option value="NGX Phys, ID, 7a (US/MM), APC-ATP">NGX Phys, ID, 7a (US/MM), APC-ATP</option><option value="NGX Phys, ID, ATP Day Ahead (CA/GJ), APC-ATP">NGX Phys, ID, ATP Day Ahead (CA/GJ), APC-ATP</option><option value="NGX Phys, ID, ATP Same Day (CA/GJ), APC-ATP">NGX Phys, ID, ATP Same Day (CA/GJ), APC-ATP</option><option value="NGX Phys, ID, Day Ahead (CA/GJ), AB-NIT">NGX Phys, ID, Day Ahead (CA/GJ), AB-NIT</option><option value="NGX Phys, ID, Day Ahead (CA/GJ), APC-ATP">NGX Phys, ID, Day Ahead (CA/GJ), APC-ATP</option><option value="NGX Phys, ID, Day Ahead (CA/GJ), Spectra - Stn 2">NGX Phys, ID, Day Ahead (CA/GJ), Spectra - Stn 2</option><option value="NGX Phys, ID, Day Ahead (US/MM), Emerson 1">NGX Phys, ID, Day Ahead (US/MM), Emerson 1</option><option value="NGX Phys, ID, Day Ahead (US/MM), Emerson 2">NGX Phys, ID, Day Ahead (US/MM), Emerson 2</option><option value="NGX Phys, ID, Day Ahead (US/MM), Union-Dawn">NGX Phys, ID, Day Ahead (US/MM), Union-Dawn</option><option value="NGX Phys, ID, GD (US/MM), Spectra - Hunt">NGX Phys, ID, GD (US/MM), Spectra - Hunt</option><option value="NGX Phys, ID, IF (US/MM), Spectra - Hunt">NGX Phys, ID, IF (US/MM), Spectra - Hunt</option>
+                </select>
+            </div>
+            <div class="form-group true-grid-3">
+                <label for="selectedTimePeriod">Time Period</label>
+                <select name="criteria.selectedTimePeriod" id="selectedTimePeriod" class="select-compact select-long">
+                    <option value="Current Settlement" selected="selected">Current Settlement</option><option value="Previous Day Settlement">Previous Day Settlement</option><option value="Day-2 Settlement">Day-2 Settlement</option><option value="Day-3 Settlement">Day-3 Settlement</option><option value="Day-4 Settlement">Day-4 Settlement</option>
+                </select>
+            </div>
+        </div>
+
+        <input name="submit" type="submit" class="btn btn-primary" value="Submit" />
+
+    <div style="display: none;"><input type="hidden" name="_sourcePage" value="L2zdXvXW6fiYsOABpZSSjQxGsA5xPe96FHy8N4BRR_LWkOsO_UyfJyScqp3FqDO2gqC9YJosfExpI4KXEIfZNg==" /><input type="hidden" name="__fp" value="7KvJP7Mi3gF2fV3s49GaoiVFXZSC421b7apW2Pbwbs6DBKusYDVIceKp1vt5DGBsVQjPHcxDKhSqdseUkPz55Q==" /></div></form>
+
+    
+
+        <!-- display the header -->
+        <h2 class="secondary-header">
+            Natural Gas Market Settlement History for 29-Apr-2020
+        </h2>
+        <hr class="hr">
+
+        
+            
+
+                <div class="row">
+                    <div class="true-grid-10">
+
+                        <table class="table table-data table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>Market</th>
+                                    <th class="table-align-center">Begin<br/>Date</th>
+                                    <th class="table-align-center">End<br/>Date</th>
+                                    <th class="table-align-right"># Trades</th>
+                                    <th class="table-align-right">Total<br/>Volume</th>
+                                    <th class="table-align-right">Open</th>
+                                    <th class="table-align-right">High</th>
+                                    <th class="table-align-right">Low</th>
+                                    <th class="table-align-right">Settle</th>
+                                    <th class="table-align-right">Net OI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2020-05-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2020-05-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>1.7833</td>
+                                        <td class="table-align-right" nowrap>310,000</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2020-06-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2020-06-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>1.9628</td>
+                                        <td class="table-align-right" nowrap>300,000</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2020-07-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2020-07-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.0746</td>
+                                        <td class="table-align-right" nowrap>310,000</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2020-08-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2020-08-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.1158</td>
+                                        <td class="table-align-right" nowrap>310,000</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2020-09-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2020-09-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.2131</td>
+                                        <td class="table-align-right" nowrap>300,000</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2020-10-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2020-10-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.2701</td>
+                                        <td class="table-align-right" nowrap>310,000</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2020-11-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2020-11-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.4930</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2020-12-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2020-12-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.6201</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2021-01-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2021-01-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.6976</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2021-02-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2021-02-28</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.6883</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2021-03-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2021-03-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.6266</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2021-04-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2021-04-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.3846</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2021-05-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2021-05-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.3189</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2021-06-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2021-06-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.2877</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2021-07-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2021-07-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.3757</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2021-08-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2021-08-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.3866</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2021-09-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2021-09-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.3553</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2021-10-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2021-10-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.4460</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2021-11-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2021-11-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.5538</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2021-12-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2021-12-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.7209</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2022-01-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2022-01-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.8130</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2022-02-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2022-02-28</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.7705</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2022-03-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2022-03-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.6880</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2022-04-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2022-04-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.1681</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2022-05-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2022-05-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.0776</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2022-06-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2022-06-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.0841</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2022-07-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2022-07-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.1508</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2022-08-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2022-08-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.1587</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2022-09-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2022-09-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.1625</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2022-10-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2022-10-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.2543</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2022-11-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2022-11-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.3606</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2022-12-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2022-12-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.5027</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2023-01-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2023-01-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.6514</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2023-02-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2023-02-28</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.6005</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2023-03-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2023-03-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.4530</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2023-04-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2023-04-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.0368</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2023-05-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2023-05-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.0069</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2023-06-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2023-06-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.0525</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2023-07-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2023-07-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.0815</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2023-08-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2023-08-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.0913</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2023-09-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2023-09-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.1064</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2023-10-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2023-10-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.1442</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2023-11-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2023-11-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.1434</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2023-12-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2023-12-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.4497</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2024-01-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2024-01-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.6434</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2024-02-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2024-02-29</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.5823</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2024-03-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2024-03-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.3846</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2024-04-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2024-04-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.0659</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2024-05-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2024-05-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.0167</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2024-06-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2024-06-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.0544</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2024-07-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2024-07-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.0908</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2024-08-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2024-08-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.0987</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2024-09-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2024-09-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.1025</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2024-10-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2024-10-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.1416</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2024-11-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2024-11-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.1282</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2024-12-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2024-12-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.4341</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2025-01-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2025-01-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.6324</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2025-02-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2025-02-28</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.5831</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2025-03-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2025-03-31</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.4020</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                                    <tr>
+                                        <td class="table-partitioned">NGX Fin FF, FP for 7A, (CA/GJ), AB-NIT</td>
+                                        <td class="table-align-center" nowrap>2025-04-01</td>
+                                        <td class="table-align-center table-partitioned" nowrap>2025-04-30</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                        <td class="table-align-right table-partitioned" nowrap>0</td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right" nowrap></td>
+                                        <td class="table-align-right table-partitioned" nowrap>2.1129</td>
+                                        <td class="table-align-right" nowrap>0</td>
+                                    </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            
+            
+        
+
+    
+
+    
+
+    <script type="text/javascript">
+        $(function() {
+            $('select').chosen({ search_contains: true, disable_search_threshold: 5, inherit_select_classes: true });
+        });
+    </script>
+
+</body>
+</html>

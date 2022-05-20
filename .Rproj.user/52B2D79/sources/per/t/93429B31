@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1516221078518.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1275049023",
+    "id" : "93429B31",
+    "lastKnownWriteTime" : 1516222245,
+    "last_content_update" : 1516222245592,
+    "path" : "C:/Users/aleach/Google Drive/EIA_data_pulls/eia_weekly_supply.R",
+    "project_path" : "eia_weekly_supply.R",
+    "properties" : {
+        "cursorPosition" : "111,46",
+        "scrollLine" : "76"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

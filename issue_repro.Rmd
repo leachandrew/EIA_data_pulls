@@ -1,0 +1,27 @@
+---
+title: "Testing"
+author: "Andrew Leach"
+date: "January 2018"
+output:
+  html_document:
+      code_folding: hide
+      includes:
+      after_body: 
+      theme: lumen
+      toc: yes
+      toc_float: yes
+  word_document:
+    toc: yes
+  pdf_document:
+    toc: yes
+always_allow_html: yes
+
+---
+
+
+```{r, include=FALSE,cache=TRUE}
+a<-data.frame(seq(1,10,1))
+```
+
+
+Now, when I type, I should be able to see that the first value is `r a[1,1]`.
