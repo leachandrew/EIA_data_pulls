@@ -15,7 +15,6 @@ output:
   pdf_document:
     toc: yes
 always_allow_html: yes
-
 ---
 
 
@@ -133,7 +132,7 @@ data_fetch<-function(key, cat){
 
 ```
 
-#Commodity Prices
+# Commodity Prices
 
 
 Both the EIA data interface [here](https://www.eia.gov/petroleum/data.php#prices) or the API [here](https://www.eia.gov/opendata/qb.php?category=714757) allow you to access benchmark commodity prices we'll talk a lot about in the first couple of classes.  For most of what we do with prices, we'll use data from the Bloomberg terminal but the EIA prices are a useful source of information that you can access from anywhere. 
@@ -898,7 +897,7 @@ oil_play<-ggplot(df1,aes(Date,volume*1000,group = play,fill=play)) +
 
 
 ```{r gas data, warning=FALSE,cache=TRUE}
-gas_prod_file<-"https://www.eia.gov/naturalgas/weekly/img/shale_gas_202211.xlsx"
+gas_prod_file<-"https://www.eia.gov/naturalgas/weekly/img/shale_gas_202212.xlsx"
 
 download.file(gas_prod_file,"play-data.xlsx",mode="wb")
 #plays<-getSheetNames("play-data.xlsx")
