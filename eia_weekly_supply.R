@@ -956,7 +956,6 @@ if(png==1)#set these to only turn on if you're making PNG graphs
 #EIA DPR
 #require(XLConnect)
 
-
 dpr_file<-"https://www.eia.gov/petroleum/drilling/xls/dpr-data.xlsx"
 
 download.file(dpr_file,"dpr-data.xlsx",mode="wb")
@@ -975,44 +974,58 @@ for(play in plays){
 }
 
 
-df1<-melt(dpr_data,id=c("Month","Total_oil_prod","Total_gas_prod"),measure.vars = c("play"),value.name = "Play")
-df1$variable<-NULL
-df1<-na.omit(df1)
+dpr_data<-melt(dpr_data,id=c("Month","Total_oil_prod","Total_gas_prod"),measure.vars = c("play"),value.name = "Play")
+dpr_data$variable<-NULL
+dpr_data<-dpr_data%>%na.omit()%>%
+  mutate(Play=gsub(" Region","",Play),
+         Play=factor(Play))
 
 
 
-df1<-df1 %>% mutate(Play=fct_other(Play,keep=c("Permian Region","Eagle Ford Region","Bakken Region"),other_level = "Other Regions")) %>%
-  group_by(Month,Play) %>% summarize(Total_oil_prod=sum(Total_oil_prod),Total_gas_prod=sum(Total_gas_prod))
 
-
-
-bw<-F
-png<-1
-if(png==1)#set these to only turn on if you're making PNG graphs
-  set_png("lto_dpr.png")
-p<-ggplot(df1,aes(Month,Total_oil_prod/1000,group = Play,fill=Play)) +
-  geom_area(position = "stack",color="black") +
+lto_dpr<-ggplot(dpr_data,aes(Month,Total_oil_prod/1000,group = Play,fill=Play)) +
+  geom_area(position = "stack",color="black",size=0.5) +
   #geom_point(size=1) +
-  #scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
-  scale_x_date(date_breaks = "1 year", date_labels =  "%b\n%Y",expand=c(0,0)) +
-  #scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
-  #scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
-  #scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
-  theme_minimal()+theme(
-    legend.position = "bottom",
-    legend.margin=margin(c(0,0,0,0),unit="cm"),
-    legend.text = element_text(colour="black", size = 12),
-    plot.caption = element_text(size = 14, face = "italic"),
-    plot.title = element_text(face = "bold"),
-    plot.subtitle = element_text(size = 14, face = "italic"),
-    #panel.grid.minor = element_blank(),
-    text = element_text(size = 14,face = "bold"),
-    axis.text.y =element_text(size = 14,face = "bold", colour="black"),
-    axis.text.x=element_text(size = 14,face = "bold", colour="black"),
-  )+
+  #scale_color_viridis("",discrete=TRUE,option="D")+
+  #scale_fill_viridis("",discrete=TRUE,option="D")+   
+  scale_fill_manual("",values = colors_ua10(),guide = guide_legend(nrow=2,order=1))+
+  weekly_graphs()+
   labs(y="Crude Oil Production by Play \n(Monthly, Thousands of Barrels per Day)",x="Week",
        title=paste("US Production of Tight Oil",sep=""),
-       caption="Source: EIA DPR, graph by Andrew Leach.")
+       caption="Source: EIA Drilling Productivity Report.")
+
+lto_dpr
+
+
+bakken_dpr<-ggplot(dpr_data%>%filter(Play=="Bakken"),aes(Month,Total_oil_prod/1000,group = Play,fill=Play)) +
+  geom_area(position = "stack",color="black",size=0.5) +
+  #geom_point(size=1) +
+  #scale_color_viridis("",discrete=TRUE,option="D")+
+  #scale_fill_viridis("",discrete=TRUE,option="D")+   
+  scale_fill_manual("",values = colors_ua10(),guide = guide_legend(nrow=2,order=1))+
+  weekly_graphs()+
+  theme(legend.position = "none")+
+  labs(y=#"Bakken Crude Oil Production \n
+       "Monthly, Thousands of Barrels per Day",x="",
+       #title=paste("Bakken Production of Tight Oil",sep=""),
+       caption="Source: EIA Drilling Productivity Report.")
+
+bakken_dpr
+lto_dpr
+
+
+gas_dpr<-ggplot(dpr_data,aes(Month,Total_gas_prod/10^6,group = Play,fill=Play)) +
+  geom_area(position = "stack",color="black",size=0.5) +
+  #geom_point(size=1) +
+  #scale_color_viridis("",discrete=TRUE,option="D")+
+  #scale_fill_viridis("",discrete=TRUE,option="D")+   
+  scale_fill_manual("",values = colors_ua10(),guide = guide_legend(nrow=2,order=1))+
+  weekly_graphs()+
+  labs(y="Shale and Tight Gas Production by Play \n(Monthly, Billion Cubic Feet per Day)",x="Week",
+       title=paste("US Production of Tight and Shale Gas",sep=""),
+       caption="Source: EIA Drilling Productivity Report.")
+
+
 if(bw==T)
   p<-p+scale_fill_grey("", start = .8, end = 0, na.value = "red")
 if(bw==F)

@@ -1,7 +1,7 @@
 ---
-title: <center>EIA Data Updates</center>
-author: <center>Andrew Leach</center>
-date: <center>`r format(Sys.time(), '%d %B, %Y')`</center>
+title: EIA Data Updates
+author: Andrew Leach
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output:
   html_document:
       code_folding: hide
@@ -22,6 +22,12 @@ always_allow_html: yes
 ```{r, include=FALSE,cache=FALSE}
 #use this to tell R to download data again in certain spots
 KEEP_CACHE<-TRUE
+
+knitr::opts_chunk$set(message=F,
+                      warning=F,
+                      fig.retina=3,
+                      fig.align = "center",
+                      dpi = 220)
 
 ```
 
@@ -859,7 +865,7 @@ lto_dpr
     
 ## Shale Gas and Light Tight Oil Production Reports {.tabset .tabset-fade}
 
-Finally for current data, the US EIA also produces a shale gas and light tight oil spreadsheet with data by play which is slightly different than the DPR data - it's more disaggregated. You can access the Excel spreadsheet directly [here](https://www.eia.gov/energyexplained/oil-and-petroleum-products/data/US-tight-oil-production.xlsx) for oil and [here](https://www.eia.gov/naturalgas/weekly/img/shale_gas_201907.xlsx) for gas. Again, the code link shows the means of downloading and processing the data via R. 
+Finally for current data, the US EIA also produces light tight oil spreadsheet with data by play which is slightly different than the DPR data - it's more disaggregated. You can access the Excel spreadsheet directly [here](https://www.eia.gov/energyexplained/oil-and-petroleum-products/data/US-tight-oil-production.xlsx) for oil and [here](https://www.eia.gov/naturalgas/weekly/img/shale_gas_202211.xlsx) for gas. Again, the code link shows the means of downloading and processing the data via R. 
 
 ```{r , warning=FALSE,cache=TRUE}
 oil_prod_file<-"https://www.eia.gov/energyexplained/oil-and-petroleum-products/data/US-tight-oil-production.xlsx"
@@ -892,7 +898,7 @@ oil_play<-ggplot(df1,aes(Date,volume*1000,group = play,fill=play)) +
 
 
 ```{r gas data, warning=FALSE,cache=TRUE}
-gas_prod_file<-"https://www.eia.gov/naturalgas/weekly/img/shale_gas_202201.xlsx"
+gas_prod_file<-"https://www.eia.gov/naturalgas/weekly/img/shale_gas_202211.xlsx"
 
 download.file(gas_prod_file,"play-data.xlsx",mode="wb")
 #plays<-getSheetNames("play-data.xlsx")
@@ -1462,15 +1468,19 @@ for(j in seq(2014,2019)){
   AEO_data<-rbind(AEO_data,work_data)
 }
 
-#get the 2022 defns
-subs<-data_fetch(KEY,cat=4442481)
-for(j in seq(2020,2022)){
-  #print(paste("working on AEO",j,sep=""))
-  work_data<-subs$Series_IDs
-  work_data$series_id<-gsub("2022",j,work_data$series_id)
-  work_data$name<-gsub("2022",j,work_data$name)
-  AEO_data<-rbind(AEO_data,work_data)
-}
+# #get the 2022 defns
+#2022 is 4577710
+#2021 is 4047706
+# 2019 is 3604661
+ subs<-data_fetch(KEY,cat=4577710)
+ for(j in seq(2020,2022)){
+   #print(paste("working on AEO",j,sep=""))
+   work_data<-subs$Series_IDs
+   work_data$series_id<-gsub("2022",j,work_data$series_id)
+   work_data$name<-gsub("2022",j,work_data$name)
+   AEO_data<-rbind(AEO_data,work_data)
+ }
+
 
 
 AEO_data$name<-gsub("Natural Gas : Volumes : ","",AEO_data$name)
