@@ -28,12 +28,7 @@ data_fetch<-function(key, cat){
                       key, "&category_id=", cat, "&out=xml", sep="" )
   )
   
-  #http://api.eia.gov/category/?api_key=YOUR_API_KEY_HERE&category_id=476336
-  #url <- paste("https://api.eia.gov/category?api_key=",
-  #             key, "&category_id=", cat, "&out=xml", sep="" )
-  #https://api.eia.gov/category/?api_key=91b4dca0b858df64a2279d82f71af240&category_id=476336&out=xml
-  #https://api.eia.gov/category?api_key=91b4dca0b858df64a2279d82f71af240&category_id=476336&out=xml
-  
+ 
   x <- read_xml(url)
   doc <- XML::xmlParse(file=x)
   

@@ -12,7 +12,7 @@ library(readxl)
 library(reshape2)
 library(scales)
 library(viridis)
-KEY <- "91b4dca0b858df64a2279d82f71af240"
+
 
 
 set_png<-function(file_sent,width=1400,height=750,res=130){

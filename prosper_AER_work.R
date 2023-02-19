@@ -57,8 +57,7 @@ work_theme_small<-function(){
     )
 }
 
- KEY <- "91b4dca0b858df64a2279d82f71af240"
-
+ 
 
 eia_fix_dates<-function(data_sent)
 {

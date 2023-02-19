@@ -6,7 +6,6 @@ if(R.version$platform ==  "x86_64-w64-mingw32")
 print(getwd())
 source("../andrew_base.R")
 library(tools)
- KEY <- "91b4dca0b858df64a2279d82f71af240"
  
  
  get_children<-function(category_id){

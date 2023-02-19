@@ -5,8 +5,6 @@ if(R.version$platform ==  "x86_64-w64-mingw32")
   setwd("C:/Users/aleach/Google Drive/EIA_data_pulls")
 print(getwd())
 source("../andrew_base.R")
-
- KEY <- "91b4dca0b858df64a2279d82f71af240"
  
  
  get_children<-function(category_id){
