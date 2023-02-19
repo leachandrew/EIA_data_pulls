@@ -43,7 +43,7 @@ The US Energy Information Administration (EIA) provides a wealth of data for ene
 * Short Term Energy Outlook
 * Annual Energy Outlook
 
-For each section, I've included R code to access the data as well as links to the web interface for the data.  The R code relies on stadard Tidyverse packages as well as a couple of custom functions and an API key.  You should be able to run this with the code provided once you get your own key  [here](https://www.eia.gov/opendata/register.cfm), and you'll have to store it in a variable called KEY to get the code to work.
+For each section, I've included R code to access the data as well as links to the web interface for the data.  The R code relies on standard Tidyverse packages as well as a couple of custom functions and an API key.  You should be able to run this with the code provided once you get your own key  [here](https://www.eia.gov/opendata/register.cfm), and you'll have to store it in a variable called KEY to get the code to work.
 
 If you're going to run the R code, you'll need a few basic set-up elements to get everything to work. I've included the code here for your reference.
 
@@ -73,11 +73,6 @@ data_fetch<-function(key, cat){
                       key, "&category_id=", cat, "&out=xml", sep="" )
   )
   
-  #http://api.eia.gov/category/?api_key=YOUR_API_KEY_HERE&category_id=476336
-  #url <- paste("https://api.eia.gov/category?api_key=",
-  #             key, "&category_id=", cat, "&out=xml", sep="" )
-  #https://api.eia.gov/category/?api_key=91b4dca0b858df64a2279d82f71af240&category_id=476336&out=xml
-  #https://api.eia.gov/category?api_key=91b4dca0b858df64a2279d82f71af240&category_id=476336&out=xml
   
   x <- read_xml(url)
   doc <- XML::xmlParse(file=x)
