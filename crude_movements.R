@@ -246,7 +246,7 @@ keeps<-c("East Coast (PADD 1)","Midwest (PADD 2)","Gulf Coast (PADD 3)","Rocky M
          "West Coast (PADD 5)","World","Canada")
 
 
-df1<-movements %>% filter(date>=ymd("2000-01-01") & Commodity=="Crude Oil",To != "U.S.")%>%
+df1<-movements %>% filter(date>=ymd("1990-01-01") & Commodity=="Crude Oil",To != "U.S.")%>%
   mutate(To=factor(To)) %>% mutate(To=fct_collapse(To,
                           "West Coast (PADD 5)" = c("Federal Offshore PADD 5", "West Coast (PADD 5)"),
                           "International Trade" = c("Export")
@@ -273,7 +273,7 @@ if(png==1)#set these to only turn on if you're making PNG graphs
 moves_in<-ggplot(filter(df1,To!="International Trade"),aes(date,quantity,group = From,colour=From,fill=From)) +
   geom_area(position = "stack")+
   facet_grid(~To)+
-scale_x_date()+
+scale_x_date(breaks = pretty_breaks(10))+
   scale_fill_manual("Source of Crude",values = colors_tableau10()[-7],guide = "legend")+
   scale_colour_manual("Source of Crude",values=colors_tableau10()[-7],guide = "legend")+
   guides(fill=guide_legend(nrow =2,byrow=FALSE))+
@@ -289,7 +289,7 @@ scale_x_date()+
     panel.grid.minor = element_blank(),
     text = element_text(size = 12,face = "bold"),
     axis.text.y = element_text(size = 12,face = "bold", colour="black"),
-    axis.text.x = element_text(size = 12, colour = "black", angle = 90,hjust = 0),
+    axis.text.x = element_text(size = 12, colour = "black", angle = 90,vjust = 0.5),
     strip.text.x = element_text(size = 10, colour = "black", angle = 0)
   )+
 labs(y="Crude Oil (MMbbl/d)",x="Year",
@@ -305,7 +305,7 @@ if(png==1)#set these to only turn on if you're making PNG graphs
 moves_out<-ggplot(filter(df1,Mode!="Production",From!="International Trade"),aes(date,quantity,group = To,colour=To,fill=To)) +
   geom_area(position = "stack")+
   facet_grid(~From)+
-  scale_x_date()+
+  scale_x_date(breaks = pretty_breaks(10))+
   scale_fill_manual("",values = colors_tableau10()[-7],guide = "legend")+
   scale_colour_manual("",values=colors_tableau10()[-7],guide = "legend")+
   guides(fill=guide_legend(nrow =1,byrow=FALSE))+
@@ -321,7 +321,7 @@ moves_out<-ggplot(filter(df1,Mode!="Production",From!="International Trade"),aes
     panel.grid.minor = element_blank(),
     text = element_text(size = 12,face = "bold"),
     axis.text.y = element_text(size = 12,face = "bold", colour="black"),
-    axis.text.x = element_text(size = 12, colour = "black", angle = 90,hjust = 0),
+    axis.text.x = element_text(size = 12, colour = "black", angle = 90,vjust = 0.5),
     strip.text.x = element_text(size = 10, colour = "black", angle = 0)
   )+
   labs(y="Crude Oil (MMbbl/d)",x="Year",
@@ -348,10 +348,7 @@ mylegend<-arrangeGrob(g_legend(moves_out + theme(legend.title = element_blank(),
 
 
 
-png<-1
-if(png==1)
-  set_png(file_sent=paste("movements.png",sep=""),h_sent = 1200,w_sent=2000)
-grid.arrange(arrangeGrob(moves_in +labs(caption="Note: Production denoted as supply from within the PADD, e.g. PADD 2 production appears as PADD 2 supply from PADD 2.")+
+plot<-grid.arrange(arrangeGrob(moves_in +labs(caption="Note: Production denoted as supply from within the PADD, e.g. PADD 2 production appears as PADD 2 supply from PADD 2.")+
                            theme(legend.position="none",
                                            legend.margin=margin(c(0,0,0,0),unit="cm"),
                                            legend.text = element_text(colour="black", size = 14, face = "bold"),
@@ -392,9 +389,8 @@ bottom =text_grob(
 #)
 #
 )
-if(png==1)#set these to only turn on if you're making PNG graphs
-  dev.off()
 
+ggsave(plot = plot,"movements.png",dpi=300,bg="white",width = 14,height=8)
 
 #get canadian imports by PADD
 
