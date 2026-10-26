@@ -956,6 +956,7 @@ if(png==1)#set these to only turn on if you're making PNG graphs
 #EIA DPR
 #require(XLConnect)
 
+
 dpr_file<-"https://www.eia.gov/petroleum/drilling/xls/dpr-data.xlsx"
 
 download.file(dpr_file,"dpr-data.xlsx",mode="wb")
@@ -974,62 +975,46 @@ for(play in plays){
 }
 
 
-dpr_data<-melt(dpr_data,id=c("Month","Total_oil_prod","Total_gas_prod"),measure.vars = c("play"),value.name = "Play")
-dpr_data$variable<-NULL
-dpr_data<-dpr_data%>%na.omit()%>%
-  mutate(Play=gsub(" Region","",Play),
-         Play=factor(Play))
+df1<-melt(dpr_data,id=c("Month","Total_oil_prod","Total_gas_prod"),measure.vars = c("play"),value.name = "Play")
+df1$variable<-NULL
+df1<-na.omit(df1)
+
+df1<-df1 %>% mutate(Play=fct_other(Play,keep=c("Permian Region","Eagle Ford Region","Bakken Region"),other_level = "Other Regions")) %>%
+  group_by(Month,Play) %>% summarize(Total_oil_prod=sum(Total_oil_prod),Total_gas_prod=sum(Total_gas_prod))
 
 
 
-
-lto_dpr<-ggplot(dpr_data,aes(Month,Total_oil_prod/1000,group = Play,fill=Play)) +
-  geom_area(position = "stack",color="black",size=0.5) +
+bw<-T
+png<-1
+if(png==1)#set these to only turn on if you're making PNG graphs
+  set_png("lto_dpr.png")
+p<-ggplot(df1,aes(Month,Total_oil_prod/1000,group = Play,fill=Play)) +
+  geom_area(position = "stack") +
   #geom_point(size=1) +
-  #scale_color_viridis("",discrete=TRUE,option="D")+
-  #scale_fill_viridis("",discrete=TRUE,option="D")+   
-  scale_fill_manual("",values = colors_ua10(),guide = guide_legend(nrow=2,order=1))+
-  weekly_graphs()+
+  #scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
+  scale_x_date(date_breaks = "1 year", date_labels =  "%b\n%Y",expand=c(0,0)) +
+  #scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
+  #scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+  #scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+  theme_minimal()+theme(
+    legend.position = "bottom",
+    legend.margin=margin(c(0,0,0,0),unit="cm"),
+    legend.text = element_text(colour="black", size = 12),
+    plot.caption = element_text(size = 14, face = "italic"),
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(size = 14, face = "italic"),
+    #panel.grid.minor = element_blank(),
+    text = element_text(size = 14,face = "bold"),
+    axis.text.y =element_text(size = 14,face = "bold", colour="black"),
+    axis.text.x=element_text(size = 14,face = "bold", colour="black"),
+  )+
   labs(y="Crude Oil Production by Play \n(Monthly, Thousands of Barrels per Day)",x="Week",
        title=paste("US Production of Tight Oil",sep=""),
-       caption="Source: EIA Drilling Productivity Report.")
-
-lto_dpr
-
-
-bakken_dpr<-ggplot(dpr_data%>%filter(Play=="Bakken"),aes(Month,Total_oil_prod/1000,group = Play,fill=Play)) +
-  geom_area(position = "stack",color="black",size=0.5) +
-  #geom_point(size=1) +
-  #scale_color_viridis("",discrete=TRUE,option="D")+
-  #scale_fill_viridis("",discrete=TRUE,option="D")+   
-  scale_fill_manual("",values = colors_ua10(),guide = guide_legend(nrow=2,order=1))+
-  weekly_graphs()+
-  theme(legend.position = "none")+
-  labs(y=#"Bakken Crude Oil Production \n
-       "Monthly, Thousands of Barrels per Day",x="",
-       #title=paste("Bakken Production of Tight Oil",sep=""),
-       caption="Source: EIA Drilling Productivity Report.")
-
-bakken_dpr
-lto_dpr
-
-
-gas_dpr<-ggplot(dpr_data,aes(Month,Total_gas_prod/10^6,group = Play,fill=Play)) +
-  geom_area(position = "stack",color="black",size=0.5) +
-  #geom_point(size=1) +
-  #scale_color_viridis("",discrete=TRUE,option="D")+
-  #scale_fill_viridis("",discrete=TRUE,option="D")+   
-  scale_fill_manual("",values = colors_ua10(),guide = guide_legend(nrow=2,order=1))+
-  weekly_graphs()+
-  labs(y="Shale and Tight Gas Production by Play \n(Monthly, Billion Cubic Feet per Day)",x="Week",
-       title=paste("US Production of Tight and Shale Gas",sep=""),
-       caption="Source: EIA Drilling Productivity Report.")
-
-
+       caption="Source: EIA DPR, graph by Andrew Leach.")
 if(bw==T)
   p<-p+scale_fill_grey("", start = .8, end = 0, na.value = "red")
 if(bw==F)
-  p<-p+scale_fill_viridis("",discrete=TRUE,option="C")
+  p<-p+scale_fill_viridis("",discrete=TRUE,option="D")
 print(p)
 if(png==1)#set these to only turn on if you're making PNG graphs
   dev.off()
@@ -1100,21 +1085,10 @@ ggplot(df1,aes(Month,Total_oil_prod/1000)) +
 if(png==1)#set these to only turn on if you're making PNG graphs
   dev.off()
 
-
-df2<-melt(dpr_data,id=c("Month","Total_oil_prod","Total_gas_prod"),measure.vars = c("play"),value.name = "Play")
-df2$variable<-NULL
-df2<-na.omit(df2)
-
-df2<-df2 %>% mutate(Play=fct_other(Play,keep=c("Permian Region","Appalachia Region","Haynesville Region"),other_level = "Other Regions")) %>%
-  group_by(Month,Play) %>% summarize(Total_oil_prod=sum(Total_oil_prod),Total_gas_prod=sum(Total_gas_prod))
-
-
-
-
 png<-1
 if(png==1)#set these to only turn on if you're making PNG graphs
   set_png("gas_dpr.png")
-ggplot(df2,aes(Month,Total_gas_prod/10^6,group = Play,colour=Play,fill=Play)) +
+ggplot(df1,aes(Month,Total_gas_prod/10^6,group = Play,colour=Play,fill=Play)) +
   geom_area(position = "stack") +
   #geom_point(size=1) +
   scale_color_viridis("",discrete=TRUE,option="D")+
@@ -1150,9 +1124,7 @@ if(png==1)#set these to only turn on if you're making PNG graphs
 #require(XLConnect)
 
 
-#oil_prod_file<-"https://www.eia.gov/energyexplained/data/U.S.%20tight%20oil%20production.xlsx"
-oil_prod_file<-"https://www.eia.gov/energyexplained/oil-and-petroleum-products/data/US-tight-oil-production.xlsx"
-
+oil_prod_file<-"https://www.eia.gov/energyexplained/data/U.S.%20tight%20oil%20production.xlsx"
 
 download.file(oil_prod_file,"play-data.xlsx",mode="wb")
 #plays<-getSheetNames("play-data.xlsx")
@@ -1165,28 +1137,21 @@ df1<-melt(play_data,id=c("Date"),variable.name = "play",value.name = "volume" )
 df1$play<-gsub("\\.", " ", df1$play)
 df1$play<-gsub("&N", " & N", df1$play)
 df1$play<-gsub("  ", " ", df1$play)
-df1$play<-as.factor(df1$play) %>% fct_relevel("Rest of US 'tight oil'",after = Inf)
-
-df1 <- df1 %>% group_by(play) %>% mutate(max_vol=max(volume)) %>% ungroup() %>%
-  mutate(play=fct_reorder(play,volume,min),
-         play= fct_relevel(play,"Rest of US 'tight oil'",after = Inf))%>%
-  group_by(play)%>%
-  mutate(region=paste(strsplit(as.character(play), "\\(|\\)")[[1]][2]))%>% ungroup()
-
+df1$play<-as.factor(df1$play)
 
 
 png<-1
 if(png==1)#set these to only turn on if you're making PNG graphs
   set_png("oil_play.png")
-ggplot(df1,aes(Date,volume*1000,group = play,fill=play)) +
-  geom_area(position = "stack",colour="black") +
+ggplot(df1,aes(Date,volume*1000,group = play,colour=play,fill=play)) +
+  geom_area(position = "stack") +
   #geom_point(size=1) +
-  scale_color_viridis("",discrete=TRUE,option="C")+
-  scale_fill_viridis("",discrete=TRUE,option="C")+
-  #scale_fill_discrete("")+
-  #scale_colour_discrete(guide = "none")+   
+  #scale_color_viridis("",discrete=TRUE,option="D")+
+  #scale_fill_viridis("",discrete=TRUE,option="D")+
+  scale_fill_discrete("")+
+  scale_colour_discrete(guide = "none")+   
   #scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
-  scale_x_date(date_breaks = "12 months", date_labels =  "%b\n%Y",expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels =  "%b\n%Y",expand=c(0,0)) +
   #scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
   #scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
   #scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
@@ -1201,7 +1166,7 @@ ggplot(df1,aes(Date,volume*1000,group = play,fill=play)) +
     text = element_text(size = 14,face = "bold"),
     legend.text = element_text(colour="black", size = 8),
     axis.text.y =element_text(size = 14,face = "bold", colour="black"),
-    axis.text.x=element_text(size = 14,face = "bold", colour="black"),
+    axis.text.x=element_text(size = 14,face = "bold", colour="black",angle=90, hjust=1),
   )+
   labs(y="Tight Oil Production by Play \n(Monthly, Thousands of Barrels per Day)",x="Date",
        title=paste("US tight oil production estimates by play",sep=""),
@@ -1213,27 +1178,17 @@ if(png==1)#set these to only turn on if you're making PNG graphs
 
 gas_prod_file<-"https://www.eia.gov/energyexplained/data/U.S.%20dry%20shale%20gas%20production.xlsx"
 
-gas_prod_file<-"https://www.eia.gov/naturalgas/weekly/img/shale_gas_201907.xlsx"
-
 download.file(gas_prod_file,"play-data.xlsx",mode="wb")
 #plays<-getSheetNames("play-data.xlsx")
 #plays<-plays[plays!="RegionCounties"]
 play_data <- read.xlsx(xlsxFile = "play-data.xlsx", sheet = "data", startRow = 1,skipEmptyRows = TRUE,detectDates = TRUE)
 play_data$X13<-NULL
-play_data$X14<-NULL
 play_data$Date<-as.Date(play_data$Date,origin = "1899-12-30")
 df1<-melt(play_data,id=c("Date"),variable.name = "play",value.name = "volume" )
 df1$play<-gsub("\\.", " ", df1$play)
 df1$play<-gsub("&N", " & N", df1$play)
 df1$play<-gsub("  ", " ", df1$play)
 
-
-df1 <- df1 %>%
-  mutate(play=as_factor(play),play=fct_relevel(play,"Rest of US 'shale'",after = Inf))%>%
-  group_by(play) %>% mutate(max_prod=max(volume)) %>% ungroup() %>%
-  mutate(play=fct_reorder(play,-max_prod),play=fct_other(play,keep=levels(play)[1:5]))%>%
-  group_by(Date,play) %>% summarise(volume=sum(volume))
-  
 
 
 png<-1
@@ -1280,20 +1235,23 @@ oil_prod_data<-df1%>%left_join(oil_prod_data,by=c("Month")) %>%
   group_by(Month,Play) %>% summarize(Total_oil_prod=sum(Total_oil_prod),Total_gas_prod=sum(Total_gas_prod),US_prod=mean(`U.S. Field Production of Crude Oil, Monthly`))
 
 
-  
-bw<-F
+
+bw<-T
+png<-1
+if(png==1)#set these to only turn on if you're making PNG graphs
+  set_png("lto_dpr.png")
 p<-ggplot(oil_prod_data) +
-  geom_line(data=filter(oil_prod_data,Play=="Bakken Region"),aes(Month,US_prod,color="US Total Oil Production"),size=1.5)+
+  geom_line(data=filter(oil_prod_data,Play=="Bakken Region"),aes(Month,US_prod,color="US Total Oil Production"))+
   geom_area(aes(Month,Total_oil_prod/1000,group = Play,fill=Play),position = "stack") +
   #geom_point(size=1) +
   #scale_colour_brewer(NULL,labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports"),type = "seq", palette = "Paired", direction = 1)+
   scale_x_date(date_breaks = "1 year", date_labels =  "%b\n%Y",expand=c(0,0)) +
-  scale_y_continuous(breaks=pretty_breaks(),expand=c(0,0.1))+
-  #expand_limits(x=Sys.Date()+months(24))+
+  #scale_colour_manual(labels=c("Gasoline Exports","Gasoline Imports","Net Gasoline Exports",values=c("#41ae76","#238b45","#006d2c","#00441b","Black","Black","Black","Black"))+
+  #scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
+  #scale_y_continuous(limits=c(min(df1$value),max(df1$value)),expand=c(0,0))+
   theme_minimal()+theme(
     legend.position = "bottom",
     legend.margin=margin(c(0,0,0,0),unit="cm"),
-    plot.margin=margin(c(0.5,0.5,0.5,0.5),unit="cm"),
     legend.text = element_text(colour="black", size = 12),
     plot.caption = element_text(size = 14, face = "italic"),
     plot.title = element_text(face = "bold"),
@@ -1301,7 +1259,7 @@ p<-ggplot(oil_prod_data) +
     #panel.grid.minor = element_blank(),
     text = element_text(size = 14,face = "bold"),
     axis.text.y =element_text(size = 14,face = "bold", colour="black"),
-    axis.text.x=element_text(size = 14,face = "bold", colour="black",margin = margin(t = 5)),
+    axis.text.x=element_text(size = 14,face = "bold", colour="black"),
   )+
   labs(y="Crude Oil Production by Play \n(Monthly, Thousands of Barrels per Day)",x="",
        title=paste("US Production of Tight Oil and Total Crude Oil",sep=""),
@@ -1310,8 +1268,9 @@ if(bw==T)
   p<-p+scale_fill_grey("", start = .7, end = .2, na.value = "red")+
   scale_colour_grey("", start =.1, end = .15, na.value = "red")
 if(bw==F)
-  p<-p+scale_fill_viridis("",discrete=TRUE,option="D")+
-  scale_colour_grey("", start =.1, end = .15, na.value = "black")
-p
-ggsave("lto_dpr_total.png",width = 16,height = 9,dpi=400)
+  p<-p+scale_fill_viridis("",discrete=TRUE,option="D")
+print(p)
+if(png==1)#set these to only turn on if you're making PNG graphs
+  dev.off()
+
 

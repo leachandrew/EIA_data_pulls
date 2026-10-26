@@ -1,3 +1,4 @@
+base
 RColorBrewer
 viridisLite
 viridis
@@ -12,12 +13,11 @@ purrr
 dplyr
 stringr
 forcats
-timechange
 lubridate
 reshape2
 knitr
 prettydoc
-xml2
+XML
 zoo
 openxlsx
-readxl
+bindrcpp

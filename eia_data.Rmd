@@ -1,7 +1,7 @@
 ---
-title: EIA Data Updates
-author: Andrew Leach
-date: "`r format(Sys.time(), '%d %B, %Y')`"
+title: <center>EIA Data Updates</center>
+author: <center>Andrew Leach</center>
+date: <center>`r format(Sys.time(), '%d %B, %Y')`</center>
 output:
   html_document:
       code_folding: hide
@@ -15,27 +15,33 @@ output:
   pdf_document:
     toc: yes
 always_allow_html: yes
+
 ---
 
 
 ```{r, include=FALSE,cache=FALSE}
+#Mac
+if(R.version$platform ==  "x86_64-apple-darwin15.6.0")
+  setwd("/Users/aleach/Google Drive/EIA_data_pulls")
+#PC
+if(R.version$platform ==  "x86_64-w64-mingw32")
+  setwd("C:/Users/aleach/Google Drive/EIA_data_pulls")
+#Set EIA API Key
+
+KEY <- "91b4dca0b858df64a2279d82f71af240"
+
 #use this to tell R to download data again in certain spots
 KEEP_CACHE<-TRUE
 
-knitr::opts_chunk$set(message=F,
-                      warning=F,
-                      fig.retina=3,
-                      fig.align = "center",
-                      dpi = 220)
 
 ```
 
 
-The US Energy Information Administration (EIA) provides a wealth of data for energy markets.  This update focuses on their regularly-updated oil and gas data sources including:
+The US Energy Information Administration (EIA) provides a wealth of data for energy markets.  This update focusses on their regularly-updated oil and gas data sources including:
 
 * Spot Prices and Some Futures Market Info
 * Weekly Petroleum Status Report
-* Weekly Gas Storage Report
+* Weekly Gas Storage Reort
 * Oil and gas production updates
     + Monthly Production Data by Region
     + Drilling Productivity Reports
@@ -43,7 +49,7 @@ The US Energy Information Administration (EIA) provides a wealth of data for ene
 * Short Term Energy Outlook
 * Annual Energy Outlook
 
-For each section, I've included R code to access the data as well as links to the web interface for the data.  The R code relies on standard Tidyverse packages as well as a couple of custom functions and an API key.  You should be able to run this with the code provided once you get your own key  [here](https://www.eia.gov/opendata/register.cfm), and you'll have to store it in a variable called KEY to get the code to work.
+For each section, I've included R code to access the data as well as links to the web interface for the data.  The R code relies on stadard Tidyverse packages as well as a couple of custom functions and an API key.  You should be able to run this with the code provided once you get your own key  [here](https://www.eia.gov/opendata/register.cfm), and you'll have to store it in a variable called KEY to get the code to work.
 
 If you're going to run the R code, you'll need a few basic set-up elements to get everything to work. I've included the code here for your reference.
 
@@ -58,76 +64,60 @@ library(lubridate)
 library(reshape2)
 library(knitr)
 library(prettydoc)
-library(xml2)
+library(XML)
 library(zoo)
 library(openxlsx)
-library(readxl)
 
-data_fetch<-function(key, cat){
-  #key<-KEY
-  #cat=476336
+#quick function to make time breaks on axes
+make_breaks <- function(strt, hour, interval="day", length.out=31) {
+  strt <- as.POSIXlt(strt - 60*60*24)  # start back one day
+  strt <- ISOdatetime(strt$year+1900L, strt$mon+1L, strt$mday, hour=hour, min=0, sec=0, tz="UTC")
+  seq.POSIXt(strt, strt+(1+length.out)*60*60*24, by=interval)
+}
+
+#get multiple series listing from the EIA API
+data_fetch<-function(key, cat=2227122){
+  key <- unlist(strsplit(key, ";"))
   ifelse(cat==999999999,
-         url <- paste("https://api.eia.gov/category/?api_key=",
+         url <- paste("http://api.eia.gov/category?api_key=",
                       key, "&out=xml", sep="" ),
-         url <- paste("https://api.eia.gov/category/?api_key=",
+         url <- paste("http://api.eia.gov/category?api_key=",
                       key, "&category_id=", cat, "&out=xml", sep="" )
   )
-  
-  
-  x <- read_xml(url)
-  doc <- XML::xmlParse(file=x)
-  
-  
-  Parent_Category <- tryCatch(XML::xmlToDataFrame(,stringsAsFactors = F,nodes =
+  doc <- xmlParse(file=url, isURL=TRUE)
+  Parent_Category <- tryCatch(xmlToDataFrame(,stringsAsFactors = F,nodes =
                                                XML::getNodeSet(doc, "//category/parent_category_id")),
                               warning=function(w) FALSE, error=function(w) FALSE)
-  Sub_Categories <- XML::xmlToDataFrame(,stringsAsFactors = F,nodes =
+  Sub_Categories <- xmlToDataFrame(,stringsAsFactors = F,nodes =
                                      XML::getNodeSet(doc, "//childcategories/row"))
-  Series_IDs <- XML::xmlToDataFrame(nodes =
+  Series_IDs <- xmlToDataFrame(nodes =
                                  XML::getNodeSet(doc, "///childseries/row"),stringsAsFactors = F)
   Categories <- list(Parent_Category, Sub_Categories, Series_IDs)
   names(Categories) <- c("Parent_Category", "Sub_Categories", "Series_IDs")
-  Categories
+  return(Categories)
 }
 
- get_children<-function(category_id=476336){
-   subs<-data_fetch(KEY,cat=category_id)
-   sub_cats<-subs$Sub_Categories
-   #build list from sub_cats
-   cat_store <- list()
-   cat_count<-1
-   for (cat in sub_cats$category_id) {
-     #cat<-sub_cats$category_id[1]
-     series<-data_fetch(KEY,cat=cat)
-     cat_store[[cat_count]]<-series$Series_IDs
-     cat_count<-cat_count+1
-   }
-   data.frame(do.call(rbind,cat_store))
- }
- #get_children()
- 
- get_series<-function(category_id=476336){
-   #series,name,f,units,updated
-   subs<-data_fetch(KEY,cat=category_id)
-   subs$Series_IDs
- }
- #get_series()
- 
- pd_fix<-function(data,name){
-   data<-data.frame(date=index(data), coredata(data))
-   data$date<-ymd(data$date)
-   data <- setNames(data, c("date",name)) 
- }
- 
- EIA_to_DF<-function(series_info){
-   data<- pdfetch_EIA(series_info$series_id,KEY)
-   pd_fix(data,series_info$name)
-   }
- 
+colors_tableau10 <- function()
+{
+  return(c("#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD", "#8C564B",
+           "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF"))
+}
+
+colors_tableau10_light <- function()
+{
+  return(c("#AEC7E8", "#FFBB78", "#98DF8A", "#FF9896", "#C5B0D5", "#C49C94",
+           "#F7B6D2", "#C7C7C7", "#DBDB8D", "#9EDAE5"))
+}
+
+colors_tableau10_medium <- function()
+{
+  return(c("#729ECE", "#FF9E4A", "#67BF5C", "#ED665D", "#AD8BC9", "#A8786E",
+           "#ED97CA", "#A2A2A2", "#CDCC5D", "#6DCCDA"))
+}
 
 ```
 
-# Commodity Prices
+#Commodity Prices
 
 
 Both the EIA data interface [here](https://www.eia.gov/petroleum/data.php#prices) or the API [here](https://www.eia.gov/opendata/qb.php?category=714757) allow you to access benchmark commodity prices we'll talk a lot about in the first couple of classes.  For most of what we do with prices, we'll use data from the Bloomberg terminal but the EIA prices are a useful source of information that you can access from anywhere. 
@@ -859,10 +849,10 @@ lto_dpr
     
 ## Shale Gas and Light Tight Oil Production Reports {.tabset .tabset-fade}
 
-Finally for current data, the US EIA also produces light tight oil spreadsheet with data by play which is slightly different than the DPR data - it's more disaggregated. You can access the Excel spreadsheet directly [here](https://www.eia.gov/energyexplained/oil-and-petroleum-products/data/US-tight-oil-production.xlsx) for oil and [here](https://www.eia.gov/naturalgas/weekly/img/shale_gas_202211.xlsx) for gas. Again, the code link shows the means of downloading and processing the data via R. 
+Finally for current data, the US EIA also produces a shale gas and light tight oil spreadsheet with data by play which is slightly different than the DPR data - it's more disaggregated. You can access the Excel spreadsheet directly [here](https://www.eia.gov/energyexplained/data/U.S.%20tight%20oil%20production.xlsx) for oil and [here](https://www.eia.gov/energyexplained/data/U.S.%20dry%20shale%20gas%20production.xlsx") for gas. Again, the code link shows the means of downloading and processing the data via R. 
 
 ```{r , warning=FALSE,cache=TRUE}
-oil_prod_file<-"https://www.eia.gov/energyexplained/oil-and-petroleum-products/data/US-tight-oil-production.xlsx"
+oil_prod_file<-"https://www.eia.gov/energyexplained/data/U.S.%20tight%20oil%20production.xlsx"
 
 download.file(oil_prod_file,"play-data.xlsx",mode="wb")
 #plays<-getSheetNames("play-data.xlsx")
@@ -892,14 +882,13 @@ oil_play<-ggplot(df1,aes(Date,volume*1000,group = play,fill=play)) +
 
 
 ```{r gas data, warning=FALSE,cache=TRUE}
-gas_prod_file<-"https://www.eia.gov/naturalgas/weekly/img/shale_gas_202212.xlsx"
+gas_prod_file<-"https://www.eia.gov/energyexplained/data/U.S.%20dry%20shale%20gas%20production.xlsx"
 
 download.file(gas_prod_file,"play-data.xlsx",mode="wb")
 #plays<-getSheetNames("play-data.xlsx")
 #plays<-plays[plays!="RegionCounties"]
 play_data <- read.xlsx(xlsxFile = "play-data.xlsx", sheet = "data", startRow = 1,skipEmptyRows = TRUE,detectDates = TRUE)
 play_data$X13<-NULL
-play_data$X14<-NULL
 play_data$Date<-as.Date(play_data$Date,origin = "1899-12-30")
 df1<-melt(play_data,id=c("Date"),variable.name = "play",value.name = "volume" )
 df1$play<-gsub("\\.", " ", df1$play)
@@ -1221,392 +1210,141 @@ ggplot() +
 
 ```
 
+The STEO also has data on other aspects we'll discuss in class like OPEC spare capacity and non-opec supply addtions.
+
+![](eia_data_files/figure-html/opec_spare_capacity.png)
+
+![](eia_data_files/figure-html/non_opec_production.png)
 
 # Annual Energy Outlook {.tabset .tabset-fade}
 
 Finally, for long-term outlooks, we can look to the Annual Energy Outlook which carries forecasts through to 2050 under a variety of assumptions and scenarios.  The Annual Outlook which appears twice per year (in November as an Early Release and in March in final form) is available [here](https://www.eia.gov/outlooks/aeo/) from the EIA website and, as usual, data are available for the previous 5 editions through the API [here](https://www.eia.gov/opendata/qb.php?category=964164).  One of the more interesting things to do with Annual Outlook data from year to year is to see how the forward views have changed on prices or quantities in which we are interested. Below are are few examples of how the projections have evolved since 2014.
 
 ```{r AEO data and graphs}
-eia_aeo_comp<-function(start_year=2014,end_year=2022,api_series=".SUP_NA_LFL_NA_DCP_NA_USA_MILLBRLPDY.A",
-                   label="US Total Crude Oil Production",
-                   units="mmbbl/d",
-                   history=FALSE,
-                   hist_series="PET.MCRFPUS2.A",
-                   hist_conversion=1,
-                   hist_year=1950,
-                   zero_y=TRUE
-                   ){ #use oil as the default
-  #testing
-  #api_series<-".GEN_NA_ELEP_NA_SLR_PHTVL_NA_BLNKWH.A"
-  #start_year=2015
-  #end_year=2022
-  #label="Oil Production"
-  #units="mmbbl/d"
-  #hist_series<-"PET.MCRFPUS2.A"
-  #hist_conversion=1000
-  series<-paste("AEO.",seq(start_year,end_year),".REF",seq(start_year,end_year),api_series,sep="")
-  labels<-paste(seq(start_year,end_year)," AEO",sep="")
-  elements=end_year-start_year+1
-  data<-pd_fix(pdfetch_EIA(series,KEY),labels)%>%
-    pivot_longer(-date,names_to = "variable")
-  plot<-ggplot(data)+
-  geom_line(aes(date,value,group=variable,color=variable,size=variable==paste(end_year,"AEO")),lty="31")+
-  #geom_point(data=data %>% filter(variable==paste(end_year,"AEO")),aes(date,value,group=variable,color=variable),size=2.25)+
-  scale_y_continuous(breaks=pretty_breaks(),expand=c(0,0))+
-  scale_x_date(breaks=pretty_breaks(n=10),expand=c(0,0))+
-  scale_color_viridis("",discrete = T,option="A",direction = -1,end = .9)+
-  scale_size_manual("",values=c(1,1.5))+
-  scale_linetype_manual("",values=c("solid"))+
-  theme_minimal()+weekly_graphs()+
-    theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)))+
-  guides(linetype=guide_legend(order = 1,keywidth = unit(1.6,"cm")),
-         size="none",
-          #shape = guide_legend(keywidth = unit(1.6,"cm"),nrow = 2),
-         #linetype = guide_legend(keywidth = unit(1.6,"cm"),nrow = 2),
-         #colour = guide_legend(keywidth = unit(1.6,"cm"),override.aes = list(lty = "11")  ,nrow = 2),
-         colour = guide_legend(keywidth = unit(1.6,"cm"),nrow = trunc(elements/6)+1,
-                               override.aes = list(size=c(rep(1,elements-1),1.5))),
-         #fill = guide_legend(keywidth = unit(1.6,"cm"),nrow = 2)
-         NULL)
-  if(zero_y)
-    plot<-plot+expand_limits(y=0)
-  
-  #get historical data
-  if(history)
-    {
-    hist_data<-pd_fix(pdfetch_EIA(hist_series,KEY),"Historical data")%>%
-      pivot_longer(-date,names_to = "variable")%>%
-      mutate(value=value/hist_conversion)%>%
-      filter(year(date)>=hist_year)
-    plot<-plot+
-    geom_line(data=hist_data,aes(date,value,lty="Historical Data"),size=1)+
-    labs(y=paste(label," (",units,")",sep=""),x="",
-         title=paste("Historical",label,"and EIA AEO Reference Case Projections"),
-         caption="Source: Data via EIA AEO, graph by Andrew Leach.")
-   }
-  
-  if(!history){
-    plot<-plot+
-    labs(y=paste(label," (",units,")",sep=""),x="",
-         title=paste("EIA Annual Energy Outlook",label,"Forecasts"),
-         caption="Source: Data via EIA AEO, graph by Andrew Leach.")
-    }
-plot
-  
-  }
+oil_exports_data_18<-EIAdata::getEIA(ID = "AEO.2018.REF2018.TRAD_NA_LFL_NA_EXP_NA_USA_MILLBRLPDY.A", key = KEY) 
+
+oil_exports_data_17<-EIAdata::getEIA(ID = "AEO.2017.REF2017.TRAD_NA_LFL_NA_EXP_NA_USA_MILLBRLPDY.A", key = KEY) 
+#series_id=AEO.2017.REF2017.GEN_NA_ELEP_NA_SLR_PHTVL_NA_BLNKWH.A 
+oil_exports_data_16<-EIAdata::getEIA(ID = "AEO.2016.REF2016.TRAD_NA_LFL_NA_EXP_NA_USA_MILLBRLPDY.A", key = KEY)  
+oil_exports_data_15<-EIAdata::getEIA(ID = "AEO.2015.REF2015.TRAD_NA_LFL_NA_EXP_NA_USA_MILLBRLPDY.A", key = KEY)  
+oil_exports_data_14<-EIAdata::getEIA(ID = "AEO.2014.REF2014.TRAD_NA_LFL_NA_EXP_NA_USA_MILLBRLPDY.A", key = KEY)  
+
+
+oil_exports_data<-merge(oil_exports_data_18,oil_exports_data_17)
+
+oil_exports_data<-merge(oil_exports_data,oil_exports_data_16)
+oil_exports_data<-merge(oil_exports_data,oil_exports_data_15)
+oil_exports_data<-merge(oil_exports_data,oil_exports_data_14)
+
+names(oil_exports_data)<-c("oil_exports_2018","oil_exports_2017","oil_exports_2016","oil_exports_2015","oil_exports_2014")
+oil_exports_data<-data.frame(date=index(oil_exports_data), coredata(oil_exports_data))
+oil_exports_melt <- melt(oil_exports_data,id="date") 
+
+oil_exports_graph<-ggplot(oil_exports_melt) +
+  geom_line(aes(date,value,colour=variable),size=2) +
+  scale_color_viridis("",labels = c("2018 AEO","2017 AEO","2016 AEO","2015 AEO","2014 AEO"),discrete = TRUE)+
+  #scale_x_datetime(limits = lims,breaks=breaks,labels = date_format("%a\n%m-%d\n%H:00", tz="America/Denver"))+
+  guides(colour=guide_legend(byrow=FALSE))+
+  theme_minimal()+theme(    
+    legend.position = "bottom",
+    legend.margin=margin(c(0,0,0,0),unit="cm"),
+    legend.text = element_text(colour="black", size = 16, face = "bold"),
+    plot.caption = element_text(size = 14, face = "italic"),
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(size = 16, face = "italic"),
+    panel.grid.minor = element_blank(),
+    text = element_text(size = 16,face = "bold"),
+    axis.text = element_text(size = 16,face = "bold", colour="black")
+  )+    labs(y="Annual Oil Exports (mmbbl/d)",x="",
+             title="EIA Annual Energy Outlook Oil Exports Forecasts",
+             caption="Source: EIA API\nGraph by Andrew Leach")
+
+oil_net_imports_data_18<-EIAdata::getEIA(ID = "AEO.2018.REF2018.TRAD_NA_LFL_NA_NETIMP_NETIMP_USA_MILLBRLPDY.A", key = KEY) 
+oil_net_imports_data_17<-EIAdata::getEIA(ID = "AEO.2017.REF2017.TRAD_NA_LFL_NA_NETIMP_NETIMP_USA_MILLBRLPDY.A", key = KEY) 
+oil_net_imports_data_16<-EIAdata::getEIA(ID = "AEO.2016.REF2016.TRAD_NA_LFL_NA_NETIMP_NETIMP_USA_MILLBRLPDY.A", key = KEY) 
+oil_net_imports_data_15<-EIAdata::getEIA(ID = "AEO.2015.REF2015.TRAD_NA_LFL_NA_NETIMP_NETIMP_USA_MILLBRLPDY.A", key = KEY) 
+oil_net_imports_data_14<-EIAdata::getEIA(ID = "AEO.2014.REF2014.TRAD_NA_LFL_NA_NETIMP_NETIMP_USA_MILLBRLPDY.A", key = KEY) 
+oil_net_imports_data<-merge(oil_net_imports_data_18,oil_net_imports_data_17)
+oil_net_imports_data<-merge(oil_net_imports_data,oil_net_imports_data_16)
+oil_net_imports_data<-merge(oil_net_imports_data,oil_net_imports_data_15)
+oil_net_imports_data<-merge(oil_net_imports_data,oil_net_imports_data_14)
+
+names(oil_net_imports_data)<-c("oil_net_imports_2018","oil_net_imports_2017","oil_net_imports_2016","oil_net_imports_2015","oil_net_imports_2014")
+oil_net_imports_data<-data.frame(date=index(oil_net_imports_data), coredata(oil_net_imports_data))
+oil_net_imports_melt <- melt(oil_net_imports_data,id="date") 
+
+
+oil_net_imports_graph<-ggplot(oil_net_imports_melt) +
+  geom_line(aes(date,value,colour=variable),size=2) +
+  scale_color_viridis("",labels = c("2018 AEO","2017 AEO","2016 AEO","2015 AEO","2014 AEO"),discrete = TRUE)+
+  #scale_x_datetime(limits = lims,breaks=breaks,labels = date_format("%a\n%m-%d\n%H:00", tz="America/Denver"))+
+  guides(colour=guide_legend(byrow=FALSE))+
+  theme_minimal()+theme(    
+    legend.position = "bottom",
+    legend.margin=margin(c(0,0,0,0),unit="cm"),
+    legend.text = element_text(colour="black", size = 16, face = "bold"),
+    plot.caption = element_text(size = 14, face = "italic"),
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(size = 16, face = "italic"),
+    panel.grid.minor = element_blank(),
+    text = element_text(size = 16,face = "bold"),
+    axis.text = element_text(size = 16,face = "bold", colour="black")
+  )+    labs(y="Millions of Barrels Per Day",x="\nTime",
+             title="EIA Annual Energy Outlook Net Oil Imports Forecasts",
+             caption="Source: EIA API\nGraph by Andrew Leach")
+
+products_net_imports_data_18<-EIAdata::getEIA(ID = "AEO.2018.REF2018.SUP_NA_LFL_OPS_NPI_NA_NA_NA.A", key = KEY) 
+products_net_imports_data_17<-EIAdata::getEIA(ID = "AEO.2017.REF2017.SUP_NA_LFL_OPS_NPI_NA_NA_NA.A", key = KEY)
+products_net_imports_data_16<-EIAdata::getEIA(ID = "AEO.2016.REF2016.SUP_NA_LFL_OPS_NPI_NA_NA_NA.A", key = KEY)
+products_net_imports_data_15<-EIAdata::getEIA(ID = "AEO.2015.REF2015.SUP_NA_LFL_OPS_NPI_NA_NA_NA.A", key = KEY)
+products_net_imports_data_14<-EIAdata::getEIA(ID = "AEO.2014.REF2014.SUP_NA_LFL_OPS_NPI_NA_NA_NA.A", key = KEY)
+products_net_imports_data<-merge(products_net_imports_data_18,products_net_imports_data_17)
+products_net_imports_data<-merge(products_net_imports_data,products_net_imports_data_16)
+products_net_imports_data<-merge(products_net_imports_data,products_net_imports_data_15)
+products_net_imports_data<-merge(products_net_imports_data,products_net_imports_data_14)
+
+names(products_net_imports_data)<-c("products_net_imports_2018","products_net_imports_2017","products_net_imports_2016","products_net_imports_2015","products_net_imports_2014")
+products_net_imports_data<-data.frame(date=index(products_net_imports_data), coredata(products_net_imports_data))
+products_net_imports_melt <- melt(products_net_imports_data,id="date") 
+
+product_net_imports_graph<-ggplot(products_net_imports_melt) +
+  geom_line(aes(date,-value,colour=variable),size=2) +
+  scale_color_viridis("",labels = c("2018 AEO","2017 AEO","2016 AEO","2015 AEO","2014 AEO"),discrete = TRUE)+
+  #scale_x_datetime(limits = lims,breaks=breaks,labels = date_format("%a\n%m-%d\n%H:00", tz="America/Denver"))+
+  guides(colour=guide_legend(byrow=FALSE))+
+  theme_minimal()+theme(    
+    legend.position = "bottom",
+    legend.margin=margin(c(0,0,0,0),unit="cm"),
+    legend.text = element_text(colour="black", size = 16, face = "bold"),
+    plot.caption = element_text(size = 14, face = "italic"),
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(size = 16, face = "italic"),
+    panel.grid.minor = element_blank(),
+    text = element_text(size = 16,face = "bold"),
+    axis.text = element_text(size = 16,face = "bold", colour="black")
+  )+    labs(y="Millions of Barrels Per Day",x="\nTime",
+             title="EIA Annual Energy Outlook Net Products Export Forecasts",
+             caption="Source: EIA API\nGraph by Andrew Leach")
 
 ```
-   
 
-## Oil Production, Trade, and Prices {.tabset .tabset-fade}
+## Oil Exports
 
-### US Oil Production
-```{r fig.width=14, fig.height=7, oil_prod, cache=TRUE,warning=FALSE}
-
-eia_aeo_comp(history = TRUE,hist_conversion = 1000)
-```
-
-### US Oil Imports
-```{r fig.width=14, fig.height=7, oil_imp, cache=TRUE,warning=FALSE}
-
-eia_aeo_comp(start_year = 2014,api_series =".TRAD_NA_LFL_NA_GIM_NA_USA_MILLBRLPDY.A",label = "US Gross Crude Oil Imports",
-                          units = "million barrels per day",
-                          history = TRUE,
-                          hist_series = "PET.MCRIMUS2.A",
-                          hist_conversion = 1000,
-                          hist_year=1950)
-```
-
-### US Oil Exports
-```{r fig.width=14, fig.height=7, oil_exp, cache=TRUE,warning=FALSE}
-
-eia_aeo_comp(start_year = 2014,api_series =".TRAD_NA_LFL_NA_EXP_NA_USA_MILLBRLPDY.A",label = "US Gross Crude Oil Exports",
-                          units = "million barrels per day",
-                          history = TRUE,
-                          hist_series = "PET.MCREXUS2.A",
-                          hist_conversion = 1000,
-                          hist_year=2010)
-```
-
-### WTI Oil Prices
-```{r fig.width=14, fig.height=7, oil_price, cache=TRUE,warning=FALSE}
-
-eia_aeo_comp(start_year = 2015,api_series =".PRCE_NA_NA_NA_CR_WTI_USA_NDLRPBRL.A",label = "WTI (Cushing) Nominal Spot Price",
-                        units = "$/bbl",
-                        history = TRUE,
-                        hist_series = "PET.RWTC.M",
-                        hist_conversion = 1,
-                        hist_year=1990)
-```
-
-## Natural Gas Production, Trade, and Prices {.tabset .tabset-fade}
-
-### US Natural Gas Production
-```{r fig.width=14, fig.height=7, gas_prod, cache=TRUE,warning=FALSE}
-
-eia_aeo_comp(start_year = 2014,api_series =".SUP_DPR_NA_NA_NG_TOT_USA_TRLCF.A",label = "US Dry Natural Gas Production",
-                          units = "TCF",
-                          history = TRUE,
-                          hist_series = "NG.N9070US2.M",
-                          hist_conversion = 10^6/12,
-                          hist_year=1950)
-```
-
-### US Natural Gas Imports
-```{r fig.width=14, fig.height=7, gas_imp, cache=TRUE,warning=FALSE}
-
-eia_aeo_comp(start_year = 2020,api_series =".SUP_IMP_NA_NA_NG_NA_NA_TRLCF.A",label = "US Gross Natural Gas Imports",
-                          units = "TCF",
-                          history = TRUE,
-                          hist_series = "NG.N9100US2.M",
-                          hist_conversion = 10^6/12,
-                          hist_year=1950)
-```
-
-### US Natural Gas Exports
-```{r fig.width=14, fig.height=7, gas_exp, cache=TRUE,warning=FALSE}
-
-eia_aeo_comp(start_year = 2014,api_series =".SUP_EXPT_NA_NA_NG_NA_NA_TRLCF.A",label = "US Gross Natural Gas Exports",
-                          units = "TCF",
-                          history = TRUE,
-                          hist_series = "NG.N9130US2.M",
-                          hist_conversion = 10^6/12,
-                          hist_year=2010)
-```
-
-### Henry Hub Natural Gas Prices
-```{r fig.width=14, fig.height=7, gas_price, cache=TRUE,warning=FALSE}
-
-eia_aeo_comp(start_year = 2014,api_series =".PRCE_HHP_NA_NA_NG_NA_USA_NDLRPMBTU.A",label = "Henry Hub Nominal Spot Price",
-                          units = "$/MMBTU",
-                          history = TRUE,
-                          hist_series = "NG.RNGWHHD.M",
-                          hist_conversion = 1,
-                          hist_year=1990)
+```{r oil_exports_graph, echo = FALSE, warning=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+oil_exports_graph
 ```
 
 
-### Trade Flows
-```{r fig.width=14, fig.height=7, gas_trade,verbose = FALSE, cache=TRUE,warning=FALSE}
+## Oil Net Imports
 
-
-#AEO Gas trade
-
- export_set<-c("Exports : Pipeline Exports to Canada",
-               "Exports : Pipeline Exports to Mexico",
-               "Exports : Liquefied Natural Gas Exports")
- import_set<-c("Imports : Pipeline Imports from Canada",
-               "Imports : Pipeline Imports from Mexico",
-               "Imports : Liquefied Natural Gas Imports")
- 
- 
- 
-#imports by data_series
-#http://api.eia.gov/category/?api_key=YOUR_API_KEY_HERE&category_id=476336
-
-import_series<-get_children(476336)
-import_series<-filter(import_series,grepl("U.S. Natural Gas Pipeline Imports From",name)|grepl("U.S. Liquefied Natural Gas Imports,",name),!grepl("Price",name),!grepl("Annual",name))
-       
-#exports by data series
-#http://api.eia.gov/category/?api_key=YOUR_API_KEY_HERE&category_id=476803
-export_series<-get_children(476802)
-export_series<-filter(export_series,grepl("U.S. Natural Gas Pipeline Exports to",name)|grepl("Liquefied U.S. Natural Gas Exports,",name),!grepl("Price",name),!grepl("Annual",name))
-
-gas_trade<-rbind(import_series,export_series)
-gas_trade_data<-EIA_to_DF(gas_trade)
-#reset to match AEO Names
-names(gas_trade_data)<-c("date",                                                  
-                         "Imports : Pipeline Imports from Canada",
-                         "Imports : Pipeline Imports from Mexico",
-                         "Imports : Liquefied Natural Gas Imports",           
-                         "Exports : Pipeline Exports to Canada",  
-                         "Exports : Pipeline Exports to Mexico",  
-                         "Exports : Liquefied Natural Gas Exports")
-
-#gas_trade_data$`Imports : Pipeline Imports`<-gas_trade_data$`Imports : Pipeline Imports from Canada`+gas_trade_data$`Imports : Pipeline Imports from Mexico`
-#gas_trade_data$`Exports : Pipeline Exports`<-gas_trade_data$`Exports : Pipeline Exports to Canada`+gas_trade_data$`Exports : Pipeline Exports to Mexico`
-
-#gas_trade_data$`Pipeline Net Imports`<-gas_trade_data$`Imports : Pipeline Imports`- gas_trade_data$`Exports : Pipeline Exports`
-#gas_trade_data$`Liquefied Natural Gas Net Imports`<-gas_trade_data$`Imports : Liquefied Natural Gas Imports` - gas_trade_data$`Exports : Liquefied Natural Gas Exports`
-
-  
-gas_trade_data<-gas_trade_data %>% pivot_longer(-date,names_to ="series") 
-
-#make it annual
-gas_trade_data<-gas_trade_data %>% mutate(year=year(date)) %>% group_by(year,series) %>%
-  summarise(value=12*mean(value,na.rm = T)) %>% ungroup %>% #now annual values based on mean non-na month
-  mutate(date=ymd(paste(year,12,31,sep = "-")),year=NULL)
-#adjust to TCF per year
-gas_trade_data$value<-gas_trade_data$value/10^6
-
-history_dates<-tibble(date=unique(gas_trade_data$date))
-
-gas_trade_data<-gas_trade_data %>% filter(series %in% import_set | series %in% export_set) %>%
-  mutate(value=ifelse(series %in% import_set,-1*value,value))
-
-
-
-#build AEO list
-
-subs<-data_fetch(KEY,cat=3162260)
-
-#AEO_data$test<-"SUP_IMP_LIQ_NA_NG_NA_NA_TRLCF.A"
-
-AEO_data<-subs$Series_IDs
-AEO_data<-NULL
-for(j in seq(2014,2019)){
-  #print(paste("working on AEO",j,sep=""))
-  work_data<-subs$Series_IDs
-  work_data$series_id<-gsub("2019",j,work_data$series_id)
-  work_data$name<-gsub("2019",j,work_data$name)
-  AEO_data<-rbind(AEO_data,work_data)
-}
-
-# #get the 2022 defns
-#2022 is 4577710
-#2021 is 4047706
-# 2019 is 3604661
- subs<-data_fetch(KEY,cat=4577710)
- for(j in seq(2020,2022)){
-   #print(paste("working on AEO",j,sep=""))
-   work_data<-subs$Series_IDs
-   work_data$series_id<-gsub("2022",j,work_data$series_id)
-   work_data$name<-gsub("2022",j,work_data$name)
-   AEO_data<-rbind(AEO_data,work_data)
- }
-
-
-
-AEO_data$name<-gsub("Natural Gas : Volumes : ","",AEO_data$name)
-
-
-test<- pdfetch_EIA(AEO_data$series_id,KEY)
-series_data<-data.frame(date=index(test), coredata(test))
-series_data$date<-ymd(series_data$date)
-series_data <- setNames(series_data, c("date",AEO_data$name))
-
-
-suppressMessages(series_data <-series_data %>% full_join(history_dates))#include the dates for which we have history. They will be NA now, but we'll stack them in later
-
-
-#melt it
-series_data<-series_data %>% pivot_longer(-c(date),names_to="variable") #%>% na.omit()
-
-
-#series_data$`Pipeline Net Imports`<-series_data$`Imports : Pipeline Imports`- gas_trade_data$`Exports : Pipeline Exports`
-#series_data$`Liquefied Natural Gas Net Imports`<-gas_trade_data$`Imports : Liquefied Natural Gas Imports` - gas_trade_data$`Exports : Liquefied Natural Gas Exports`
-
-
-
-#get the year for each
-name_split<-do.call(rbind,strsplit(as.character(series_data$variable),", "))
-
-series_data$series<-name_split[,1]
-#series_data$case<-name_split[,2]
-series_data$aeo_year<-name_split[,3]
-
-
-
-
-suppressMessages(joint_data<-series_data%>%filter(year(date)>=2000)%>%left_join(gas_trade_data%>%rename(history=value)))
-
-joint_data<-joint_data %>% filter(series %in% import_set | series %in% export_set) %>%
-  mutate(value=ifelse(series %in% import_set,-1*value,value),
-         #history=ifelse(series %in% import_set,-1*history,history)
-         NULL)
-
-#strip out history after forecast date
-
-joint_data<-joint_data %>% 
-  mutate(year=as.numeric(gsub("AEO","",aeo_year)),
-    history=ifelse(year(date)<as.numeric(gsub("AEO","",aeo_year)),history,NA),
-    series=gsub("Exports : ","",series),
-    series=gsub("Imports : ","",series),
-    series=factor(series,levels=c("Liquefied Natural Gas Exports", "Pipeline Exports to Canada",  "Pipeline Exports to Mexico",
-                                  "Liquefied Natural Gas Imports", "Pipeline Imports from Canada" ,"Pipeline Imports from Mexico" ))
-    
-    )
-
-
-gas_trade_plot<-ggplot(joint_data)+
-  geom_area(aes(date,value,fill=series),position="stack",alpha=0.6,color="black",size=0.25)+
-  geom_area(aes(date,history,fill=series),position="stack",color="black",size=0.25)+
-  facet_wrap(~aeo_year,nrow = 1)+
-  scale_y_continuous(breaks=pretty_breaks(),expand=c(0,0))+
-  scale_x_date(breaks=pretty_breaks(n=5),expand=c(0,0))+
-  #scale_color_viridis("",discrete = T,option="A",direction = -1,end = .9)+
-  scale_fill_viridis("",discrete = T,option="A",direction = -1,end = .9)+
-  scale_size_manual("",values=c(1,1.5))+
-  scale_linetype_manual("",values=c("solid"))+
-  expand_limits(x=ymd("1999-10-01"))+
-  theme_minimal()+weekly_graphs()+
-  theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)))+
-  theme(axis.text.x = element_text(angle=90,hjust = 0.5,vjust = 0.5))+
-  guides(linetype=guide_legend(order = 1,keywidth = unit(1.6,"cm")),
-         size="none",
-         #shape = guide_legend(keywidth = unit(1.6,"cm"),nrow = 2),
-         #linetype = guide_legend(keywidth = unit(1.6,"cm"),nrow = 2),
-         #colour = guide_legend(keywidth = unit(1.6,"cm"),override.aes = list(lty = "11")  ,nrow = 2),
-         fill = guide_legend(keywidth = unit(1,"cm"),nrow = 2,byrow = TRUE),
-         #fill = guide_legend(keywidth = unit(1.6,"cm"),nrow = 2)
-         NULL)+
-  labs(y=paste("Annual Net Outflows (TCF)",sep=""),x="",
-       title=paste("EIA Annual Energy Outlook Natural Gas Trade Projections"),
-       subtitle=paste("Historical data up to forecast date in darker shade, forecasts shown with more transparency"),
-       caption="Source: Data via EIA, graph by Andrew Leach.")
-
-gas_trade_plot
-
-
+```{r oil_net_imports, echo = FALSE, warning=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+oil_net_imports_graph
 ```
 
+## Product Net Exports
 
-
-
-## Electricity supply {.tabset .tabset-fade}
-
-
-### Total Electricity Supply
-```{r fig.width=14, fig.height=7, scheme_plot_3, cache=TRUE,warning=FALSE}
-
-eia_aeo_comp(start_year = 2015,api_series =".GEN_NA_ELEP_NA_TEG_NA_USA_BLNKWH.A",label = "Electricity Generation",
-                          units = "billion kWh",
-                          history = TRUE,
-                          hist_conversion = 1000,
-                          hist_series = "ELEC.GEN.ALL-US-99.A"
-                          )
-```
-
-
-### Solar Generation
-```{r fig.width=14, fig.height=7, scheme_plot_1, cache=TRUE,warning=FALSE}
-
-eia_aeo_comp(start_year = 2014,api_series =".GEN_NA_ALLS_NA_SLR_NA_NA_BLNKWH.A",label = "Solar Electricity Generation",
-                          units = "billion kWh",
-                          history = TRUE,
-                          hist_conversion = 1000,
-                          hist_series = "ELEC.GEN.TSN-US-99.A"
-                          )
-```
-
-
-### Coal Generation
-
-```{r fig.width=14, fig.height=7, scheme_plot_2, cache=TRUE,warning=FALSE}
-eia_aeo_comp(start_year = 2018,api_series =".GEN_NA_ELEP_POW_CL_NA_USA_BLNKWH.A",label = "Coal-fired Electricity Generation",
-                          units = "billion kWh",
-                         history = TRUE,
-                         hist_conversion = 1000,
-                         hist_series = "ELEC.GEN.COW-US-98.A")
-```
-
-## Energy-related carbon dioxide emissions {.tabset .tabset-fade}
-```{r fig.width=14, fig.height=7, co2_plot, cache=TRUE,warning=FALSE}
-eia_aeo_comp(start_year = 2015,api_series =".EMI_CO2_TEN_NA_NA_NA_NA_MILLMETNCO2.A",label = "Energy-related CO2 Emissions",
-                         units = "Mt",
-                         history = TRUE,
-                         hist_series = "EMISS.CO2-TOTV-TT-TO-US.A",
-                        zero_y = TRUE)+expand_limits(y=6000)
+```{r aeo_products, echo = FALSE, warning=FALSE, results="asis", cache=FALSE, fig.width=10, fig.pos="H"}
+product_net_imports_graph
 ```
 
 

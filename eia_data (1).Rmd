@@ -28,6 +28,8 @@ if(R.version$platform ==  "x86_64-w64-mingw32")
   setwd("C:/Users/aleach/Google Drive/EIA_data_pulls")
 #Set EIA API Key
 
+KEY <- "91b4dca0b858df64a2279d82f71af240"
+
 #use this to tell R to download data again in certain spots
 KEEP_CACHE<-TRUE
 
@@ -847,10 +849,10 @@ lto_dpr
     
 ## Shale Gas and Light Tight Oil Production Reports {.tabset .tabset-fade}
 
-Finally for current data, the US EIA also produces a shale gas and light tight oil spreadsheet with data by play which is slightly different than the DPR data - it's more disaggregated. You can access the Excel spreadsheet directly [here](https://www.eia.gov/energyexplained/data/U.S.%20tight%20oil%20production.xlsx) for oil and [here](https://www.eia.gov/energyexplained/data/U.S.%20dry%20shale%20gas%20production.xlsx") for gas. Again, the code link shows the means of downloading and processing the data via R. 
+Finally for current data, the US EIA also produces a shale gas and light tight oil spreadsheet with data by play which is slightly different than the DPR data - it's more disaggregated. You can access the Excel spreadsheet directly [here](https://www.eia.gov/energyexplained/oil-and-petroleum-products/data/US-tight-oil-production.xlsx) for oil and [here](https://www.eia.gov/naturalgas/weekly/img/shale_gas_201907.xlsx) for gas. Again, the code link shows the means of downloading and processing the data via R. 
 
 ```{r , warning=FALSE,cache=TRUE}
-oil_prod_file<-"https://www.eia.gov/energyexplained/data/U.S.%20tight%20oil%20production.xlsx"
+oil_prod_file<-"https://www.eia.gov/energyexplained/oil-and-petroleum-products/data/US-tight-oil-production.xlsx"
 
 download.file(oil_prod_file,"play-data.xlsx",mode="wb")
 #plays<-getSheetNames("play-data.xlsx")
@@ -880,13 +882,14 @@ oil_play<-ggplot(df1,aes(Date,volume*1000,group = play,fill=play)) +
 
 
 ```{r gas data, warning=FALSE,cache=TRUE}
-gas_prod_file<-"https://www.eia.gov/energyexplained/data/U.S.%20dry%20shale%20gas%20production.xlsx"
+gas_prod_file<-"https://www.eia.gov/naturalgas/weekly/img/shale_gas_201907.xlsx"
 
 download.file(gas_prod_file,"play-data.xlsx",mode="wb")
 #plays<-getSheetNames("play-data.xlsx")
 #plays<-plays[plays!="RegionCounties"]
 play_data <- read.xlsx(xlsxFile = "play-data.xlsx", sheet = "data", startRow = 1,skipEmptyRows = TRUE,detectDates = TRUE)
 play_data$X13<-NULL
+play_data$X14<-NULL
 play_data$Date<-as.Date(play_data$Date,origin = "1899-12-30")
 df1<-melt(play_data,id=c("Date"),variable.name = "play",value.name = "volume" )
 df1$play<-gsub("\\.", " ", df1$play)
@@ -1219,6 +1222,8 @@ The STEO also has data on other aspects we'll discuss in class like OPEC spare c
 Finally, for long-term outlooks, we can look to the Annual Energy Outlook which carries forecasts through to 2050 under a variety of assumptions and scenarios.  The Annual Outlook which appears twice per year (in November as an Early Release and in March in final form) is available [here](https://www.eia.gov/outlooks/aeo/) from the EIA website and, as usual, data are available for the previous 5 editions through the API [here](https://www.eia.gov/opendata/qb.php?category=964164).  One of the more interesting things to do with Annual Outlook data from year to year is to see how the forward views have changed on prices or quantities in which we are interested. Below are are few examples of how the projections have evolved since 2014.
 
 ```{r AEO data and graphs}
+oil_exports_data_19<-EIAdata::getEIA(ID = "AEO.2019.REF2019.TRAD_NA_LFL_NA_EXP_NA_USA_MILLBRLPDY.A", key = KEY) 
+
 oil_exports_data_18<-EIAdata::getEIA(ID = "AEO.2018.REF2018.TRAD_NA_LFL_NA_EXP_NA_USA_MILLBRLPDY.A", key = KEY) 
 
 oil_exports_data_17<-EIAdata::getEIA(ID = "AEO.2017.REF2017.TRAD_NA_LFL_NA_EXP_NA_USA_MILLBRLPDY.A", key = KEY) 
@@ -1228,19 +1233,21 @@ oil_exports_data_15<-EIAdata::getEIA(ID = "AEO.2015.REF2015.TRAD_NA_LFL_NA_EXP_N
 oil_exports_data_14<-EIAdata::getEIA(ID = "AEO.2014.REF2014.TRAD_NA_LFL_NA_EXP_NA_USA_MILLBRLPDY.A", key = KEY)  
 
 
-oil_exports_data<-merge(oil_exports_data_18,oil_exports_data_17)
+oil_exports_data<-merge(oil_exports_data_19,oil_exports_data_18)
+
+oil_exports_data<-merge(oil_exports_data,oil_exports_data_17)
 
 oil_exports_data<-merge(oil_exports_data,oil_exports_data_16)
 oil_exports_data<-merge(oil_exports_data,oil_exports_data_15)
 oil_exports_data<-merge(oil_exports_data,oil_exports_data_14)
 
-names(oil_exports_data)<-c("oil_exports_2018","oil_exports_2017","oil_exports_2016","oil_exports_2015","oil_exports_2014")
+names(oil_exports_data)<-c("oil_exports_2019","oil_exports_2018","oil_exports_2017","oil_exports_2016","oil_exports_2015","oil_exports_2014")
 oil_exports_data<-data.frame(date=index(oil_exports_data), coredata(oil_exports_data))
 oil_exports_melt <- melt(oil_exports_data,id="date") 
 
 oil_exports_graph<-ggplot(oil_exports_melt) +
   geom_line(aes(date,value,colour=variable),size=2) +
-  scale_color_viridis("",labels = c("2018 AEO","2017 AEO","2016 AEO","2015 AEO","2014 AEO"),discrete = TRUE)+
+  scale_color_viridis("",labels = c("2019 AEO","2018 AEO","2017 AEO","2016 AEO","2015 AEO","2014 AEO"),discrete = TRUE)+
   #scale_x_datetime(limits = lims,breaks=breaks,labels = date_format("%a\n%m-%d\n%H:00", tz="America/Denver"))+
   guides(colour=guide_legend(byrow=FALSE))+
   theme_minimal()+theme(    
@@ -1257,24 +1264,26 @@ oil_exports_graph<-ggplot(oil_exports_melt) +
              title="EIA Annual Energy Outlook Oil Exports Forecasts",
              caption="Source: EIA API\nGraph by Andrew Leach")
 
-oil_net_imports_data_18<-EIAdata::getEIA(ID = "AEO.2018.REF2018.TRAD_NA_LFL_NA_NETIMP_NETIMP_USA_MILLBRLPDY.A", key = KEY) 
+oil_net_imports_data_19<-EIAdata::getEIA(ID = "AEO.2018.REF2018.TRAD_NA_LFL_NA_NETIMP_NETIMP_USA_MILLBRLPDY.A", key = KEY) 
+oil_net_imports_data_18<-EIAdata::getEIA(ID = "AEO.2019.REF2019.TRAD_NA_LFL_NA_NETIMP_NETIMP_USA_MILLBRLPDY.A", key = KEY) 
 oil_net_imports_data_17<-EIAdata::getEIA(ID = "AEO.2017.REF2017.TRAD_NA_LFL_NA_NETIMP_NETIMP_USA_MILLBRLPDY.A", key = KEY) 
 oil_net_imports_data_16<-EIAdata::getEIA(ID = "AEO.2016.REF2016.TRAD_NA_LFL_NA_NETIMP_NETIMP_USA_MILLBRLPDY.A", key = KEY) 
 oil_net_imports_data_15<-EIAdata::getEIA(ID = "AEO.2015.REF2015.TRAD_NA_LFL_NA_NETIMP_NETIMP_USA_MILLBRLPDY.A", key = KEY) 
 oil_net_imports_data_14<-EIAdata::getEIA(ID = "AEO.2014.REF2014.TRAD_NA_LFL_NA_NETIMP_NETIMP_USA_MILLBRLPDY.A", key = KEY) 
-oil_net_imports_data<-merge(oil_net_imports_data_18,oil_net_imports_data_17)
+oil_net_imports_data<-merge(oil_net_imports_data_19,oil_net_imports_data_18)
+oil_net_imports_data<-merge(oil_net_imports_data,oil_net_imports_data_17)
 oil_net_imports_data<-merge(oil_net_imports_data,oil_net_imports_data_16)
 oil_net_imports_data<-merge(oil_net_imports_data,oil_net_imports_data_15)
 oil_net_imports_data<-merge(oil_net_imports_data,oil_net_imports_data_14)
 
-names(oil_net_imports_data)<-c("oil_net_imports_2018","oil_net_imports_2017","oil_net_imports_2016","oil_net_imports_2015","oil_net_imports_2014")
+names(oil_net_imports_data)<-c("oil_net_imports_2019","oil_net_imports_2018","oil_net_imports_2017","oil_net_imports_2016","oil_net_imports_2015","oil_net_imports_2014")
 oil_net_imports_data<-data.frame(date=index(oil_net_imports_data), coredata(oil_net_imports_data))
 oil_net_imports_melt <- melt(oil_net_imports_data,id="date") 
 
 
 oil_net_imports_graph<-ggplot(oil_net_imports_melt) +
   geom_line(aes(date,value,colour=variable),size=2) +
-  scale_color_viridis("",labels = c("2018 AEO","2017 AEO","2016 AEO","2015 AEO","2014 AEO"),discrete = TRUE)+
+  scale_color_viridis("",labels = c("2019 AEO","2018 AEO","2017 AEO","2016 AEO","2015 AEO","2014 AEO"),discrete = TRUE)+
   #scale_x_datetime(limits = lims,breaks=breaks,labels = date_format("%a\n%m-%d\n%H:00", tz="America/Denver"))+
   guides(colour=guide_legend(byrow=FALSE))+
   theme_minimal()+theme(    
@@ -1291,23 +1300,26 @@ oil_net_imports_graph<-ggplot(oil_net_imports_melt) +
              title="EIA Annual Energy Outlook Net Oil Imports Forecasts",
              caption="Source: EIA API\nGraph by Andrew Leach")
 
+
+products_net_imports_data_19<-EIAdata::getEIA(ID = "AEO.2019.REF2019.SUP_NA_LFL_OPS_NPI_NA_NA_NA.A", key = KEY) 
 products_net_imports_data_18<-EIAdata::getEIA(ID = "AEO.2018.REF2018.SUP_NA_LFL_OPS_NPI_NA_NA_NA.A", key = KEY) 
 products_net_imports_data_17<-EIAdata::getEIA(ID = "AEO.2017.REF2017.SUP_NA_LFL_OPS_NPI_NA_NA_NA.A", key = KEY)
 products_net_imports_data_16<-EIAdata::getEIA(ID = "AEO.2016.REF2016.SUP_NA_LFL_OPS_NPI_NA_NA_NA.A", key = KEY)
 products_net_imports_data_15<-EIAdata::getEIA(ID = "AEO.2015.REF2015.SUP_NA_LFL_OPS_NPI_NA_NA_NA.A", key = KEY)
 products_net_imports_data_14<-EIAdata::getEIA(ID = "AEO.2014.REF2014.SUP_NA_LFL_OPS_NPI_NA_NA_NA.A", key = KEY)
-products_net_imports_data<-merge(products_net_imports_data_18,products_net_imports_data_17)
+products_net_imports_data<-merge(products_net_imports_data_19,products_net_imports_data_18)
+products_net_imports_data<-merge(products_net_imports_data,products_net_imports_data_17)
 products_net_imports_data<-merge(products_net_imports_data,products_net_imports_data_16)
 products_net_imports_data<-merge(products_net_imports_data,products_net_imports_data_15)
 products_net_imports_data<-merge(products_net_imports_data,products_net_imports_data_14)
 
-names(products_net_imports_data)<-c("products_net_imports_2018","products_net_imports_2017","products_net_imports_2016","products_net_imports_2015","products_net_imports_2014")
+names(products_net_imports_data)<-c("products_net_imports_2019","products_net_imports_2018","products_net_imports_2017","products_net_imports_2016","products_net_imports_2015","products_net_imports_2014")
 products_net_imports_data<-data.frame(date=index(products_net_imports_data), coredata(products_net_imports_data))
 products_net_imports_melt <- melt(products_net_imports_data,id="date") 
 
 product_net_imports_graph<-ggplot(products_net_imports_melt) +
   geom_line(aes(date,-value,colour=variable),size=2) +
-  scale_color_viridis("",labels = c("2018 AEO","2017 AEO","2016 AEO","2015 AEO","2014 AEO"),discrete = TRUE)+
+  scale_color_viridis("",labels = c("2019 AEO","2018 AEO","2017 AEO","2016 AEO","2015 AEO","2014 AEO"),discrete = TRUE)+
   #scale_x_datetime(limits = lims,breaks=breaks,labels = date_format("%a\n%m-%d\n%H:00", tz="America/Denver"))+
   guides(colour=guide_legend(byrow=FALSE))+
   theme_minimal()+theme(    

@@ -7,6 +7,8 @@ print(getwd())
 source("../andrew_base.R")
 
 
+ KEY <- "91b4dca0b858df64a2279d82f71af240"
+
 
  
  
@@ -942,7 +944,7 @@ for(commod_base in seq(1,length(commod_list))){
   
   #jpeg(file="AESO_LTO.jpg", width = 1400, height = 750)
   print("making graph")
-  set_png(file=file_name)
+  png(file=file_name, width = 1400, height = 750,res=130,type='cairo')
   graph<-ggplot(subset(df1,Date>"2007-01-01"),aes(Date,value,group = variable,colour=variable)) +
     geom_line(size=1.7) +
     #geom_point(size=1) +
@@ -1470,52 +1472,10 @@ movements_padd<-series
 #http://api.eia.gov/category/?api_key=YOUR_API_KEY_HERE&category_id=296686
 
 
-subs<-data_fetch(KEY,cat=296686)
-#sub_cats<-subs$Sub_Categories
-
-  series <-subs$Series_IDs %>% filter(grepl("PADD",name),grepl("Monthly",name),units=="Thousand Barrels per Day")
-  series$name<-as.character(series$name)
-  series$To<-do.call("rbind",strsplit(series$name, " Field Production of "))[,1]
-  series$Mode<-"Production"
-  Rest<-do.call("rbind",strsplit(series$name, " Field Production of "))[,2]
-  series$From<-series$To
-  series$Commodity<-do.call("rbind",strsplit(Rest, ", Monthly"))[,1]
-  series$freq<-"Monthly"
-  
-production_padd<-series
-
-
 #imports to PADDs
-#http://api.eia.gov/category/?api_key=YOUR_API_KEY_HERE&category_id=314562
-
-subs<-data_fetch(KEY,cat=314562)
-sub_cats<-subs$Sub_Categories
-
-data_store <- list()
-stack<-1
-for (cat in sub_cats$category_id) {
-  #for testing
-  #cat<-sub_cats$category_id[2]
-  subs<-data_fetch(KEY,cat=cat)
-  series <-subs$Series_IDs %>% filter(grepl("Monthly",name),units=="Thousand Barrels per Day")
-  series$name<-as.character(series$name)
-  series$To<-do.call("rbind",strsplit(series$name, " Imports of "))[,1]
-  series$Mode<-"Import"
-  Rest<-do.call("rbind",strsplit(series$name, " Imports of "))[,2]
-  series<-series[!grepl("Imports From ",Rest),]
-  Rest<-Rest[!grepl("Imports From",Rest)] #take out exports to the PADD itself - odd
-  series<-series[!grepl("Imports from ",Rest),]
-  Rest<-Rest[!grepl("Imports from",Rest)] #take out exports to the PADD itself - odd
-  series$From<-"Import"
-  series$Commodity<-do.call("rbind",strsplit(Rest, ", Monthly"))[,1]
-  series$freq<-"Monthly"
-  data_store[[stack]]<-series
-  stack<-stack+1
-}
 
 
-imports_padd<-data.frame(do.call(rbind,data_store))
-
+#http://api.eia.gov/category/?api_key=YOUR_API_KEY_HERE&category_id=367391
 
 
 
@@ -1544,7 +1504,7 @@ stack<-1
   }
 
 
-imports_proc_padd<-data.frame(do.call(rbind,data_store))
+imports_padd<-data.frame(do.call(rbind,data_store))
 
 
 
@@ -1561,7 +1521,7 @@ for (cat in sub_cats$category_id[-1]) {
   subs<-data_fetch(KEY,cat=cat)
   series <-subs$Series_IDs %>% filter(grepl("Monthly",name),units=="Thousand Barrels per Day")
   series$name<-as.character(series$name)
-  series$To<-"Export"
+  series$To<-"World"
   series$From<-do.call("rbind",strsplit(series$name, " Exports of "))[,1]
   series$Mode<-"Export"
   Rest<-do.call("rbind",strsplit(series$name, " Exports of "))[,2]
@@ -1580,38 +1540,28 @@ exports_padd<-data.frame(do.call(rbind,data_store))
 
 padd_data<-rbind(imports_padd,movements_padd)
 padd_data<-rbind(padd_data,exports_padd)
-padd_data<-rbind(padd_data,production_padd)
 padd_data$series_id<-as.character(padd_data$series_id)
 padd_data$series_id2<-gsub('\\-','.',padd_data$series_id)
   
   
 #get all the movements and imports data
 
-crude_series<-padd_data %>% filter(Commodity=="Crude Oil")
-
-#all_data<-data.frame(pdfetch_EIA(padd_data$series_id,KEY),stringsAsFactors = F)
-crude_data<-data.frame(pdfetch_EIA(crude_series$series_id,KEY),stringsAsFactors = F)
-
-
-
+all_data<-data.frame(pdfetch_EIA(padd_data$series_id,KEY),stringsAsFactors = F)
 
 
 
 library(dplyr)
 
 #all_data<-data.frame(all_data)
-crude_data$date=ymd(rownames(crude_data))
-
-
-movements<-melt(crude_data,id="date",variable.name = "series_id",value.name = "quantity") #convert data to long form with series ids
+all_data$date=ymd(rownames(all_data))
+movements<-melt(all_data,id="date",variable.name = "series_id",value.name = "quantity") #convert data to long form with series ids
 movements$series_id<-as.character(movements$series_id)
-movements<-movements %>% left_join(crude_series,by=c("series_id"="series_id2"))
+movements<-movements %>% na.omit() %>% left_join(padd_data,by=c("series_id"="series_id2"))
+
 movements$quantity[movements$units=="Thousand Barrels"]<-movements$quantity[movements$units=="Thousand Barrels"]/
   days_in_month(movements$date[movements$units=="Thousand Barrels"])
 movements$units[movements$units=="Thousand Barrels"]<-"Thousand Barrels per Day"
 movements$units<-factor(movements$units)
-movements$quantity[is.na(movements$quantity)] <- 0
-
 
 #test some graphing
 
@@ -1619,43 +1569,40 @@ keeps<-c("East Coast (PADD 1)","Midwest (PADD 2)","Gulf Coast (PADD 3)","Rocky M
          "West Coast (PADD 5)","World","Canada")
 
 
-df1<-movements %>% filter(date>=ymd("2000-01-01") & Commodity=="Crude Oil",To != "U.S.")%>%
-  mutate(To=factor(To)) %>% mutate(To=fct_collapse(To,
-                          "West Coast (PADD 5)" = c("Federal Offshore PADD 5", "West Coast (PADD 5)"),
-                          "International Trade" = c("Export")
-                          )
-                          ) %>%
-  mutate(From=factor(From)) %>% mutate(From=fct_collapse(From,
-                          "West Coast (PADD 5)" = c("Federal Offshore PADD 5", "West Coast (PADD 5)"),
-                          "International Trade" = c("Import")
-                          )
-                          ) %>%
-  group_by(date,To,From,Commodity,Mode) %>% summarize(quantity=sum(quantity))
+df1<-movements %>% filter(date>=ymd("2007-01-01") & Commodity=="Crude Oil" &
+                            Mode!="Export") %>%
+  mutate(From_mod=factor(From)) %>% mutate(From_mod=fct_other(From_mod, keep = keeps)) %>%
+  group_by(date,To,From_mod,Commodity,Mode) %>% summarize(quantity=sum(quantity))
 
-#df1$From<-fct_recode(df1$From, "Imports from Canada" = "Canada", "Other Imports" = "Other")
-df1$From<- factor(df1$From, levels=c("East Coast (PADD 1)","Midwest (PADD 2)","Gulf Coast (PADD 3)","Rocky Mountain (PADD 4)",
-"West Coast (PADD 5)","Production","International Trade"))
-df1$To<- factor(df1$To, levels=c("East Coast (PADD 1)","Midwest (PADD 2)","Gulf Coast (PADD 3)","Rocky Mountain (PADD 4)",
-                                     "West Coast (PADD 5)","International Trade"))
+df2<-dcast(df1,date + To+Commodity ~ From_mod,value.var="quantity")
+df2$Other<-df2$World-df2$Canada
+df2$Other<-df2$World-df2$Canada
+df2$World<-NULL
+df3<-melt(df2,id=c("date","To","Commodity"),value.name = "quantity",variable.name = "From")
+df3$quantity[is.na(df3$quantity)] <- 0
+df3$From<-fct_recode(df3$From, "Imports from Canada" = "Canada", "Other Imports" = "Other")
+df3$From<- factor(df3$From, levels=c("East Coast (PADD 1)","Midwest (PADD 2)","Gulf Coast (PADD 3)","Rocky Mountain (PADD 4)",
+"West Coast (PADD 5)","Imports from Canada","Other Imports"))
+df3$To<- factor(df3$To, levels=c("East Coast (PADD 1)","Midwest (PADD 2)","Gulf Coast (PADD 3)","Rocky Mountain (PADD 4)",
+                                     "West Coast (PADD 5)","World"))
 
-df_test<-df1 %>% filter(From=="East Coast (PADD 1)")
+
 
 png<-1
 if(png==1)#set these to only turn on if you're making PNG graphs
   set_png("padd_imports.png")
-moves_in<-ggplot(filter(df1,To!="International Trade"),aes(date,quantity,group = From,colour=From,fill=From)) +
+ggplot(df3,aes(date,quantity,group = From,colour=From,fill=From)) +
   geom_area(position = "stack")+
   facet_grid(~To)+
 scale_x_date()+
-  scale_fill_manual("Source of Crude",values = colors_tableau10()[-7],guide = "legend")+
-  scale_colour_manual("Source of Crude",values=colors_tableau10()[-7],guide = "legend")+
+  scale_fill_manual("",values = colors_tableau10()[-7],guide = "legend")+
+  scale_colour_manual("",values=colors_tableau10()[-7],guide = "legend")+
   guides(fill=guide_legend(nrow =2,byrow=FALSE))+
   theme_minimal()+theme(
     plot.margin = margin(.5, .5, .5, .5, "cm"),
     legend.position = "bottom",
     legend.margin=margin(c(.10,0,.10,0),unit="cm"),
     legend.text = element_text(colour="black", size = 14),
-    legend.title = element_text(colour="black", size = 14,vjust=0.5),
     plot.caption = element_text(size = 12, face = "italic"),
     plot.title = element_text(size = 18,face = "bold"),
     plot.subtitle = element_text(size = 14, face = "italic"),
@@ -1665,46 +1612,92 @@ scale_x_date()+
     axis.text.x = element_text(size = 12, colour = "black", angle = 90,hjust = 0),
     strip.text.x = element_text(size = 10, colour = "black", angle = 0)
   )+
-labs(y="Crude Oil (MMbbl/d)",x="Year",
-       title=paste("US Crude Oil Source By Region"),
-        subtitle=paste("Production appears as sourced from within a PADD, so PADD 2 production is oil from PADD 2 in PADD 2"),
+labs(y="Crude Oil Imports (Thousands of Barrels Per Day)",x="Year",
+       title=paste("US Crude Oil Imports By Region and Source (Monthly)"),
        caption="Source: EIA API, graph by Andrew Leach.")
-print(moves_in)
 if(png==1)#set these to only turn on if you're making PNG graphs
   dev.off()
 
-if(png==1)#set these to only turn on if you're making PNG graphs
-  set_png("padd_exports.png")
-moves_out<-ggplot(filter(df1,Mode!="Production",From!="International Trade"),aes(date,quantity,group = To,colour=To,fill=To)) +
+
+df1<-movements %>% filter(date>=ymd("2000-01-01") & Commodity=="Crude Oil" &
+                            Mode!="Import" & Mode!="Export") 
+
+#replace NAs with zeros
+df2<-dcast(df1,date + To+Commodity ~ From,value.var="quantity")
+df1<-melt(df2,id=c("date","To","Commodity"),value.name = "quantity",variable.name = "From")
+df2<-dcast(df1,date + From+Commodity ~ To,value.var="quantity")
+df1<-melt(df2,id=c("date","From","Commodity"),value.name = "quantity",variable.name = "To")
+df1$quantity[is.na(df1$quantity)] <- 0
+
+
+df1$From<- factor(df1$From, levels=c("East Coast (PADD 1)","Midwest (PADD 2)","Gulf Coast (PADD 3)","Rocky Mountain (PADD 4)",
+                                     "West Coast (PADD 5)"))
+df1$To<- factor(df1$To, levels=c("East Coast (PADD 1)","Midwest (PADD 2)","Gulf Coast (PADD 3)","Rocky Mountain (PADD 4)",
+                                     "West Coast (PADD 5)"))
+
+
+moves_in<- ggplot(df1,aes(date,quantity,group = From,colour=From,fill=From)) +
+  geom_area(position = "stack")+
+  facet_grid(~To)+
+  scale_x_date()+
+  scale_fill_manual("",values = colors_tableau10()[-7],guide = "legend")+
+  scale_colour_manual("",values=colors_tableau10()[-7],guide = "legend")+
+  guides(fill=guide_legend(nrow =2,byrow=FALSE))+
+  theme_minimal()+theme(
+    plot.margin = margin(.5, .5, .5, .5, "cm"),
+    legend.position = "bottom",
+    legend.margin=margin(c(.10,0,.10,0),unit="cm"),
+    legend.text = element_text(colour="black", size = 14),
+    plot.caption = element_text(size = 12, face = "italic"),
+    plot.title = element_text(size = 18,face = "bold"),
+    plot.subtitle = element_text(size = 14, face = "italic"),
+    panel.grid.minor = element_blank(),
+    text = element_text(size = 14,face = "bold"),
+    axis.text.y = element_text(size = 12,face = "bold", colour="black"),
+    axis.text.x = element_text(size = 12, colour = "black", angle = 90,hjust = 0),
+    strip.text.x = element_text(size = 12, colour = "black", angle = 0)
+  )+
+  labs(y="Crude Oil (1000 Barrels Per Day)",x="Year",
+       title=paste("Inbound Movements By Region and Destination"),
+       caption="Source: EIA API, graph by Andrew Leach.")
+#png<-1
+#if(png==1)#set these to only turn on if you're making PNG graphs
+#  set_png("padd_moves_in.png")
+print(moves_in)
+#if(png==1)#set these to only turn on if you're making PNG graphs
+#  dev.off()
+
+
+moves_out<- ggplot(df1,aes(date,quantity,group = To,colour=To,fill=To)) +
   geom_area(position = "stack")+
   facet_grid(~From)+
   scale_x_date()+
-  scale_fill_manual("Destination of Crude",values = colors_tableau10()[-7],guide = "legend")+
-  scale_colour_manual("Destination of Crude",values=colors_tableau10()[-7],guide = "legend")+
+  scale_fill_manual("",values = colors_tableau10()[-7],guide = "legend")+
+  scale_colour_manual("",values=colors_tableau10()[-7],guide = "legend")+
   guides(fill=guide_legend(nrow =2,byrow=FALSE))+
   theme_minimal()+theme(
     plot.margin = margin(.5, .5, .5, .5, "cm"),
     legend.position = "bottom",
     legend.margin=margin(c(.10,0,.10,0),unit="cm"),
     legend.text = element_text(colour="black", size = 14),
-    legend.title = element_text(colour="black", size = 14,vjust=0.5),
     plot.caption = element_text(size = 12, face = "italic"),
     plot.title = element_text(size = 18,face = "bold"),
     plot.subtitle = element_text(size = 14, face = "italic"),
     panel.grid.minor = element_blank(),
-    text = element_text(size = 12,face = "bold"),
+    text = element_text(size = 14,face = "bold"),
     axis.text.y = element_text(size = 12,face = "bold", colour="black"),
     axis.text.x = element_text(size = 12, colour = "black", angle = 90,hjust = 0),
-    strip.text.x = element_text(size = 10, colour = "black", angle = 0)
+    strip.text.x = element_text(size = 12, colour = "black", angle = 0)
   )+
-  labs(y="Crude Oil (MMbbl/d)",x="Year",
-       title=paste("US Crude Oil Destination by Region"),
-       #subtitle=paste("Production appears as sourced from within a PADD, so PADD 2 production is oil from PADD 2 in PADD 2"),
+  labs(y="Crude Oil (1000 Barrels Per Day)",x="Year",
+       title=paste("Outbound Movements By Region and Destination"),
        caption="Source: EIA API, graph by Andrew Leach.")
+#png<-1
+#if(png==1)#set these to only turn on if you're making PNG graphs
+#  set_png("padd_moves_in.png")
 print(moves_out)
-if(png==1)#set these to only turn on if you're making PNG graphs
-  dev.off()
-
+#if(png==1)#set these to only turn on if you're making PNG graphs
+#  dev.off()
 
 library(grid)
 library(gridExtra)
@@ -1717,55 +1710,48 @@ g_legend<-function(a.gplot){
   legend <- tmp$grobs[[leg]]
   return(legend)}
 
-#grab the legend without a title
-mylegend<-arrangeGrob(g_legend(moves_in + theme(legend.title = element_blank(),
-                                                legend.spacing = unit(1.0, 'cm'),
-                                                legend.text =  element_text(margin = margin(t = 0, r = 1, b = 0, l = 0)), nrow=1)))
+mylegend<-arrangeGrob(g_legend(moves_in), nrow=1)
 
 
 
 png<-1
 if(png==1)
   set_png(file=paste("movements.png",sep=""),height = 1200,width=2000)
-grid.arrange(arrangeGrob(moves_in +labs(caption="Note: Production denoted as supply from within the PADD, i.e. PADD 2 production appears as PADD 2 supply from PADD 2.")+
-                           theme(legend.position="none",
+grid.arrange(arrangeGrob(moves_in + theme(legend.position="none",
                                            legend.margin=margin(c(0,0,0,0),unit="cm"),
                                            legend.text = element_text(colour="black", size = 14, face = "bold"),
-                                            plot.caption = element_text(size = 12,face = "italic", colour="black"),          
-                                            plot.title = element_text(size = 12,face = "bold", colour="black"),
-                                          plot.subtitle = element_blank(),
+                                           plot.caption = element_blank(),
+                                          plot.title = element_text(size = 12,face = "bold", colour="black"),
+                                           plot.subtitle = element_text(size = 14, face = "italic"),
                                            panel.grid.minor = element_blank(),
                                            text = element_text(size = 10,face = "bold"),
                                            axis.text = element_text(size =12,face = "bold", colour="black"),
                                            axis.text.x = element_blank(),
-                                          axis.title.x = element_blank(),
                                           strip.text = element_text(colour="black", size = 8, face = "bold"),
                                           
 ),
 moves_out+
   theme(legend.position="none",
         plot.title = element_text(size = 12,face = "bold", colour="black"),
-        plot.subtitle = element_blank(),
+        plot.subtitle = element_text(size = 16, face = "italic"),
         plot.caption = element_blank(),
         panel.grid.minor = element_blank(),
         text = element_text(size = 10,face = "bold"),
         axis.text = element_text(size = 12,face = "bold", colour="black"),
         axis.title.x = element_blank(),
-        strip.text = element_text(colour="black", size = 8, face = "bold"),
-        axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0))),
+        strip.text = element_text(colour="black", size = 8, face = "bold"),),
 
 ncol=1,heights=c(3,3)),
 mylegend, 
 nrow=2,heights=c(10, 1),bottom =text_grob(
   "Source: Data via EIA, graph by Andrew Leach",
-  face = "italic", color = "black",size=14,just="center",lineheight = 2
+  face = "italic", color = "black",size=14,just="center",lineheight = 1
+),
+top =text_grob(
+  "US PADD-to-PADD Crude Oil Movements",
+  face = "bold", color = "black",size=14,just="center",lineheight = 1
 )
-#,
-#top =text_grob(
-#  "US PADD-to-PADD Crude Oil Movements",
-#  face = "bold", color = "black",size=14,just="center",lineheight = 1
-#)
-#
+
 )
 if(png==1)#set these to only turn on if you're making PNG graphs
   dev.off()
@@ -1779,6 +1765,10 @@ if(png==1)#set these to only turn on if you're making PNG graphs
 subs<-data_fetch(KEY,cat=293662)
 testing<-t(subs$Series_IDs$series_id) #take out the 4-week averages
 testing<- as.character(testing)
+
+
+
+
 #Loop to get all data from 
 #US and PADDDs 1-5 weekly
 

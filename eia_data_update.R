@@ -1,98 +1,59 @@
-library(zoo)
-library(lubridate)
-library(readxl)
-library(scales)
-library(grid)
-library(gridExtra)
-library(janitor)
-library(ggpubr)
-library(cowplot)
-library(patchwork)
-library(ggthemes)
-library(directlabels)
-library(pdfetch)
-library(gghighlight)
-library(viridis)
-library(tidyverse)
-library(ggrepel)
-library(xml2)
-library(rvest)
+if(R.version$platform ==  "x86_64-apple-darwin15.6.0")
+  setwd("/Users/aleach/Google Drive/EIA_data_pulls")
+#PC
+if(R.version$platform ==  "x86_64-w64-mingw32")
+  setwd("C:/Users/aleach/Google Drive/EIA_data_pulls")
+print(getwd())
+source("../andrew_base.R")
 
+ KEY <- "91b4dca0b858df64a2279d82f71af240"
+ 
+ 
+ get_children<-function(category_id){
+   subs<-data_fetch(KEY,cat=category_id)
+   sub_cats<-subs$Sub_Categories
+   #build list from sub_cats
+   cat_store <- list()
+   cat_count<-1
+   for (cat in sub_cats$category_id) {
+     #cat<-sub_cats$category_id[1]
+     series<-data_fetch(KEY,cat=cat)
+     cat_store[[cat_count]]<-series$Series_IDs
+     cat_count<-cat_count+1
+   }
+   data.frame(do.call(rbind,cat_store))
+ }
+ 
+ 
+ get_series<-function(category_id){
+   #series,name,f,units,updated
+   subs<-data_fetch(KEY,cat=category_id)
+   subs$Series_IDs
+ }
+ 
+ pd_fix<-function(data,name){
+   data<-data.frame(date=index(data), coredata(data))
+   data$date<-ymd(data$date)
+   data <- setNames(data, c("date",name)) 
+ }
+ 
+ EIA_to_DF<-function(series_info){
+   data<- pdfetch_EIA(series_info$series_id,KEY)
+   pd_fix(data,series_info$name)
+   }
+ 
+ 
+ 
 
-data_fetch<-function(key, cat){
-  #key<-KEY
-  #cat=476336
-  ifelse(cat==999999999,
-         url <- paste("https://api.eia.gov/category/?api_key=",
-                      key, "&out=xml", sep="" ),
-         url <- paste("https://api.eia.gov/category/?api_key=",
-                      key, "&category_id=", cat, "&out=xml", sep="" )
-  )
-
-  x <- read_xml(url)
-  doc <- XML::xmlParse(file=x)
-  
-  
-  Parent_Category <- tryCatch(XML::xmlToDataFrame(,stringsAsFactors = F,nodes =
-                                                    XML::getNodeSet(doc, "//category/parent_category_id")),
-                              warning=function(w) FALSE, error=function(w) FALSE)
-  Sub_Categories <- XML::xmlToDataFrame(,stringsAsFactors = F,nodes =
-                                          XML::getNodeSet(doc, "//childcategories/row"))
-  Series_IDs <- XML::xmlToDataFrame(nodes =
-                                      XML::getNodeSet(doc, "///childseries/row"),stringsAsFactors = F)
-  Categories <- list(Parent_Category, Sub_Categories, Series_IDs)
-  names(Categories) <- c("Parent_Category", "Sub_Categories", "Series_IDs")
-  Categories
-}
-
-get_children<-function(category_id=476336){
-  subs<-data_fetch(KEY,cat=category_id)
-  sub_cats<-subs$Sub_Categories
-  #build list from sub_cats
-  cat_store <- list()
-  cat_count<-1
-  for (cat in sub_cats$category_id) {
-    #cat<-sub_cats$category_id[1]
-    series<-data_fetch(KEY,cat=cat)
-    cat_store[[cat_count]]<-series$Series_IDs
-    cat_count<-cat_count+1
-  }
-  data.frame(do.call(rbind,cat_store))
-}
-#get_children()
-
-get_series<-function(category_id=476336){
-  #series,name,f,units,updated
-  subs<-data_fetch(KEY,cat=category_id)
-  subs$Series_IDs
-}
-#get_series()
-
-pd_fix<-function(data,name){
-  data<-data.frame(date=index(data), coredata(data))
-  data$date<-ymd(data$date)
-  data <- setNames(data, c("date",name)) 
-}
-
-EIA_to_DF<-function(series_info){
-  data<- pdfetch_EIA(series_info$series_id,KEY)
-  pd_fix(data,series_info$name)
-}
-
-
-
-
-series<-paste("AEO.",seq(2015,2022),".REF",seq(2015,2022),".GEN_NA_ELEP_NA_SLR_PHTVL_NA_BLNKWH.A",sep="")
-labels<-paste(seq(2014,2022)," AEO",sep="")
-
+series<-paste("AEO.",seq(2015,2019),".REF",seq(2015,2019),".GEN_NA_ELEP_NA_SLR_PHTVL_NA_BLNKWH.A",sep="")
 #2014 is different
 series<-c("AEO.2014.REF2014.GEN_NA_ELEP_NA_SOPH_NA_NA_BLNKWH.A",series)
-#names<-rev(labels)
+names<-rev(c("solar_2019","solar_2018","solar_2017","solar_2016","solar_2015","solar_2014"))
 solar_data<-pdfetch_EIA(series,KEY) 
+solar_data <- setNames(solar_data, names)
 solar_data<-data.frame(date=index(solar_data), coredata(solar_data))
-solar_data <- setNames(solar_data, c("date",labels))
 solar_data$date<-ymd(solar_data$date)
-solar_melt <- pivot_longer(solar_data,-date,names_to = "variable")
+solar_melt <- melt(solar_data,id="date") 
 
 png<-1
 if(png==1)
@@ -103,7 +64,7 @@ if(png==1)
 
 ggplot(solar_melt) +
   geom_line(aes(date,value,colour=variable),size=2) +
-  scale_color_viridis("",labels = labels,discrete = TRUE)+
+  scale_color_viridis("",labels = c("2014 AEO","2015 AEO","2016 AEO","2017 AEO","2018 AEO","2019 AEO"),discrete = TRUE)+
   #scale_x_datetime(limits = lims,breaks=breaks,labels = date_format("%a\n%m-%d\n%H:00", tz="America/Denver"))+
   guides(colour=guide_legend(byrow=FALSE))+
   theme_minimal()+theme(    
@@ -123,25 +84,37 @@ if(png==1)#set these to only turn on if you're making PNG graphs
   dev.off()
 
 
+
+
 #oil production data in 
-       
+                                    
+oil_production_data_19<-getEIA(ID = "AEO.2019.REF2019.SUP_NA_LFL_NA_DCP_NA_USA_MILLBRLPDY.A", key = KEY) 
+oil_production_data_18<-getEIA(ID = "AEO.2018.REF2018.SUP_NA_LFL_NA_DCP_NA_USA_MILLBRLPDY.A", key = KEY) 
+oil_production_data_17<-getEIA(ID = "AEO.2017.REF2017.SUP_NA_LFL_NA_DCP_NA_USA_MILLBRLPDY.A", key = KEY) 
+#series_id=AEO.2017.REF2017.GEN_NA_ELEP_NA_SLR_PHTVL_NA_BLNKWH.A 
+oil_production_data_16<-getEIA(ID = "AEO.2016.REF2016.SUP_NA_LFL_NA_DCP_NA_USA_MILLBRLPDY.A", key = KEY)  
+oil_production_data_15<-getEIA(ID = "AEO.2015.REF2015.SUP_NA_LFL_NA_DCP_NA_USA_MILLBRLPDY.A", key = KEY)  
+oil_production_data_14<-getEIA(ID = "AEO.2014.REF2014.SUP_NA_LFL_NA_DCP_NA_USA_MILLBRLPDY.A", key = KEY)  
 
-series<-paste("AEO.",seq(2014,2022),".REF",seq(2014,2022),".SUP_NA_LFL_NA_DCP_NA_USA_MILLBRLPDY.A",sep="")
-labels<-paste(seq(2014,2022)," AEO",sep="")
 
-oil_data<-pdfetch_EIA(series,KEY) 
-oil_data<-data.frame(date=index(oil_data), coredata(oil_data))
-oil_data <- setNames(oil_data, c("date",labels))
-oil_data$date<-ymd(oil_data$date)
-oil_melt <- pivot_longer(oil_data,-date,names_to = "variable")
+oil_production_data<-merge(oil_production_data_19,oil_production_data_18)
+oil_production_data<-merge(oil_production_data,oil_production_data_17)
+
+oil_production_data<-merge(oil_production_data,oil_production_data_16)
+oil_production_data<-merge(oil_production_data,oil_production_data_15)
+oil_production_data<-merge(oil_production_data,oil_production_data_14)
+
+names(oil_production_data)<-c("oil_production_2019","oil_production_2018","oil_production_2017","oil_production_2016","oil_production_2015","oil_production_2014")
+oil_production_data<-data.frame(date=index(oil_production_data), coredata(oil_production_data))
+oil_production_melt <- melt(oil_production_data,id="date") 
 
 
 png<-1
 if(png==1)
   set_png(file="oil_production_eia.png")
-ggplot(oil_melt) +
+ggplot(oil_production_melt) +
   geom_line(aes(date,value,colour=variable),size=2) +
-  #scale_color_viridis("",labels = c("2019 AEO","2018 AEO","2017 AEO","2016 AEO","2015 AEO","2014 AEO"),discrete = TRUE)+
+  scale_color_viridis("",labels = c("2019 AEO","2018 AEO","2017 AEO","2016 AEO","2015 AEO","2014 AEO"),discrete = TRUE)+
   #scale_x_datetime(limits = lims,breaks=breaks,labels = date_format("%a\n%m-%d\n%H:00", tz="America/Denver"))+
   guides(colour=guide_legend(byrow=FALSE))+
   theme_minimal()+theme(    
@@ -160,73 +133,13 @@ ggplot(oil_melt) +
 if(png==1)#set these to only turn on if you're making PNG graphs
   dev.off()
 
-eia_aeo_comp<-function(start_year=2014,end_year=2022,series=".SUP_NA_LFL_NA_DCP_NA_USA_MILLBRLPDY.A",
-                   label="Oil Production",
-                   units="mmbbl/d"
-                   ){ #use oil as the default
-  series<-paste("AEO.",seq(start_year,end_year),".REF",seq(start_year,end_year),series,sep="")
-  labels<-paste(seq(start_year,end_year)," AEO",sep="")
-  elements=end_year-start_year+1
-  data<-pdfetch_EIA(series,KEY) 
-  data<-data.frame(date=index(oil_data), coredata(oil_data))
-  data <- setNames(oil_data, c("date",labels))%>%mutate(date=ymd(date))%>%
-    pivot_longer(-date,names_to = "variable")%>%
-  ggplot()+
-  geom_line(aes(date,value,group=variable,color=variable,size=variable==paste(end_year,"AEO")))+
-  #geom_point(data=data %>% filter(variable==paste(end_year,"AEO")),aes(date,value,group=variable,color=variable),size=2.25)+
-  scale_y_continuous(breaks=pretty_breaks())+
-  scale_color_viridis("",discrete = T,option="A",direction = -1,end = .9)+
-  scale_size_manual("",values=c(1,2.25))+
-  theme_minimal()+weekly_graphs()+
-    theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)))+
-    expand_limits(y=0)+
-  guides(size="none",
-          #shape = guide_legend(keywidth = unit(1.6,"cm"),nrow = 2),
-         #linetype = guide_legend(keywidth = unit(1.6,"cm"),nrow = 2),
-         #colour = guide_legend(keywidth = unit(1.6,"cm"),override.aes = list(lty = "11")  ,nrow = 2),
-         colour = guide_legend(keywidth = unit(1.6,"cm"),nrow = 2,
-                               override.aes = list(size=c(rep(1,elements-1),1.75))),
-         #fill = guide_legend(keywidth = unit(1.6,"cm"),nrow = 2)
-         NULL)+
-  labs(y=paste(label," (",units,")",sep=""),x="",
-       title=paste("EIA",label,"Forecasts"),
-       caption="Source: Data via EIA AEO, graph by Andrew Leach.")
-}
-
-oil_graph<-eia_aeo_comp()
-ggsave("oil_graph.png",oil_graph,width=14,height=7)
-
-end_year<-2022
-elements<-NROW(unique(oil_melt$variable))
-ggplot(oil_melt%>%mutate(current_year=grepl(end_year,variable)))+
-  geom_line(aes(date,value,group=variable,color=variable,size=variable=="2022 AEO"))+
-  #geom_line(data=oil_melt %>% filter(variable==paste(end_year,"AEO")),aes(date,value,group=variable,color=variable),size=2.25)+
-  #gghighlight(variable==paste(end_year,"AEO"),
-  #            #unhighlighted_params = list(size = 1, colour = alpha("pink", 0.4))
-  #            NULL)+
-  
-  scale_y_continuous(breaks=pretty_breaks())+
-  #scale_color_viridis("",discrete = T,option="A",direction = -1,end = .9)+
-  scale_size_manual("",values=c(1,2.25))+
-  theme_minimal()+weekly_graphs()+
-  guides(#shape = guide_legend(keywidth = unit(1.6,"cm"),nrow = 2),
-    size = "none",
-    #linetype = guide_legend(keywidth = unit(1.6,"cm"),nrow = 2),
-    #colour = guide_legend(keywidth = unit(1.6,"cm"),override.aes = list(lty = "11")  ,nrow = 2),
-    colour = guide_legend(keywidth = unit(1.6,"cm"),nrow = 2,
-                          override.aes = list(size=c(rep(1,elements-1),1.75))),
-    #fill = guide_legend(keywidth = unit(1.6,"cm"),nrow = 2)
-    NULL)+
-  labs(y=paste(label," (",units,")",sep=""),x="",
-       title=paste("EIA",label,"Forecasts"),
-       caption="Source: Data via EIA AEO, graph by Andrew Leach.")
-
 
 #oil price data in 
 
 #AEO.2019.REF2019.PRCE_NOMP_TEN_NA_WTI_NA_USA_NDLRPBRL.A
 
-series<-paste("AEO.",seq(2014,2019),".REF",seq(2014,max_year),".PRCE_NOMP_TEN_NA_WTI_NA_USA_NDLRPBRL.A",sep="")
+series<-paste("AEO.",seq(2014,2019),".REF",seq(2014,2019),".PRCE_NOMP_TEN_NA_WTI_NA_USA_NDLRPBRL.A",sep="")
+
 brent_series<-paste("AEO.",seq(2015,2019),".REF",seq(2015,2019),".PRCE_NA_NA_NA_CR_BRNTSPPR_USA_NDLRPBRL.A",sep="")
 #2014 is different
 brent_series<-c("AEO.2014.REF2014.PRCE_NA_NA_NA_CO_BRNTSPPR_USA_NDLRPBRL.A",brent_series)
@@ -2299,7 +2212,6 @@ ggplot(subset(df1,Date>"2016-02-01"),aes(Date,value,group = variable,colour=vari
 
 
 #movements between PADDs
-
 #crude movement patterns within US
 subs<-data_fetch(KEY,cat=330987)
 series <-subs$Series_IDs %>% filter(grepl("Monthly",name))
@@ -2564,7 +2476,8 @@ g_legend<-function(a.gplot){
 #grab the legend without a title
 mylegend<-arrangeGrob(g_legend(moves_in + theme(legend.title = element_blank(),
                                                 legend.spacing = unit(1.0, 'cm'),
-                                                legend.text =  element_text(margin = margin(t = 0, r = 1, b = 0, l = 0)))))
+                                                legend.text =  element_text(margin = margin(t = 0, r = 1, b = 0, l = 0)), nrow=1)))
+
 
 
 png<-1
@@ -2613,10 +2526,6 @@ nrow=2,heights=c(10, 1),bottom =text_grob(
 if(png==1)#set these to only turn on if you're making PNG graphs
   dev.off()
 
-
-#PADD Imports by Country of Origin Series
-
-#http://api.eia.gov/category/?api_key=YOUR_API_KEY_HERE&category_id=367391
 
 
 #get canadian import processing by PADD
@@ -3564,381 +3473,3 @@ ggplot(weekly_sales)+
 dev.off()
 
 
-
-
-
-#ribbon plot nymex
-
-
-
-
-#annual energy outlooks
-#get 2014 (when they bought the project), 2017 (comparability to hearings analysis), and now
-series<-paste("AEO.",c(2014,2017,2021),".REF",c(2014,2017,2021),".PRCE_NOMP_TEN_NA_WTI_NA_USA_NDLRPBRL.A",sep="")
-series<-c(series,paste("AEO.",c(2014,2017,2021),".LOWPRICE.PRCE_NOMP_TEN_NA_WTI_NA_USA_NDLRPBRL.A",sep=""))
-series<-c(series,paste("AEO.",c(2014,2017,2021),".HIGHPRICE.PRCE_NOMP_TEN_NA_WTI_NA_USA_NDLRPBRL.A",sep=""))
-wti_data<-pdfetch_EIA(series,KEY) 
-names<-c(paste("AEO ",c(2014,2017,2021)," Reference Case",sep=""),paste("AEO ",c(2014,2017,2021)," Low Price Case",sep=""),paste("AEO ",c(2014,2017,2021)," High Price Case",sep=""))
-wti_data <- setNames(wti_data, names)
-wti_data<-data.frame(date=index(wti_data), coredata(wti_data))
-wti_data$date<-ymd(wti_data$date)
-write_csv(wti_data,"aeo_runs.csv")
-wti_melt <- melt(wti_data,id="date",variable.name = "version")
-wti_melt$version<-as.character(wti_melt$version)
-wti_melt$version<-gsub("\\."," ",wti_melt$version)
-wti_melt <- wti_melt%>%mutate(case = substr(version,10,100),
-                              case=gsub(" Case","",case),
-                              case=factor(case),
-                              set=substr(version,1,8),
-                              year=substr(version,5,8)
-)
-
-#WTI Historic prices
-#PET.RWTC.M
-wti_hist<-pdfetch_EIA(c("PET.RWTC.D"),KEY)
-wti_hist<- setNames(wti_hist, "value")
-wti_hist<-data.frame(date=index(wti_hist), coredata(wti_hist))
-wti_hist <- wti_hist %>% mutate(date=ymd(date),
-                                case = "NYMEX Historic WTI Price Data",
-                                set=case,
-                                case=factor(case),
-                                version=case,
-                                year=as.character(2020))%>%
-  filter(date>ymd("2005-01-01"))
-
-wti_melt<-wti_melt %>% bind_rows(wti_hist)%>%
-  mutate(case=factor(case),case=fct_relevel(case,"Reference",after = 1))
-#wti_melt<-wti_melt %>% rename("Date"="date") %>% filter(year(Date)<2024)
-
-
-wti_wide<-wti_melt %>%filter(case!="NYMEX Historic WTI Price Data")%>%pivot_wider(-c(case,version),names_from=case,values_from=value)%>%
-  rename(low=`Low Price`,high=`High Price`)%>% mutate(labels=paste("EIA Reference case and high and low price scenario range,","Annual Energy Oulook",year))
-#%>%
-#  left_join(wti_hist %>% select(date,wti_history=value))
-
-
-#get CER 2020 prices
-
-cer_2020<-read_csv("benchmark-prices-2020.csv")%>%clean_names()%>%filter(variable=="West Texas Intermediate (WTI) - US$/bbl",year>=2020)%>%
-  mutate(date=ymd(paste(year,"-12-31")),
-         value=value*1.02^(year-2020))%>% select(date,value,scenario)%>%
-  pivot_wider(-scenario,values_from=value,names_from=scenario)%>%
-  select(date,cer_reference=Reference,cer_evolving=Evolving)%>%
-  mutate(labels="Reference and Evolving scenario range, CER Canada's Energy Future 2020")
-
-
-#code to run off current nyumex
-nymex_wti<-read_csv("ftp://ftp.cmegroup.com/pub/settle/nymex_future.csv")%>%clean_names()%>%
-#code to run off specific date
-#nymex_wti<-read_csv("nymex_futures_dec28.csv")%>%clean_names()%>%
-
-  filter(product_description=="Crude Oil Last Day Financial Futures")%>%
-  mutate(Date=ymd(paste(contract_year,contract_month,15)),
-         version=paste("NYMEX WTI Futures",format(max(mdy(tradedate)),"%b %d, %Y")),
-         forecast=3)%>%
-  rename("value"="settle")%>%
-  select(Date,value,version,forecast)%>%
-  mutate(version=factor(version))
-
-nymex_version<-as.character(unique(nymex_wti$version))
-
-
-
-
-graph_palette<-colors_tableau10()
-
-graph_palette<-viridis_pal(option = "H")(5)
-
-graph_palette<-viridis(5,option="G",direction = -1)
-
-ggplot(filter(wti_wide,year(date)%%1==0))+
-  geom_line(aes(date,Reference,group=set,color=labels),size=1.25)+
-  
-  geom_ribbon(aes(date,ymin=low,ymax=high,group=set,color=labels,fill=labels),alpha=.2,linetype="blank",size=.25)+
-  
-  geom_line(data=nymex_wti,aes(Date,value,group=version,linetype=version),size=1.25,color="black")+
-  geom_line(data=wti_hist,aes(date,value,group=version,linetype=version),size=1.25,color="black")+
-  
-  geom_ribbon(data=cer_2020,aes(date,ymax=cer_reference,ymin=cer_evolving,fill=labels,color=labels),alpha=.2,linetype="blank",size=.25)+
-  #geom_errorbar(data=filter(cer_2020,year(date)%%1==0),aes(date,ymax=cer_reference,ymin=cer_evolving,fill=labels,color=labels),linetype="solid",width=200)+
-  #geom_point(data=nymex_test,aes(Date,value,group=version,color=version,fill=version,shape=version),size=2)+
-  
-  
-  scale_fill_manual("",values = graph_palette)+
-  scale_color_manual("",values = graph_palette)+
-  
-  #scale_fill_grey("",start = 0,end = 0.5)+
-  #scale_color_grey("",start = 0,end = 0.5)+
-  
-  
-  #scale_fill_manual("",values = c(viridis_cols[c(1,1,2,2,3,3)],"black","black"))+
-  #scale_color_manual("",values = c(viridis_cols[c(1,1,2,2,3,3)],"black","black"))+
-  scale_linetype_manual("",values=c("solid","11"))+
-  #scale_shape_manual("",values=c(15,16,15,16,15,16,32,32))+
-  scale_y_continuous(breaks=pretty_breaks())+
-  expand_limits(y=0)+
-  scale_x_date(breaks = "5 years",date_labels = "%b\n%Y",expand=c(0,0))+
-  
-  weekly_graphs()+
-  work_theme()+
-  theme(plot.caption = element_blank())+#no caption
-  theme(plot.subtitle = element_blank(),plot.title = element_blank(),
-        legend.text = element_text(size = 14),
-        legend.title = element_text(size = 14))+
-  guides(col = guide_legend(override.aes = list(linetype = c(0,1,1,1)),keywidth = unit(2.1,"cm"),nrow = 4,reverse = T),
-         fill = guide_legend(keywidth = unit(2.1,"cm"),nrow = 5,reverse = T),
-         linetype = guide_legend(keywidth = unit(2.1,"cm"),nrow = 2)
-         
-         #shape = guide_legend(keywidth = unit(2.4,"cm"),nrow = 2)
-  )+
-  labs(y="WTI Price ($/bbl)",x="",
-       title=paste("EIA and CER WTI Outlook"),
-       subtitle=paste("Historic and forward market settlement prices, CER Energy Futures 2020 and EIA Annual Energy Outlook (AEO) forecasts"),
-       caption="Data via CME Group, Canadian Energy Regulator (CER), and the US Energy Information Administration (EIA). Graph by Andrew Leach.")
-ggsave("wti_ribbon_nymex.png",dpi=300,width = 14,height=8)
-
-
-
-
-#electricity data
-
-#aeo projections by data_series
-#http://api.eia.gov/category/?api_key=YOUR_API_KEY_HERE&category_id=476336
-#aeo_electricity<-get_children(4047341)
-
-#coal power AEO.2021.REF2021.GEN_NA_ELEP_TGE_CL_NA_USA_BLNKWH.A
-#coal 2014  AEO.2014.REF2014.ENV_CDE_TEN_NA_CL_NA_NA_MILLMETNCO2.A
-#total gen AEO.2021.REF2021.GEN_NA_ELEP_NA_TEG_NA_USA_BLNKWH.A
-#electricity emissions AEO.2021.REF2021.EMI_CO2_ELEP_NA_NA_NA_NA_MILLMETNCO2.A
-#total emissions AEO.2021.REF2021.EMI_CO2_TEN_NA_NA_NA_NA_MILLMETNCO2.A
-
-
-aeo_data<-function(generic_series_id,case="REF",title)
-{
-#title="Coal generation"
-#generic_series_id="GEN_NA_ELEP_TGE_CL_NA_USA_BLNKWH.A"
-aeo_series<-paste("AEO.",seq(2015,2021),".",case,seq(2015,2021),".",generic_series_id,sep="")
-labels<-paste(title,"_EIA AEO ",seq(2015,2021),"_",case,sep="")
-
-aeo_data<-pdfetch_EIA(aeo_series,KEY) 
-aeo_data <- setNames(aeo_data, labels)
-aeo_data<- data.frame(date=index(aeo_data), coredata(aeo_data))%>%as_tibble()%>%
-  mutate(date=ymd(date)) %>%
-  pivot_longer(cols=-date)%>%
-  separate(name,into=c("title","source","case"),sep="_")%>%
-  mutate(title=gsub("\\."," ",title),source=gsub("\\."," ",source))%>% na.omit()
-}
-
-#get_data
-power_data<-bind_rows(aeo_data("Coal generation",generic_series_id="GEN_NA_ELEP_TGE_CL_NA_USA_BLNKWH.A",case="REF"),
-                      aeo_data("Total generation",generic_series_id="GEN_NA_ELEP_NA_TEG_NA_USA_BLNKWH.A",case="REF"),
-                      aeo_data("Electricity emissions",generic_series_id="EMI_CO2_ELEP_NA_NA_NA_NA_MILLMETNCO2.A",case="REF"),
-                      aeo_data("Total emissions",generic_series_id="EMI_CO2_TEN_NA_NA_NA_NA_MILLMETNCO2.A",case="REF"),
-                      )
-
-
-#basic data from the API
-
-api_data<-function(generic_series_id,case="REF",title)
-{
-  #title="Coal generation"
-  #generic_series_id="ELEC.GEN.COW-US-98.A"
-  eia_data<-pdfetch_EIA(generic_series_id,KEY) 
-  eia_data <- setNames(eia_data, title)
-  eia_data<- data.frame(date=index(eia_data), coredata(eia_data))%>%as_tibble()%>%
-    mutate(date=ymd(date)) %>%
-    pivot_longer(cols=-date,names_to="title")%>%
-    mutate(title=gsub("\\."," ",title),
-                      source="EIA data")%>% na.omit()
-}
-
-
-power_data<-power_data %>% bind_rows(api_data(title="Coal generation",generic_series_id="ELEC.GEN.COW-US-98.A"),
-                                     api_data(title="All generation",generic_series_id="ELEC.GEN.ALL-US-98.A"),
-                                     api_data(title="Electricity emissions",generic_series_id="EMISS.CO2-TOTV-EC-TO-US.A"),
-                                     api_data(title="Total emissions",generic_series_id="EMISS.CO2-TOTV-TT-TO-US.A")
-                                    )
-
-power_data<-power_data %>% mutate(source=as_factor(source),
-                                  source=fct_relevel(source,"EIA data",after=0),
-                                  source=fct_recode(source,"Historical data"="EIA data"))
-
-
-power_data<-power_data %>% mutate(projection=fct_other(source,keep="Historical data",other_level="AEO Projection"),
-                                  projection=fct_relevel(projection,"Historical data",after=0),
-                                  )
-
-
-#brewer.pal(n = 8, name = "Greys")
-
-us_emissions<-ggplot(power_data %>% filter(title %in% c("Total emissions"),year(date)>=2001))+
-  geom_line(aes(date,value,group=source,color=source,lty=projection),size=2)+
-  scale_color_manual("",values=c("black",brewer.pal(n = 9, name = "Oranges")[-1]))+
-  scale_linetype_manual("",values=c("solid","11"))+
-  #guides(colour=guide_legend(byrow=FALSE))+
-  guides(col = guide_legend(override.aes = list(linetype = c("solid","11","11","11","11","11","11","11")),keywidth = unit(2.1,"cm"),reverse = F),
-         lty=FALSE)+
-  expand_limits(y=c(4000,6500))+
-  scale_y_continuous(breaks = pretty_breaks(),expand=c(0,0))+
-  scale_x_date(expand=c(0,0))+
-  theme_tufte()+
-  theme(    
-  legend.position = "right",
-  legend.margin=margin(c(0,0,0,0),unit="cm"),
-  legend.text = element_text(colour="black", size = 14, face = "bold"),
-  legend.key.width = unit(3, "lines"),
-  plot.caption = element_text(size = 14, face = "italic",hjust=0),
-  plot.title = element_text(face = "bold"),
-  plot.subtitle = element_text(size = 14, face = "italic"),
-  #panel.grid.minor = element_blank(),
-  text = element_text(size = 14,face = "bold"),
-  axis.text = element_text(size = 16,face = "bold", colour="black")
-  
-)+
-  
-    labs(y="Energy-related CO2 Emissions (Mt))",x="",
-             title="EIA historical data and Annual Energy Outlook forecasts of US energy-related carbon dioxide emissions",
-             caption="Source: EIA data and projections, graph by Andrew Leach")
-us_emissions
-ggsave("aeo_us_emissions_emissions.png",width=16,height=9,dpi=300)
-
-
-elec_emissions<-ggplot(power_data %>% filter(title %in% c("Electricity emissions"),year(date)>=2001))+
-  geom_line(aes(date,value,group=source,color=source,lty=projection),size=2)+
-  scale_color_manual("",values=c("black",brewer.pal(n = 9, name = "Oranges")[-1]))+
-  scale_linetype_manual("",values=c("solid","11"))+
-  #guides(colour=guide_legend(byrow=FALSE))+
-  guides(col = guide_legend(override.aes = list(linetype = c("solid","11","11","11","11","11","11","11")),keywidth = unit(2.1,"cm"),reverse = F),
-         lty=FALSE)+
-  expand_limits(y=c(1000,2500))+
-  scale_y_continuous(breaks = pretty_breaks(),expand=c(0,0))+
-  scale_x_date(expand=c(0,0))+
-  theme_tufte()+
-  theme(    
-    legend.position = "right",
-    legend.margin=margin(c(0,0,0,0),unit="cm"),
-    legend.text = element_text(colour="black", size = 14, face = "bold"),
-    legend.key.width = unit(3, "lines"),
-    plot.caption = element_text(size = 14, face = "italic",hjust=0),
-    plot.title = element_text(face = "bold"),
-    plot.subtitle = element_text(size = 14, face = "italic"),
-    #panel.grid.minor = element_blank(),
-    text = element_text(size = 14,face = "bold"),
-    axis.text = element_text(size = 16,face = "bold", colour="black")
-    
-  )+
-  
-  labs(y="Energy-related CO2 Emissions (Mt))\n",x="",
-       title="EIA historical data and Annual Energy Outlook forecasts of US carbon dioxide emissions from electricity",
-       caption="Source: EIA data and projections, graph by Andrew Leach")
-elec_emissions
-ggsave("aeo_us_power_emissions.png",width=16,height=9,dpi=300)
-
-
-us_coal_gen<-ggplot(power_data %>% filter(title %in% c("Coal generation"),year(date)>=2001))+
-  geom_line(aes(date,value*(projection=="Historical data")/10^3+value*(projection!="Historical data"),group=source,color=source,lty=projection),size=2)+
-  scale_color_manual("",values=c("black",brewer.pal(n = 9, name = "Oranges")[-1]))+
-  scale_linetype_manual("",values=c("solid","11"))+
-  #guides(colour=guide_legend(byrow=FALSE))+
-  guides(col = guide_legend(override.aes = list(linetype = c("solid","11","11","11","11","11","11","11")),keywidth = unit(2.1,"cm"),reverse = F),
-         lty=FALSE)+
-  expand_limits(y=c(0,2100))+
-  scale_y_continuous(breaks = pretty_breaks(),expand=c(0,0))+
-  scale_x_date(expand=c(0,0))+
-  theme_tufte()+
-  theme(    
-    legend.position = "right",
-    legend.margin=margin(c(0,0,0,0),unit="cm"),
-    legend.text = element_text(colour="black", size = 14, face = "bold"),
-    legend.key.width = unit(3, "lines"),
-    plot.caption = element_text(size = 14, face = "italic",hjust=0),
-    plot.title = element_text(face = "bold"),
-    plot.subtitle = element_text(size = 14, face = "italic"),
-    #panel.grid.minor = element_blank(),
-    text = element_text(size = 14,face = "bold"),
-    axis.text = element_text(size = 16,face = "bold", colour="black")
-    
-  )+
-  
-  labs(y="Annual Generation (BkWh))\n",x="",
-       title="EIA historical data and Annual Energy Outlook forecasts of total US electricity generation from coal",
-       caption="Source: EIA data and projections, graph by Andrew Leach")
-us_coal_gen
-ggsave("aeo_us_coal_power.png",width=16,height=9,dpi=300)
-
-ggplot(power_data %>% filter(title %in% c("All generation","Total generation"),year(date)>=2001))+
-  geom_line(aes(date,value*(projection=="Historical data")/10^3+value*(projection!="Historical data"),group=source,color=source,lty=projection),size=2)+
-  scale_color_manual("",values=c("black",brewer.pal(n = 9, name = "Oranges")[-1]))+
-  scale_linetype_manual("",values=c("solid","11"))+
-  #guides(colour=guide_legend(byrow=FALSE))+
-  guides(col = guide_legend(override.aes = list(linetype = c("solid","11","11","11","11","11","11","11")),keywidth = unit(2.1,"cm"),reverse = F),
-         lty=FALSE)+
-  expand_limits(y=c(0,5600))+
-  scale_y_continuous(breaks = pretty_breaks(),expand=c(0,0))+
-  scale_x_date(expand=c(0,0))+
-  theme_tufte()+
-  theme(    
-    legend.position = "right",
-    legend.margin=margin(c(0,0,0,0),unit="cm"),
-    legend.text = element_text(colour="black", size = 14, face = "bold"),
-    legend.key.width = unit(3, "lines"),
-    plot.caption = element_text(size = 14, face = "italic",hjust=0),
-    plot.title = element_text(face = "bold"),
-    plot.subtitle = element_text(size = 14, face = "italic"),
-    #panel.grid.minor = element_blank(),
-    text = element_text(size = 14,face = "bold"),
-    axis.text = element_text(size = 16,face = "bold", colour="black")
-    
-  )+
-  
-  labs(y="Annual Generation (BkWh))\n",x="",
-       title="EIA historical data and Annual Energy Outlook forecasts of total US electricity generation",
-       caption="Source: EIA data and projections, graph by Andrew Leach")
-ggsave("aeo_us_power_gen.png",width=16,height=9,dpi=300)
-
-
-ggplot(power_data %>% filter(title %in% c("All generation","Total generation"),year(date)>=2001,year<2020))+
-  geom_line(aes(date,value*(projection=="Historical data")/10^3+value*(projection!="Historical data"),group=source,color=source,lty=projection),size=2)+
-  scale_color_manual("",values=c("black",brewer.pal(n = 9, name = "Oranges")[-1]))+
-  scale_linetype_manual("",values=c("solid","11"))+
-  #guides(colour=guide_legend(byrow=FALSE))+
-  guides(col = guide_legend(override.aes = list(linetype = c("solid","11","11","11","11","11","11","11")),keywidth = unit(2.1,"cm"),reverse = F),
-         lty=FALSE)+
-  expand_limits(y=c(0,5600))+
-  scale_y_continuous(breaks = pretty_breaks(),expand=c(0,0))+
-  scale_x_date(expand=c(0,0))+
-  theme_tufte()+
-  theme(    
-    legend.position = "right",
-    legend.margin=margin(c(0,0,0,0),unit="cm"),
-    legend.text = element_text(colour="black", size = 14, face = "bold"),
-    legend.key.width = unit(3, "lines"),
-    plot.caption = element_text(size = 14, face = "italic",hjust=0),
-    plot.title = element_text(face = "bold"),
-    plot.subtitle = element_text(size = 14, face = "italic"),
-    #panel.grid.minor = element_blank(),
-    text = element_text(size = 14,face = "bold"),
-    axis.text = element_text(size = 16,face = "bold", colour="black")
-    
-  )+
-  
-  labs(y="Annual Generation (BkWh))\n",x="",
-       title="EIA historical data and Annual Energy Outlook forecasts of total US electricity generation",
-       caption="Source: EIA data and projections, graph by Andrew Leach")
-ggsave("aeo_us_power_gen.png",width=16,height=9,dpi=300)
-
-
-
-library(cowplot)
-power_plot<- plot_grid(us_coal_gen+theme(plot.caption=element_blank(),legend.position="none"),
-                         elec_emissions+theme(plot.caption=element_blank(),legend.position="none"),
-                         us_emissions+guides(col = guide_legend(override.aes = list(linetype = c("solid","11","11","11","11","11","11","11")),keywidth = unit(2.1,"cm"),reverse = F,nrow = 2,byrow = F),
-                                             lty=FALSE)+theme(legend.position="bottom"),
-                       ncol = 1,align="v",rel_heights = c(1,1,1.3))
-power_plot
-ggsave("aeo_us_power.png",power_plot,width=16,height=12,dpi=300)
-
-#coal generation ELEC.GEN.COW-US-98.A
-#all gen ELEC.GEN.ALL-US-98.A
-#electricity emissions EMISS.CO2-TOTV-EC-TO-US.A
-#total emissions EMISS.CO2-TOTV-TT-TO-US.A

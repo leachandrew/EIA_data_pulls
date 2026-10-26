@@ -1,0 +1,857 @@
+﻿<!DOCTYPE html>
+
+<!--[if lt IE 9]><html class="no-js lt-ie9" lang="en" xmlns="http://www.w3.org/1999/xhtml" dir="ltr"><![endif]--><!--[if gt IE 8]><!-->
+<html class="no-js" dir="ltr" lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<!--<![endif]-->
+
+<!-- METADATA BEGINS | DEBUT DES METADONNEES -->
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta name="description" content="View detailed commodity trade data using the Harmonized System (HS) classification of goods at the 10-digit commodity level for imports."/>
+<meta name="keywords" content="CIMT" />
+<link rel="canonical" href="https://www150.statcan.gc.ca/n1/pub/71-607-x/2021004/imp-eng.htm" />
+
+<!-- Page Title -->
+<title>Canadian International Merchandise Trade Web Application - Imports</title>
+
+<!--Dublin Core Metadata-->
+<link rel="schema.dcterms" href="http://purl.org/dc/terms/"/>
+<meta name="dcterms.title" content="Canadian International Merchandise Trade Web Application - Imports"/>
+<meta name="dcterms.language" title="ISO639-2/T" content="eng"/>
+<meta name="dcterms.creator" content="Government of Canada, Statistics Canada"/>
+<meta name="dcterms.issued" title="W3CDTF" content="2021-10-05"/>
+<meta name="dcterms.modified" title="W3CDTF" content="2021-10-05"/>
+<meta name="dcterms.subject" title="gcstc" content="Trade patterns; Trade; Merchandise; International trade; Imports"/>
+
+<!--Additional Metadata-->
+<script type="application/ld+json">
+{ 
+    "@context" : "http://schema.org",
+    "@type" : "CreativeWork",
+    "additionalType" : "ScholarlyArticle",
+    "name" : "Canadian International Merchandise Trade Web Application - Imports",
+    "alternateName" : "71-607-X2021004",
+    "headline" : "View detailed commodity trade data using the Harmonized System (HS) classification of goods at the 10-digit commodity level for imports.",
+    "url" : "https://www150.statcan.gc.ca/n1/pub/71-607-x/2021004/imp-eng.htm",
+    "sameAs" : "https://www150.statcan.gc.ca/n1/pub/71-607-x/2021004/imp-fra.htm",
+    "keywords" : "none",
+    "about" : ["Trade patterns", "Merchandise imports and exports"],
+    "isBasedOn" : "http://www23.statcan.gc.ca/imdb/p2SV.pl?Function=getSurvey&SDDS=2201",
+    "datePublished" : "2021-10-05",
+    "spatialCoverage" : "Canada",
+    "publisher" : {
+        "@type" : "Organization",
+        "additionalType" : "GovernmentOrganization",
+        "url" : "https://www.statcan.gc.ca/eng/start",
+        "name" : "Government of Canada, Statistics Canada",
+        "sameAs" : ["https://en.wikipedia.org/wiki/Statistics_Canada", "https://twitter.com/statcan_eng", "https://www.facebook.com/StatisticsCanada/"]
+    }
+}
+</script>
+<!-- METADATA ENDS | FIN DES METADONNEES -->
+
+
+<link rel="stylesheet" type="text/css" href="css/pre-wet.min.css">
+
+<meta property="dcterms:service" content="StatCan"/> 
+<meta property="dcterms:accessRights" content="2"/>
+
+<link href="/wet-boew4b/assets/favicon.ico" rel="icon" type="image/x-icon">
+<link rel="stylesheet" href="/wet-boew4b/css/wet-boew.min.css">
+<script src="/wet-boew4b/js/jquery.min.js"></script>
+
+<link rel="stylesheet" href="/wet-boew4b/css/theme.min.css">
+<link rel="stylesheet" href="/wet-boew4b/css/statcan.css">
+<link rel="stylesheet" href="/wet-boew4b/invitation-manager/Overlay.css"> 
+
+<noscript><link rel="stylesheet" href="/wet-boew4b/css/noscript.min.css" /></noscript>
+<!-- Adobe Analytics v5 production version --><script src="//assets.adobedtm.com/be5dfd287373/8cdb3d539c44/launch-6df9e9b447f9.min.js"></script>
+<!-- Adobe Analytics v5 staging version --><!--script src="//assets.adobedtm.com/be5dfd287373/8cdb3d539c44/launch-dfa8abb35555-staging.min.js"></script-->
+
+<script>dataLayer1 = [];</script>
+
+
+<link rel="stylesheet" type="text/css" href="css/select2.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap-treeview.min.css">
+<link rel="stylesheet" type="text/css" href="themes/redmond/jquery-ui.min.css">
+<link rel="stylesheet" type="text/css" href="/wet-boew4b/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="datatable/css/scroller.dataTables.min.css">
+
+<link rel="stylesheet" type="text/css" href="css/cimt.min.css">
+<style>
+a {
+    color: #284162 !important;
+    text-decoration: underline !important;
+    background: transparent !important;
+}
+.alert-info::before {
+    color: #269abc !important;
+    content: ""!important;
+}
+.alert::before {
+    font-family: "Glyphicons Halflings";
+    font-size: 26px !important;
+    line-height: 2.3em !important;
+    margin-left: -1.27em !important;
+    padding: 2px !important;
+    position: absolute !important;
+}
+alert-info {
+    border-color: #269abc;
+    -o-border-image: linear-gradient(to bottom, #269abc 16px, #269abc 16px, transparent 16px, transparent 48px, #269abc 48px, #269abc 48px) 1 100% !important;
+    border-image: linear-gradient(to bottom, #269abc 16px, #269abc 16px, transparent 16px, transparent 48px, #269abc 48px, #269abc 48px) 1 100% !important;
+}
+.alert {
+    background-clip: content-box;
+    background-color: inherit;
+    border-left: 6px solid #000;
+    margin-bottom: 23px;
+    margin-left: 10px;
+    padding: 0 0 0 15px;
+} 
+   .alert-info, .label-info, .label-info[href]:active, .label-info[href]:focus, .label-info[href]:hover, details.alert.alert-info, details.alert.alert-info[open] {
+    background: transparent;
+    border-color: #269abc;
+}
+.alert-danger, .alert-info, .alert-success, .alert-warning, .label-danger, .label-danger[href]:active, .label-danger[href]:focus, .label-danger[href]:hover, .label-default, .label-default[href]:active, .label-default[href]:focus, .label-default[href]:hover, .label-info, .label-info[href]:active, .label-info[href]:focus, .label-info[href]:hover, .label-primary, .label-primary[href]:active, .label-primary[href]:focus, .label-primary[href]:hover, .label-success, .label-success[href]:active, .label-success[href]:focus, .label-success[href]:hover, .label-warning, .label-warning[href]:active, .label-warning[href]:focus, .label-warning[href]:hover {
+    color: #000;
+}
+.alert, .label {
+    border-radius: 0;
+    border-style: solid;
+    border-width: 0 0 0 4px;
+}
+.alert {
+    border-left: 1px solid #269abc;
+}
+</style>
+
+<!-- CustomScriptsCSSEnd -->
+<script src="js/lodash.min.js"></script>
+<script src="js/select2.min.js"></script>
+<script src="js/crossfilter1.js"></script>
+<script src="js/d3.v3.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/bootstrap-treeview.min.js"></script>
+<script src="datatables/js/jquery.dataTables.min.js"></script>
+<script src="js/dataTables.scroller.min.js"></script>
+
+<script src="uom.js"></script>
+<script src="states_codr.js"></script>
+<script src="provinces.js"></script>
+<script src="countriesF.js"></script>
+<script src="chaptersF.js"></script>
+<script src="hs4F.js"></script>
+<script src="hs6F.js"></script>
+<script src="hs10F.js"></script>
+
+</head>
+
+<body vocab="http://schema.org/" typeof="WebPage">
+
+<ul id="wb-tphp">
+<li class="wb-slc">
+<a class="wb-sl" href="#wb-cont">Skip to main content</a>
+</li>
+<li class="wb-slc visible-sm visible-md visible-lg">
+<a class="wb-sl" href="#wb-info">Skip to "About this site"</a>
+</li>
+</ul>
+<header role="banner">
+<div id="wb-bnr" class="container">
+<section id="wb-lng" class="visible-md visible-lg text-right">
+<h2 class="wb-inv">Language selection</h2>
+<div class="row">
+<div class="col-md-12">
+<ul class="list-inline margin-bottom-none">
+<li><a lang="fr" href="
+imp-fra.htm
+">Fran&#231;ais</a></li>
+</ul>
+</div>
+</div>
+</section>
+<div class="row">
+<div class="brand col-xs-8 col-sm-9 col-md-6">
+<a href="https://www.statcan.gc.ca/en/start" property="URL"><img src="/wet-boew4b/assets/sig-blk-en.svg" alt="Statistics Canada"><span class="wb-inv"> / <span lang="fr">Statistique Canada</span></span></a>
+</div>
+<section class="wb-mb-links col-xs-4 col-sm-3 visible-sm visible-xs" id="wb-glb-mn">
+<h2>Search and menus</h2>
+<ul class="list-inline text-right chvrn">
+<li><a href="#mb-pnl" title="Search and menus" aria-controls="mb-pnl" class="overlay-lnk" role="button"><span class="glyphicon glyphicon-search"><span class="glyphicon glyphicon-th-list"><span class="wb-inv">Search and menus</span></span></span></a></li>
+</ul>
+<div id="mb-pnl"></div>
+</section>
+
+<section id="wb-srch" class="col-xs-6 text-right visible-md visible-lg">
+<h2 class="wb-inv">Search</h2>
+<form action="https://www.statcan.gc.ca/search/results/site-search" method="get" name="cse-search-box" role="search" class="form-inline">
+<div class="form-group wb-srch-qry">
+<label for="wb-srch-q" class="wb-inv">Search website</label>
+<input type="hidden" name="fq" value="stclac:2" />
+<input id="wb-srch-q" list="wb-srch-q-ac" class="wb-srch-q form-control" name="q" type="search" value="" size="27" maxlength="150" placeholder="Search website">
+<datalist id="wb-srch-q-ac">
+</datalist>
+</div>
+<div class="form-group submit">
+<button type="submit" id="wb-srch-sub" class="btn btn-primary btn-small" name="wb-srch-sub"><span class="glyphicon-search glyphicon"></span><span class="wb-inv">Search</span></button>
+</div>
+</form>
+</section>
+</div>
+</div>
+
+<nav role="navigation" id="wb-sm" class="wb-menu visible-md visible-lg" data-trgt="mb-pnl" data-ajax-replace="/wet-boew4b/ajax/sitemenu-en.html" typeof="SiteNavigationElement">
+	<div class="container nvbar">
+		<h2 class="wb-inv">Topics menu</h2>
+		<div class="row">
+			<ul class="list-inline menu">
+				<li><a href="https://www150.statcan.gc.ca/n1/en/subjects?MM=1">Subjects</a></li>
+				<li><a href="https://www150.statcan.gc.ca/n1/en/type/data?MM=1">Data</a></li>
+				<li><a href="https://www150.statcan.gc.ca/n1/en/type/analysis?MM=1">Analysis</a></li>
+				<li><a href="https://www150.statcan.gc.ca/n1/en/type/reference?MM=1">Reference</a></li>
+				<li><a href="https://www.statcan.gc.ca/en/geography?MM=1">Geography</a></li>
+				<li><a href="https://www.statcan.gc.ca/en/census?MM=1">Census</a></li>
+				<li><a href="https://www.statcan.gc.ca/en/surveys?MM=1">Surveys and statistical programs</a></li>
+				<li><a href="https://www.statcan.gc.ca/en/about/statcan?MM=1">About StatCan</a></li>
+				<li><a href="https://www.canada.ca/en.html">Canada.ca</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<nav role="navigation" id="wb-bc" class="" property="breadcrumb">
+	<div class="container">
+		<div class="row">
+
+<!-- Breadcrumb trail -->
+<ol class="breadcrumb">
+<li><a href="https://www.statcan.gc.ca/eng/start">Home</a></li>
+<!-- Breadcrumb trail -->
+  <li><a href="/en/catalogue/71-607-X">71-607-X</a></li> 
+  <li><a href="../71-607-x2021004-eng.htm">Canadian International Merchandise Trade Web Application</a></li>
+<!--START header-end.html -->
+</ol>
+
+</div>
+</div>
+</nav>
+</header>
+
+<main role="main" property="mainContentOfPage" class="container">
+
+
+<section>
+<div class="row">
+    <div class="alert alert-info mrgn-tp-lg mrgn-bttm-xlg">
+       <p>Statistics Canada's primary data source used in the  compilation of import statistics is undergoing a major transition as a result  of the <a href="https://www.cbsa-asfc.gc.ca/services/carm-gcra/menu-eng.html">Canada  Border Services Agency (CBSA) Assessment and Revenue Management (CARM) digital  initiative</a>. Delays in the receipt of import data at Statistics Canada are  currently being experienced and other issues impacting quality are also  expected throughout this transition period. </p>
+       <p>Beginning with the reference month of October 2024, users of  these statistics should exercise caution and expect material revisions until  the situation stabilizes.</p>
+    </div>
+</div>
+<h1 property="name" id="wb-cont">Imports</h1>
+
+<div id="row1controls" class="row">
+  <div class="col-md-4" id="row1btn">
+    <a class="btn btn-default cimt_link" href="exp-eng.htm">Exports</a>
+  </div>
+
+  <div class="col-md-4">
+              <table class="toggle" style="margin-right: 60px;">
+                <tr>
+                  <td style="padding-right: 10px;"><abbr title="Harmonized System level 10">HS10</abbr></td>
+                  <td><label class="switch">
+<span class="wb-inv">Check this box to view data at the HS-6 level; uncheck this box to view data at the detailed HS-10 level.</span>
+<input id="check_hs6" aria-checked="false" type="checkbox" onchange="level_change();"><span class="slider round"></span></label></td>
+                  <td style="padding-left: 10px;"><abbr title="Harmonized System level 6">HS6</abbr></td>
+                </tr>
+              </table>
+  </div>
+
+  <div class="col-md-4">
+              <table id="trade_toggle" class="toggle">
+                <tr>
+                  <td id="wt">World trade</td>
+                  <td><label class="switch">
+<span class="wb-inv">Check this box to view data for the United States only; uncheck this box to view data for all countries.</span>
+<input id="check_usa" aria-checked="false" type="checkbox" onchange="trade_change();"><span class="slider round"></span></label></td>
+                  <td style="padding-left: 10px;">US trade</td>
+                </tr>
+              </table>
+  </div>
+</div>
+
+<!-- ========== CONTENT GOES HERE ========== -->
+<div id="loading" class="hide">
+  <img alt="" src="loading.gif" />
+</div>
+
+<div id="embargo_msg" class="hide">
+  <section class="alert alert-info">
+    <h2>Table status</h2>
+    <p>This table is being updated. Please check back at 8:30 a.m. Eastern time.</p>
+    <ul style="margin-top: 10px">
+      <li>Return to the <a href="https://www.statcan.gc.ca/eng/start">home page</a></li>
+      <li><a href="https://www.statcan.gc.ca/eng/reference/refcentre/index">Contact us</a></li>
+    </ul>
+  </section>
+</div>
+
+<div id="maintenance_msg" class="hide">
+  <section class="alert alert-info">
+    <h2>Under maintenance</h2>
+    <p>The system is currently under maintenance. Please try again later.</p>
+    <ul style="margin-top: 10px">
+      <li>Return to the <a href="https://www.statcan.gc.ca/eng/start">home page</a></li>
+      <li><a href="https://www.statcan.gc.ca/eng/reference/refcentre/index">Contact us</a></li>
+    </ul>
+  </section>
+</div>
+
+<div id="topic_container" class="btn-group btn-group-justified" role="group">
+   <a id="topic0s" class="btn btn-primary" onclick="topic_click(0)" href="javascript:void(0);">Commodities <span class="wb-inv"> – selected</span></a>
+   <a id="topic2s" class="btn btn-default" onclick="topic_click(2)" href="javascript:void(0);">Top trade partners</a>
+   <a id="topic1s" class="btn btn-default" onclick="topic_click(1)" href="javascript:void(0);">Provinces</a>
+   <a id="topic3s" class="btn btn-default" onclick="topic_click(3)" href="javascript:void(0);">Data extraction</a>
+</div>
+
+<br />
+
+<div id="by_commodity_container" tabindex="-1">
+
+  <div id="hs8_commodities2" aria-hidden="true">
+    <label for="hs8_commodities">Commodity</label>
+    <select id="hs8_commodities" style="width: 100%;"></select>
+  </div>
+
+  <div id="hs8_commodities_acc" class="wb-inv" style="margin-top: 20px;">
+    <table id="hs8_comm_acc" class="display nowrap" style="width:100%;">
+      <thead><tr><th>Commodity</th></tr></thead>
+    </table>
+  </div>
+
+
+  <div class="row" style="margin-top: 15px; margin-left: -15px">
+    <div class="col-md-4">
+         <label for="reference_years">Reference period<span class="wb-inv"><br />year</span></label>
+         <select id="reference_years" class="form-control" onchange="yearChange(this.value)">
+         </select>
+    </div>
+    <div class="col-md-4">
+         <label for="reference_months"><br /><span class="wb-inv">Reference period month</span></label>
+         <select id="reference_months" class="form-control">
+         </select>
+    </div>
+    <div class="col-md-4" style="margin-top: 25px;">
+        <button class="btn btn-primary btn" onclick="setCurrentPeriod();">Apply</button>
+    </div>
+  </div>
+
+  <h2 id="current_commodity" tabindex="0" class="hide">.</h2>
+
+  <div id="total_exports"></div>
+
+  <div class="row">
+    <div class="col-md-7">
+      <div id="origin_destination" class="row">
+        <div class="col-md-6">
+           <div id="by_province"></div>
+        </div>
+        <div class="col-md-6">
+           <div id="by_country"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="dash_chart_container" class="col-md-5 hide">
+				<div class="panel panel-default">
+					<div id="dash_chart" class="panel-body">
+						<h3 id="chart_title">.</h3>
+						<p id="chart_refper"></p>
+<label for="select_chart" class="wb-inv">Chart type</label>
+<select class="select_chart form-control" id="select_chart" onchange="chartChange(this.value)">
+      <option value="1">Value</option>
+      <option value="2">Quantity</option>
+</select>
+
+<p class="wb-inv">
+  <a href="#adb-cg001" tabindex="-1">Skip chart, go to data table</a>
+</p>
+
+
+                                                <div id="chart"></div>
+                                                <div id="tooltip"></div>
+<div id="adb-cg001"></div>
+
+
+					</div>
+					<div class="panel-footer">
+						<p>&nbsp;
+							<button id="copyChartBtn" class="btn btn-primary btn-sm pull-right" onclick="pasteChart();"><span class="glyphicon glyphicon-copy"></span> Copy chart data</button>
+						</p>
+
+					</div>
+				</div>
+    </div>
+  </div>
+
+  <div id="results" tabindex="-1"></div>
+  <div id="tx_pagination"></div>
+  <p style="margin-top: 20px;">&nbsp;
+    <button id="tab1CopyBtn" class="btn btn-primary btn-sm pull-right hide" onclick="pasteTransactions();"><span class="glyphicon glyphicon-copy"></span> Copy data</button>
+  </p>
+</div>
+
+
+<div id="by_country_container" class="hide" tabindex="-1">
+  <label for="chapters_by_country"><abbr title="Harmonized System">HS</abbr> Chapter</label>
+  <select id="chapters_by_country" onchange="chapterChangeByCountry(this.value);"></select>
+
+  <div id="country_dropdown">
+    <label for="country_select" style="margin-top: 10px;">Country</label>
+    <select id="country_select" onchange="countryChange(this.value)"></select>
+  </div>
+
+  <div id="state_dropdown" class="hide">
+    <label for="state_select" style="margin-top: 10px;">State</label>
+    <select id="state_select" onchange="stateChange(this.value)"></select>
+  </div>
+
+  <div class="row" style="margin-top: 0px; margin-left: -15px;">
+    <div class="col-md-4">
+         <label for="reference_years2">Reference period<span class="wb-inv"><br />year</span></label>
+         <select id="reference_years2" class="form-control" onchange="yearChange2(this.value)">
+         </select>
+    </div>
+    <div class="col-md-4">
+         <label for="reference_months2"><br /><span class="wb-inv">Reference period month</span></label>
+         <select id="reference_months2" class="form-control">
+         </select>
+    </div>
+    <div class="col-md-4" style="margin-top: 25px;">
+        <button class="btn btn-primary btn" onclick="setCurrentPeriod2();">Apply</button>
+    </div>
+  </div>
+
+  <h2 id="current_country">The world</h2>
+
+  <div id="total_exports2"></div>
+
+  <div class="row">
+    <div class="col-md-7">
+      <div id="by_province2"></div>
+    </div>
+    <div id="dash_chart_container2" class="col-md-5 hide">
+				<div class="panel panel-default">
+					<div id="dash_chart2" class="panel-body">
+						<h3 id="chart_title2">.</h3>
+						<p id="chart_refper2"></p>
+<label for="select_chart2" class="wb-inv">Chart type</label>
+<select class="select_chart form-control" id="select_chart2" onchange="chartChange2(this.value)">
+      <option value="1">Value</option>
+      <option value="2">Monthly % change</option>
+      <option value="3">12-month % change</option>
+</select>
+
+<p class="wb-inv">
+  <a href="#adb-cg002" tabindex="-1">Skip chart, go to data table</a>
+</p>
+
+                                                <div id="chart2"></div>
+                                                <div id="tooltip2"></div>
+
+<div id="adb-cg002"></div>
+					</div>
+					<div class="panel-footer">
+						<p>&nbsp;
+							<button id="copyChartBtn2" class="btn btn-primary btn-sm pull-right" onclick="pasteChart2();"><span class="glyphicon glyphicon-copy"></span> Copy chart data</button>
+						</p>
+
+					</div>
+				</div>
+    </div>
+  </div>
+
+  <div id="commodity2_list">
+    <h3 style="text-align: center"><a id="comm2_link" style="text-decoration: underline" href="javascript:void(0)" onclick="retrieve_comm_tab2();">.</a></h3>
+  </div>
+  <div id="results2" tabindex="-1"></div>
+</div>
+
+
+<div id="by_province_container" class="hide"  tabindex="-1">
+  <label for="chapters_by_province"><abbr title="Harmonized System">HS</abbr> Chapter</label>
+  <select id="chapters_by_province" onchange="chapterChangeByProvince(this.value);"></select>
+
+  <label for="province_select" style="margin-top: 10px;">Canada/Provinces</label>
+  <select id="province_select" onchange="provinceChange(this.value)"></select>
+
+  <div class="row" style="margin-top: 0px; margin-left: -15px;">
+    <div class="col-md-4">
+         <label for="reference_years3">Reference period<span class="wb-inv"><br />year</span></label>
+         <select id="reference_years3" class="form-control" onchange="yearChange3(this.value)">
+         </select>
+    </div>
+    <div class="col-md-4">
+         <label for="reference_months3"><br /><span class="wb-inv">Reference period month</span></label>
+         <select id="reference_months3" class="form-control">
+         </select>
+    </div>
+    <div class="col-md-4" style="margin-top: 25px;">
+        <button class="btn btn-primary btn" onclick="setCurrentPeriod3();">Apply</button>
+    </div>
+  </div>
+
+  <h2 id="current_province">Canada</h2>
+
+  <div class="row">
+    <div class="col-md-7">
+      <div id="by_country3"></div>
+    </div>
+    <div id="dash_chart_container3" class="col-md-5 hide">
+				<div class="panel panel-default">
+					<div id="dash_chart3" class="panel-body">
+						<h3 id="chart_title3">.</h3>
+						<p id="chart_refper3"></p>
+<label for="select_chart3" class="wb-inv">Chart type</label>
+<select class="select_chart form-control" id="select_chart3" onchange="chartChange3(this.value)">
+      <option value="1">Value</option>
+      <option value="2">Monthly % change</option>
+      <option value="3">12-month % change</option>
+</select>
+
+<p class="wb-inv">
+  <a href="#adb-cg003" tabindex="-1">Skip chart, go to data table</a>
+</p>
+
+                                                <div id="chart3"></div>
+                                                <div id="tooltip3"></div>
+<div id="adb-cg003"></div>
+
+
+					</div>
+					<div class="panel-footer">
+						<p>&nbsp;
+							<button id="copyChartBtn3" class="btn btn-primary btn-sm pull-right" onclick="pasteChart3();"><span class="glyphicon glyphicon-copy"></span> Copy chart data</button>
+						</p>
+
+					</div>
+				</div>
+    </div>
+  </div>
+
+  <div id="commodity3_list">
+    <h3 style="text-align: center"><a id="comm3_link" style="text-decoration: underline" href="javascript:void(0)" onclick="retrieve_comm_tab3();">.</a></h3>
+  </div>
+  <div id="results3" tabindex="-1"></div>
+</div>
+
+<div id="report" class="hide" tabindex="-1">
+
+<div class="row">
+   <div class="col-md-3">
+    <label for="fromYear">Start year</label>
+             <select id="fromYear" onchange="yearChangeReportFrom(this.value)">
+             </select>
+    <label for="fromMonth">Start month</label>
+             <select id="fromMonth">
+             </select>
+    <label for="toYear">End year</label>
+             <select id="toYear" onchange="yearChangeReport(this.value)">
+             </select>
+    <label for="toMonth">End month</label>
+             <select id="toMonth">
+             </select>
+
+   </div>
+
+   <div class="col-md-3">
+  <div id="report_country_state_dropdowns">
+    <label for="report_country_state">Country/State</label>
+    <select id="report_country_state" onchange="report_country_stateChange(this.value)">
+      <option value="0" selected>Any trade partner</option>
+      <option value="1">World total</option>
+      <option value="2">US total</option>
+      <option value="3">US states only</option>
+      <option value="4">Specific country</option>
+      <option value="5">Specific state</option>
+    </select>
+  </div>
+
+  <div id="report_country_dropdown" class="hide">
+    <label for="report_country_select">Select a country</label>
+    <select id="report_country_select"></select>
+  </div>
+
+  <div id="report_state_dropdown" class="hide">
+    <label for="report_state_select">Select a state</label>
+    <select id="report_state_select"></select>
+  </div>
+
+
+     <label for="report_origin">Canada/province</label>
+     <select id="report_origin" onchange="report_originChange(this.value)">
+       <option value="0" selected>Canada total</option>
+       <option value="1">Specific province(s)</option>
+     </select>
+
+     <div id="report_provinces" class="hide">
+       <label for="report_province">Province/territories</label>
+       <select id="report_province" multiple style="height: 220px"></select>
+     </div>
+
+
+
+   </div>
+
+   <div class="col-md-6">
+  
+  <div id="report_hs_dropdowns">
+    <label for="report_hs">Commodity</label>
+    <select id="report_hs" onchange="report_hsChange(this.value)">
+      <option value="0" selected>Any</option>
+      <option value="1">Specific chapter</option>
+      <option value="2">Specific heading</option>
+      <option value="3">Specific commodity</option>
+    </select>
+  </div>
+
+  <div id="report_chapters_dropdown" class="hide">
+    <div id="report_chapters_dropdown_acc" class="wb-inv">
+      <label for="report_chapters_acc" style="margin-top: 10px"><abbr title="Harmonized System">HS</abbr> Chapter</label>
+      <select id="report_chapters_acc" onchange="report_chapter_change(this.value)"></select>
+    </div>
+    <div id="report_chapters_dropdown2" aria-hidden="true">
+      <label for="report_chapters" style="margin-top: 10px"><abbr title="Harmonized System">HS</abbr> Chapter</label>
+      <select id="report_chapters" style="width: 560px" onchange="report_chapter_change(this.value)"></select>
+    </div>
+  </div>
+
+  <div id="report_headings_dropdown" class="hide">
+    <div id="report_headings_dropdown_acc" class="wb-inv">
+      <label for="report_headings_acc" style="margin-top: 10px"><abbr title="Harmonized System">HS</abbr> Heading</label>
+      <select id="report_headings_acc" onchange="report_heading_change(this.value)"></select>
+    </div>
+    <div id="report_headings_dropdown2" aria-hidden="true">
+      <label for="report_headings" style="margin-top: 10px"><abbr title="Harmonized System">HS</abbr> Heading</label>
+      <select id="report_headings" style="width: 560px" onchange="report_heading_change(this.value)"></select>
+    </div>
+  </div>
+
+  <div id="report_single_dropdown" class="hide">
+    <div id="report_single_dropdown2" aria-hidden="true">
+      <label for="report_hs8_commodities" style="margin-top: 10px">Select a commodity<span class="wb-inv"> - Type the name of the commodity you are searching for; this will reduce the list. Press the enter key to make your selection.</span></label>
+      <select id="report_hs8_commodities" style="width: 560px"></select>
+    </div>
+    <div id="hs8_commodities_report_acc" class="wb-inv" style="margin-top: 20px;">
+      <p><strong>Selected commodity: </strong><span id="selectedHS">None</span></p>
+      <table id="hs8_comm_report_acc" class="display nowrap" style="width:100%;">
+        <thead><tr><th>Commodity</th></tr></thead>
+      </table>
+    </div>
+  </div>
+
+<div class="pull-right">
+  <p style="margin-top: 60px; margin-left: 80px">
+    <button class="btn btn-default btn-sm" onclick="pasteSelection();"><span class="glyphicon glyphicon-bookmark"></span> Save my selection</button>
+  </p>
+
+  <p style="margin-top: 20px; margin-right: 20px;">
+    <input id="check_annualize" aria-checked="false" type="checkbox" style="width:18px; height:18px; margin-top: -2px">&nbsp;Annual data
+    <button class="btn btn-primary btn-sm" style="width: 150px; margin-left: 20px;" onclick="doReport();">Submit</button>
+  </p>
+</div>
+
+   </div>
+
+ </div>
+
+
+
+  <div id="report_results_container" class="col-md-12">
+    <div id="max_note" class="alert alert-warning hide">
+<p>Please refine your query so that it contains less than <span id="max_rows"></span> rows or go 
+to the <a target="_blank" rel="noopener noreferrer" class="info" href="https://open.canada.ca/data/en/dataset?sort=metadata_modified+desc&q=CIMT&organization=statcan">Open Government Portal<span>Ouvre dans une nouvelle fenêtre</span></a> to retrieve all data of interest.</p>
+    </div>
+
+    <div id="report_results"></div>
+    <div id="pagination"></div>
+  </div>
+
+</div>
+
+</section>
+
+
+<div class="pagedetails">
+	<dl id="wb-dtmd">
+		<dt>Date modified:&#32;</dt>
+		<dd><time property="dateModified">
+  2024-12-05
+</time></dd>
+	</dl>
+</div>
+</main>
+
+<footer id="wb-info">
+	<h2 class="wb-inv">About this site</h2>
+	<div class="gc-contextual">
+		<div class="container">
+			<nav>
+				<h3>Statistics Canada</h3>
+				<ul class="list-unstyled colcount-sm-2 colcount-md-3">
+					<li><a href="https://www.statcan.gc.ca/en/reference/refcentre/index">Contact StatCan</a></li>
+					<li><a href="https://www.statcan.gc.ca/en/trust">Trust Centre</a></li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+	<div class="gc-main-footer">
+		<div class="container">
+			<nav>
+				<h3>Government of Canada</h3>
+				<ul class="list-unstyled colcount-sm-2 colcount-md-3">
+					<li><a href="https://www.canada.ca/en/contact.html">All contacts</a></li>
+					<li><a href="https://www.canada.ca/en/government/dept.html">Departments and agencies</a></li>
+					<li><a href="https://www.canada.ca/en/government/system.html">About government</a></li>
+				</ul>
+				<h4><span class="wb-inv">Themes and topics</span></h4>
+				<ul class="list-unstyled colcount-sm-2 colcount-md-3">
+					<li><a href="https://www.canada.ca/en/services/jobs.html">Jobs</a></li>
+					<li><a href="https://www.canada.ca/en/services/immigration-citizenship.html">Immigration and citizenship</a></li>
+					<li><a href="https://travel.gc.ca/">Travel and tourism</a></li>
+					<li><a href="https://www.canada.ca/en/services/business.html">Business</a></li>
+					<li><a href="https://www.canada.ca/en/services/benefits.html">Benefits</a></li>
+					<li><a href="https://www.canada.ca/en/services/health.html">Health</a></li>
+					<li><a href="https://www.canada.ca/en/services/taxes.html">Taxes</a></li>
+					<li><a href="https://www.canada.ca/en/services/environment.html">Environment and natural resources</a></li>
+					<li><a href="https://www.canada.ca/en/services/defence.html">National security and defence</a></li>
+					<li><a href="https://www.canada.ca/en/services/culture.html">Culture, history and sport</a></li>
+					<li><a href="https://www.canada.ca/en/services/policing.html">Policing, justice and emergencies</a></li>
+					<li><a href="https://www.canada.ca/en/services/transport.html">Transport and infrastructure</a></li>
+					<li><a href="https://international.gc.ca/world-monde/index.aspx?lang=eng">Canada and the world</a></li>
+					<li><a href="https://www.canada.ca/en/services/finance.html">Money and finance</a></li>
+					<li><a href="https://www.canada.ca/en/services/science.html">Science and innovation</a></li>
+					<li><a href="https://www.canada.ca/en/services/indigenous-peoples.html">Indigenous peoples</a></li>
+					<li><a href="https://www.canada.ca/en/services/veterans.html">Veterans and military</a></li>
+					<li><a href="https://www.canada.ca/en/services/youth.html">Youth</a></li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+	<div class="gc-sub-footer">
+		<div class="container d-flex align-items-center">
+			<nav>
+				<h3 class="wb-inv">Government of Canada Corporate</h3>
+				<ul>
+					<li><a href="https://www.canada.ca/en/social.html">Social media</a></li>
+					<li><a href="https://www.canada.ca/en/mobile.html">Mobile applications</a></li>
+					<li><a href="https://www.canada.ca/en/government/about.html">About Canada.ca</a></li>
+					<li><a href="https://www.statcan.gc.ca/en/reference/important-notices">Terms and conditions</a></li>
+					<li><a href="https://www.statcan.gc.ca/en/reference/privacy">Privacy</a></li>
+				</ul>
+			</nav>
+			<div class="wtrmrk align-self-end">
+				<img src="/wet-boew4b/assets/wmms-blk.svg" alt="Symbol of the Government of Canada">
+			</div>
+		</div>
+	</div>
+</footer>
+
+<script>
+
+    modifyBreadCrum();
+    
+
+    function modifyBreadCrum(){
+        
+    let dailyEn = "n1/dai-quo/index-eng.htm";
+    let dailyFr = "n1/dai-quo/index-fra.htm";
+ 
+    let breadcrumb = document.querySelector("#wb-bc ol.breadcrumb");
+        
+    if(breadcrumb === undefined || breadcrumb === null || breadcrumb.children.length == 0){
+        return;
+    } 
+        
+    let lastListNode = breadcrumb.children[breadcrumb.children.length -1];
+    
+    if(window.location.href.indexOf("daily-quotidien") != -1 || window.location.href.indexOf("dai-quo") != -1){
+        let href = window.location.href;
+        let env = href.split("n1")[0];
+        href = href.indexOf("eng") != -1 ? env + dailyEn : env + dailyFr;
+
+        createBreadcrumAnchor(href);
+    }
+    else{
+        removeBreadcrumNotAnchor();
+    }
+
+    return;
+
+    function createBreadcrumAnchor(href){
+
+        let anchor = document.createElement("a");
+    
+        if(lastListNode.lastChild !== undefined && lastListNode.lastChild !== null){
+            if(lastListNode.lastChild.nodeName === anchor.nodeName){
+                return;
+            } 
+
+            anchor.innerHTML = lastListNode.innerHTML;
+            anchor.href = href;
+            lastListNode.innerHTML = anchor.outerHTML; 
+        }
+    }
+
+    function removeBreadcrumNotAnchor(){
+
+        let anchor = document.createElement("a");
+
+        if(lastListNode.lastChild !== undefined && lastListNode.lastChild !== null){
+            if(lastListNode.lastChild.nodeName === anchor.nodeName){
+                return;
+            } 
+        
+            breadcrumb.removeChild(lastListNode);
+        }
+
+    }
+
+    }
+
+</script>
+
+<!--[if gte IE 9 | !IE ]><!-->
+<script src="/wet-boew4b/js/wet-boew.min.js"></script>
+<script src="/wet-boew4b/js/theme.min.js"></script>
+<!--<![endif]-->
+<!--[if lt IE 9]>
+<script src="/wet-boew4b/js/ie8-wet-boew2.min.js"></script>
+<![endif]-->
+<!-- LiveZilla Script BEGIN -->
+<!--<script type="text/javascript">
+	var lz_data = {overwrite:false,language:'en'};
+</script>
+<script type="text/javascript" id="c2e78f4994aa191dd320f0f115f8fd70" src="https://www.statcan.gc.ca/livechat/script.php?id=c2e78f4994aa191dd320f0f115f8fd70" defer></script>-->
+<!-- LiveZilla Script END -->
+<!-- InvitationManager -->
+<script src="/wet-boew4b/invitation-manager/Overlay.js"></script>
+<script src="/wet-boew4b/invitation-manager/InvitationManager.js"></script>
+<!-- End InvitationManager -->
+<script type="text/javascript">_satellite.pageBottom();</script>
+
+<!-- CustomScriptsJSStart -->
+
+<!-- CustomScriptsJSEnd -->
+<script>
+  var english = true;
+  var trade_type = 1;    //0=exports;  1=imports
+  var data_mode = "PRD";  //valid choices:  "TEST", "QA", "NEW_QA", "PRD"
+  var maintenance = false;
+</script>
+<script src="js/cimt4.min.js"></script>
+</body>
+</html>
